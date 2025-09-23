@@ -1,0 +1,248 @@
+/* Display */
+.hidden {
+    display: none !important;
+}
+
+.block {
+    display: block !important;
+}
+
+.inline {
+    display: inline !important;
+}
+
+.inline-block {
+    display: inline-block !important;
+}
+
+.flex {
+    display: flex !important;
+}
+
+.grid {
+    display: grid !important;
+}
+
+/* Flex helpers */
+.flex-col {
+    flex-direction: column !important;
+}
+
+.flex-row {
+    flex-direction: row !important;
+}
+
+.items-center {
+    align-items: center !important;
+}
+
+.items-start {
+    align-items: flex-start !important;
+}
+
+.items-end {
+    align-items: flex-end !important;
+}
+
+.justify-center {
+    justify-content: center !important;
+}
+
+.justify-between {
+    justify-content: space-between !important;
+}
+
+.justify-around {
+    justify-content: space-around !important;
+}
+
+.flex-1 {
+    flex: 1;
+}
+
+.flex-2 {
+    flex: 2;
+}
+
+.flex-3 {
+    flex: 3;
+}
+
+.gap-1 {
+    gap: 1rem;
+}
+
+.gap-2 {
+    gap: 2rem;
+}
+
+.gap-3 {
+    gap: 3rem;
+}
+
+.gap-4 {
+    gap: 4rem;
+}
+
+
+/* Spacing (dùng biến từ variables.css) */
+.mt-1 {
+    margin-top: var(--spacing-1) !important;
+}
+
+.mt-2 {
+    margin-top: var(--spacing-2) !important;
+}
+
+.mt-4 {
+    margin-top: var(--spacing-4) !important;
+}
+
+.mb-2 {
+    margin-bottom: var(--spacing-2) !important;
+}
+
+.mx-auto {
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+.p-2 {
+    padding: var(--spacing-2) !important;
+}
+
+.p-4 {
+    padding: var(--spacing-4) !important;
+}
+
+/* Text */
+.text-left {
+    text-align: left !important;
+}
+
+.text-center {
+    text-align: center !important;
+}
+
+.text-right {
+    text-align: right !important;
+}
+
+.text-uppercase {
+    text-transform: uppercase !important;
+}
+
+.text-lowercase {
+    text-transform: lowercase !important;
+}
+
+.text-capitalize {
+    text-transform: capitalize !important;
+}
+
+.font-light {
+    font-weight: var(--weight-light) !important;
+}
+
+.font-normal {
+    font-weight: var(--weight-normal) !important;
+}
+
+.font-medium {
+    font-weight: var(--weight-medium) !important;
+}
+
+.font-bold {
+    font-weight: var(--weight-bold) !important;
+}
+
+.text-xs {
+    font-size: var(--text-xs) !important;
+}
+
+.text-sm {
+    font-size: var(--text-sm) !important;
+}
+
+.text-base {
+    font-size: var(--text-base) !important;
+}
+
+.text-lg {
+    font-size: var(--text-lg) !important;
+}
+
+.text-xl {
+    font-size: var(--text-xl) !important;
+}
+
+/* Colors */
+.text-primary {
+    color: var(--color-primary) !important;
+}
+
+.text-secondary {
+    color: var(--color-secondary) !important;
+}
+
+.text-white {
+    color: var(--color-white) !important;
+}
+
+.text-success {
+    color: var(--color-success) !important;
+}
+
+.text-error {
+    color: var(--color-error) !important;
+}
+
+.bg-primary {
+    background-color: var(--color-primary) !important;
+}
+
+.bg-secondary {
+    background-color: var(--color-secondary) !important;
+}
+
+.bg-tertiary {
+    background-color: var(--color-tertiary) !important;
+}
+
+.bg-success {
+    background-color: var(--color-success) !important;
+}
+
+.bg-error {
+    background-color: var(--color-error) !important;
+}
+
+.bg-warning {
+    background-color: var(--color-warning) !important;
+}
+
+.bg-info {
+    background-color: var(--color-info) !important;
+}
+
+/* Borders & radius */
+.rounded {
+    border-radius: var(--border-radius-md) !important;
+}
+
+.rounded-sm {
+    border-radius: var(--border-radius-sm) !important;
+}
+
+.rounded-lg {
+    border-radius: var(--border-radius-lg) !important;
+}
+
+/* Width / Height */
+.w-full {
+    width: 100% !important;
+}
+
+.h-full {
+    height: 100% !important;
+}

@@ -1,0 +1,64 @@
+:root {
+    --header-height: 65px;
+}
+
+header {
+    width: 100%;
+    height: var(--header-height);
+    background-color: var(--color-primary);
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+}
+
+.logo {
+    height: 42px;
+    width: auto;
+    filter: drop-shadow(2px 2px 4px var(--color-primary));
+}
+
+nav {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+}
+
+.burger {
+    display: none;
+    font-size: 24px;
+    color: white;
+    background-color: var(--color-primary);
+}
+
+.nav-mobile {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    nav {
+        display: none;
+    }
+
+    .burger {
+        display: block;
+    }
+
+    .nav-mobile {
+        left: 0;
+        top: var(--header-height);
+        position: fixed;
+
+        width: 100%;
+        height: calc(100% - var(--header-height));
+        background-color: var(--color-primary);
+
+        text-align: start;
+        justify-content: start;
+
+        padding: 16px;
+    }
+}

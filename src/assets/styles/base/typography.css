@@ -1,0 +1,96 @@
+:root {
+    /* Font families */
+    --font-sans: "Inter", "Roboto", "Helvetica Neue", Arial, sans-serif;
+    --font-serif: "Merriweather", Georgia, serif;
+    --font-mono: "Fira Code", Menlo, monospace;
+
+    /* Font sizes */
+    --text-xs: 0.75rem;
+    --text-sm: 0.875rem;
+    --text-base: 1rem;
+    --text-lg: 1.125rem;
+    --text-xl: 1.25rem;
+    --text-2xl: 1.5rem;
+    --text-3xl: 1.875rem;
+    --text-4xl: 2.25rem;
+
+    /* Font weights */
+    --weight-light: 300;
+    --weight-normal: 400;
+    --weight-medium: 500;
+    --weight-bold: 700;
+
+    /* Line height */
+    --leading-tight: 1.2;
+    --leading-normal: 1.5;
+    --leading-relaxed: 1.75;
+}
+
+/* Base body text */
+body {
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    font-weight: var(--weight-normal);
+    line-height: var(--leading-normal);
+    color: var(--color-black);
+}
+
+/* Headings */
+h1,
+h2,
+h3,
+h4,
+h5 {
+    font-weight: var(--weight-bold);
+    line-height: var(--leading-tight);
+    margin-bottom: 10px;
+    color: var(--color-black);
+}
+
+h1 {
+    font-size: var(--text-4xl);
+}
+
+h2 {
+    font-size: var(--text-3xl);
+}
+
+h3 {
+    font-size: var(--text-2xl);
+}
+
+h4 {
+    font-size: var(--text-xl);
+}
+
+h5 {
+    font-size: var(--text-lg);
+}
+
+/* Paragraphs */
+p {
+    font-size: var(--text-base);
+    line-height: var(--leading-relaxed);
+    text-align: justify;
+}
+
+/* Links */
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Small text */
+.text-sm {
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+    /* hoặc leading-relaxed nếu muốn dễ đọc hơn */
+}
+
+.text-xs {
+    font-size: var(--text-xs);
+    line-height: var(--leading-normal);
+}

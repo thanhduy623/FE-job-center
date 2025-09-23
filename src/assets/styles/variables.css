@@ -1,0 +1,26 @@
+:root {
+    /* === Brand colors === */
+    --color-primary: #000000;
+    --color-secondary: #333333;
+    --color-tertiary: #ffffff;
+
+    /* === Neutral === */
+    --color-black: #000000;
+    --color-white: #ffffff;
+    --color-gray-100: #f8f9fa;
+    --color-gray-300: #dee2e6;
+    --color-gray-500: #adb5bd;
+    --color-gray-700: #495057;
+    --color-gray-900: #212529;
+
+    /* === Feedback colors === */
+    --color-success: #59AC77;
+    --color-warning: #FCB53B;
+    --color-error: #E14434;
+    --color-info: #739EC9;
+
+    /* breakpoint */
+    --breakpoint-mobile: 767px;
+    --breakpoint-tablet: 1023px;
+    --breakpoint-desktop: 1200px;
+}

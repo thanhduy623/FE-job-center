@@ -1,0 +1,33 @@
+form {
+    width: 100%;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    padding: 2rem;
+    border-radius: 1rem;
+    border: 3px solid var(--color-primary);
+    box-shadow: 0 2px 20px var(--color-primary);
+}
+
+label {
+    width: 100%;
+    text-align: start;
+    font-style: italic;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 0.5rem;
+    height: 2.5rem;
+
+    border: 1px solid var(--color-primary);
+    border-radius: 16px;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    box-shadow: 0 2px 20px var(--color-primary);
+}

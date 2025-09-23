@@ -1,0 +1,72 @@
+/* base/buttons.css */
+
+button {
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    font-weight: var(--weight-medium);
+    padding: 0.5rem 1rem;
+    border-radius: 16px;
+    border: none;
+    cursor: pointer;
+
+    color: var(--color-white);
+    background-color: #333;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+/* Hover */
+button:hover {
+    background-color: var(--color-secondary);
+}
+
+/* Focus */
+button:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Disabled */
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Small button */
+button.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: var(--text-sm);
+}
+
+/* Large button */
+button.btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: var(--text-lg);
+}
+
+button.btn-success {
+    background-color: var(--color-success);
+    color: var(--color-white);
+}
+
+button.btn-success:hover {
+    background-color: #2ecc71;
+    /* sáng hơn */
+}
+
+button.btn-error {
+    background-color: var(--color-error);
+    color: var(--color-white);
+}
+
+button.btn-error:hover {
+    background-color: #e74c3c;
+}
+
+button.btn-info {
+    background-color: var(--color-info);
+    color: var(--color-white);
+}
+
+button.btn-info:hover {
+    background-color: #3498db;
+}
