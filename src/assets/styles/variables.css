@@ -1,8 +1,8 @@
 :root {
     /* === Brand colors === */
-    --color-primary: #000000;
-    --color-secondary: #333333;
-    --color-tertiary: #ffffff;
+    --color-primary: #99212d;
+    --color-secondary: #262265;
+    --color-tertiary: #cd8a26;
 
     /* === Neutral === */
     --color-black: #000000;
@@ -23,4 +23,9 @@
     --breakpoint-mobile: 767px;
     --breakpoint-tablet: 1023px;
     --breakpoint-desktop: 1200px;
+
+    --spacing-1: 1rem;
+    --spacing-2: 2rem;
+    --spacing-3: 3rem;
+    --spacing-4: 4rem;
 }

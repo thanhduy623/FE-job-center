@@ -101,13 +101,23 @@ video {
     /* let body control font */
 }
 
-/* Make html & body take full height and set default font-family/size */
 html,
 body {
     height: 100%;
     line-height: 1.4;
+    overflow-x: auto;
     -webkit-text-size-adjust: 100%;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari, Edge */
+}
+
 
 /* Root defaults (edit to taste) */
 body {
@@ -118,6 +128,7 @@ body {
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background-color: var(--bg-color);
 }
 
 /* Images and media */

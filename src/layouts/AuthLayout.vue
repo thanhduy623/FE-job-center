@@ -4,7 +4,7 @@
     </main>
 </template>
 
-<style>
+<style scoped>
     .auth-layout {
         min-height: 100vh;
         background: url("@/assets/images/background.webp") center center / cover no-repeat;

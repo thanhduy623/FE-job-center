@@ -12,10 +12,11 @@ header {
     align-items: center;
     justify-content: space-between;
     padding: 0 16px;
+    gap: 16px;
 }
 
 .logo {
-    height: 42px;
+    height: 56px;
     width: auto;
     filter: drop-shadow(2px 2px 4px var(--color-primary));
 }

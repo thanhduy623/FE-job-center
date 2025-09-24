@@ -1,6 +1,6 @@
 <template lang="">
     <form class="flex flex-col items-center">
-        <img class="logo" src="@/assets/images/logo.webp" alt="">
+        <img class="logo" src="@/assets/images/logo.png" alt="">
         <br>
         <h1>ĐĂNG NHẬP</h1>
         <label>Tài khoản</label>
