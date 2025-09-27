@@ -83,10 +83,6 @@ a:hover {
     text-decoration: underline;
 }
 
-.text-title {
-    padding: var(--spacing-1) 0px;
-}
-
 /* Small text */
 .text-sm {
     font-size: var(--text-sm);

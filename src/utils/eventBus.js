@@ -22,7 +22,7 @@ export const EventBus = {
     confirm(message) {
         return new Promise(resolve => {
             const handler = (result) => {
-                resolve(result);
+                resolve(!!result); // đảm bảo luôn true hoặc false
                 emitter.off('confirm:response', handler);
             };
             emitter.on('confirm:response', handler);

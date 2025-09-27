@@ -31,6 +31,10 @@ export default {
     role: "Role",
     admin: "Admin",
     action: "Action",
+    id: "ID",
+    email: "email",
+    nameVN: "Vietnamese name",
+    nameEN: "English name",
 
     // Usual
     introduction: "Introduction",

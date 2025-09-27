@@ -17,6 +17,12 @@ import Login from '@/views/public/LoginView.vue'
 // Auth/Staff
 import StaffView from '@/views/auth/staff/StaffView.vue'
 import StaffAdd from '@/views/auth/staff/StaffAdd.vue'
+// Auth/Department
+import DepartmentView from '@/views/auth/department/DepartmentView.vue'
+// Auth/Job
+import JobView from '@/views/auth/job/JobView.vue'
+import JobAdd from '@/views/auth/job/JobAdd.vue'
+import JobUpdate from '@/views/auth/job/JobUpdate.vue'
 
 
 
@@ -36,7 +42,11 @@ const routes = [
         component: StaffLayout,
         children: [
             { path: 'staff', name: 'staff', component: StaffView },
-            { path: 'staff/add', name: 'staffAdd', component: StaffAdd }
+            { path: 'staff/add', name: 'staffAdd', component: StaffAdd },
+            { path: 'department', name: 'department', component: DepartmentView },
+            { path: 'job', name: 'job', component: JobView },
+            { path: 'job/add', name: 'jobAdd', component: JobAdd },
+            { path: 'job/:id', name: 'jobUpdate', component: JobUpdate },
         ]
     },
     {

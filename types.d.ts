@@ -1,0 +1,10 @@
+declare module 'bonjour';
+declare module 'html-minifier-terser';
+declare module 'node-forge';
+declare module 'normalize-package-data';
+declare module 'http-proxy';
+declare module 'http-errors';
+declare module 'connect-history-api-fallback';
+declare module 'json-schema';
+declare module 'mime';
+declare module 'minimist';

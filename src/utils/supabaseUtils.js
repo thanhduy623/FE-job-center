@@ -1,5 +1,6 @@
 import { supabase } from '@/supabase.js'
 import { getSession } from '@/utils/authSession.js'
+import { EventBus } from './eventBus'
 
 /**
  * Lấy Supabase client đã set session user
@@ -20,6 +21,7 @@ function getSupabaseClient() {
  * Lấy dữ liệu từ bảng
  */
 export async function getData(tableName, conditions = {}, relations = []) {
+    EventBus.showLoading();
     try {
         const client = getSupabaseClient()
         let query = client.from(tableName).select(relations.length ? `*, ${relations.join(', ')}` : '*')
@@ -34,6 +36,8 @@ export async function getData(tableName, conditions = {}, relations = []) {
         return { success: true, status: 200, message: 'Lấy dữ liệu thành công', data }
     } catch (error) {
         return { success: false, status: 400, message: error.message, data: [] }
+    } finally {
+        EventBus.hideLoading();
     }
 }
 
@@ -41,6 +45,7 @@ export async function getData(tableName, conditions = {}, relations = []) {
  * Thêm dữ liệu
  */
 export async function addData(tableName, newData) {
+    EventBus.showLoading();
     try {
         const client = getSupabaseClient()
         const { data, error } = await client.from(tableName).insert(newData).select()
@@ -48,6 +53,8 @@ export async function addData(tableName, newData) {
         return { success: true, status: 200, message: 'Thêm dữ liệu thành công', data }
     } catch (error) {
         return { success: false, status: 400, message: error.message, data: null }
+    } finally {
+        EventBus.hideLoading();
     }
 }
 
@@ -55,6 +62,7 @@ export async function addData(tableName, newData) {
  * Cập nhật dữ liệu
  */
 export async function updateData(tableName, newData, keys) {
+    EventBus.showLoading();
     try {
         const client = getSupabaseClient()
         let query = client.from(tableName).update(newData)
@@ -64,6 +72,8 @@ export async function updateData(tableName, newData, keys) {
         return { success: true, status: 200, message: 'Cập nhật dữ liệu thành công', data }
     } catch (error) {
         return { success: false, status: 400, message: error.message, data: null }
+    } finally {
+        EventBus.hideLoading();
     }
 }
 
@@ -71,6 +81,7 @@ export async function updateData(tableName, newData, keys) {
  * Xóa dữ liệu
  */
 export async function deleteData(tableName, conditions = {}) {
+    EventBus.showLoading();
     try {
         const client = getSupabaseClient()
         let query = client.from(tableName).delete()
@@ -80,5 +91,7 @@ export async function deleteData(tableName, conditions = {}) {
         return { success: true, status: 200, message: 'Xóa dữ liệu thành công', data }
     } catch (error) {
         return { success: false, status: 400, message: error.message, data: null }
+    } finally {
+        EventBus.hideLoading();
     }
 }

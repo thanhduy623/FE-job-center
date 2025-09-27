@@ -33,7 +33,9 @@
             const result = await login(us.value, ps.value)
 
             if (result.success) {
-                const session = result.data
+                const session = result.data;
+                console.log(result);
+
                 setSession('session', session, session.expires_in)
                 EventBus.hideLoading()
                 router.push('/staff')

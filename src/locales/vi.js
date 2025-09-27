@@ -45,6 +45,10 @@ export default {
     account: "Tài khoản",
     password: "Mật khẩu",
     profile: "Hồ sơ",
+    id: "ID",
+    email: "email",
+    nameVN: "Tên tiếng Việt",
+    nameEN: "Tên tiếng Anh",
 
     // Thông tin trường
     schoolInfo: {

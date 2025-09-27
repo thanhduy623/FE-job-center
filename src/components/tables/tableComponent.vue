@@ -1,56 +1,51 @@
 <template>
-    <table class="table-auto border-collapse border border-gray-300 w-full">
+    <table class="custom-table">
         <thead>
             <tr>
-                <th v-for="(col, i) in columns" :key="i" v-t="col.label"
-                    class="border border-gray-300 px-3 py-2 bg-gray-100 text-left">
-                </th>
+                <!-- Cột STT -->
+                <th>#</th>
+                <th v-for="col in nonActionColumns" :key="col.key" v-t="col.label"></th>
+                <th v-if="actionColumns.length" v-t="'action'"></th>
             </tr>
         </thead>
         <tbody>
             <tr v-for="(row, rowIndex) in localRows" :key="rowIndex" class="hover:bg-gray-50">
-                <!-- Render các cột dữ liệu -->
-                <td v-for="(col, colIndex) in columns" :key="colIndex" class="border border-gray-300 px-3 py-2">
-                    <!-- Nếu là action column -->
-                    <template v-if="col.actions">
-                        <div class="flex gap-2">
-                            <button v-for="(act, ai) in col.actions" :key="ai"
-                                class="px-2 py-1 rounded border bg-white hover:bg-gray-100 flex items-center gap-1"
-                                :title="act.label" @click="() => handleAction(act, row, rowIndex)">
-                                <span v-if="act.icon">{{ act.icon }}</span>
-                                <span class="sr-only">{{ act.label }}</span>
-                            </button>
-                        </div>
-                    </template>
+                <!-- Hiển thị số thứ tự -->
+                <td>{{ rowIndex + 1 }}</td>
 
-                    <!-- Nếu là cột thường -->
-                    <template v-else>
-                        {{ row[col.key] }}
-                    </template>
+                <td v-for="col in nonActionColumns" :key="col.key">{{ row[col.key] }}</td>
+                <td v-if="actionColumns.length" class="flex flex-row gap-1">
+                    <button v-for="(act, ai) in actionColumns" :key="ai" class="table-btn " :title="act.label"
+                        @click="handleAction(act, row, rowIndex)">
+                        <span v-if="act.icon">{{ act.icon }}</span>
+                    </button>
                 </td>
             </tr>
         </tbody>
     </table>
 </template>
 
+
 <script>
     export default {
         name: "TableComponent",
         props: {
-            rows: {
-                type: Array,
-                required: true,
-            },
-            columns: {
-                type: Array,
-                required: true,
-            },
+            rows: { type: Array, required: true },
+            columns: { type: Array, required: true },
         },
         emits: ["update:rows"],
         data() {
             return {
-                localRows: [...this.rows], // copy để reactive
+                localRows: [...this.rows],
             };
+        },
+        computed: {
+            nonActionColumns() {
+                return this.columns.filter(c => !c.actions);
+            },
+            actionColumns() {
+                return this.columns.find(c => c.actions)?.actions || [];
+            },
         },
         watch: {
             rows: {
@@ -65,9 +60,18 @@
                 if (typeof action.func === "function") {
                     action.func(row, rowIndex, this.localRows);
                 }
-                // nếu action có xoá, thay đổi dữ liệu thì emit ngược lên
                 this.$emit("update:rows", this.localRows);
             },
         },
     };
 </script>
+
+<style scoped>
+    button {
+        height: 32px;
+        width: 32px;
+        font-size: 16px;
+        padding: 3px;
+        border-radius: 6px;
+    }
+</style>

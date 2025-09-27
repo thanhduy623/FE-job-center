@@ -294,3 +294,8 @@ select {
 }
 
 /* End of reset */
+
+
+.main-container {
+    padding: 1rem 0;
+}
