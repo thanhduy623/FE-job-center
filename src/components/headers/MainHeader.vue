@@ -2,16 +2,16 @@
     <header class="header">
         <!-- Logo -->
         <img class="logo" src="@/assets/images/logo.webp" alt="Logo" />
-        <h2 class="text-white mb-0">TUYỂN DỤNG</h2>
+        <h3 class="text-white mb-0" v-t="'systemName'"></h3>
 
         <!-- Menu desktop -->
         <nav>
-            <RouterLink v-for="item in menuItems" :key="item.to" :to="item.to" class="text-white text-uppercase">
-                {{ item.name }}
-            </RouterLink>
+            <RouterLink v-for="item in menuItems" :key="item.to" :to="item.to" v-t="item.name"
+                class="text-white text-uppercase"> </RouterLink>
         </nav>
 
         <!-- Burger button chỉ hiện trên mobile -->
+        <LanguageSwitcher />
         <button class="burger" @click="isOpen = !isOpen">☰</button>
 
         <!-- Sidebar mobile -->
@@ -28,12 +28,14 @@
 
 <script setup>
     import { ref } from "vue";
+    import LanguageSwitcher from '@/components/others/LanguageSwitcher.vue'
 
     const isOpen = ref(false);
 
     const menuItems = [
-        { name: "Trang chủ", to: "/" },
-        { name: "Công việc", to: "/recruitment" },
-        { name: "Hỏi đáp", to: "/chatbot" },
+        { name: "home", to: "/" },
+        { name: "recruitment", to: "/recruitment" },
+        { name: "chatbot", to: "/chatbot" },
+        { name: "login", to: "/login" },
     ];
 </script>

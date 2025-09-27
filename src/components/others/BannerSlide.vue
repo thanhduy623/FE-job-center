@@ -61,8 +61,7 @@
     .banner-container {
         position: relative;
         width: 100%;
-        height: 100vh;
-        /* chiếm toàn bộ viewport */
+        aspect-ratio: 16 / 9;
         overflow: hidden;
     }
 
@@ -133,5 +132,73 @@
 
     .dot.active {
         background-color: white;
+    }
+
+    /* Mặc định đã full màn hình (desktop) */
+
+    /* Tablet (width <= 1024px) */
+    @media (max-width: 1024px) {
+        .banner-container {
+            height: 70vh;
+            /* giảm chiều cao */
+        }
+
+        .nav {
+            font-size: 1.5em;
+            width: 35px;
+            height: 35px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            margin: 0 4px;
+        }
+    }
+
+    /* Mobile (width <= 768px) */
+    @media (max-width: 768px) {
+        .banner-container {
+            height: 50vh;
+            /* banner nhỏ gọn hơn */
+        }
+
+        .nav {
+            font-size: 1.2em;
+            width: 30px;
+            height: 30px;
+        }
+
+        .nav.prev {
+            left: 10px;
+        }
+
+        .nav.next {
+            right: 10px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            margin: 0 3px;
+        }
+    }
+
+    /* Mobile nhỏ (<= 480px) */
+    @media (max-width: 480px) {
+        .banner-container {
+            height: 40vh;
+        }
+
+        .nav {
+            font-size: 1em;
+            width: 25px;
+            height: 25px;
+        }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+        }
     }
 </style>

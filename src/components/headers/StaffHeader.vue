@@ -2,16 +2,16 @@
     <header class="header">
         <!-- Logo -->
         <img class="logo" src="@/assets/images/logo.webp" alt="Logo" />
-        <h2 class="text-white mb-0">TUYỂN DỤNG</h2>
+        <h3 class="text-white mb-0" v-t="'systemName'"></h3>
 
         <!-- Menu desktop -->
         <nav>
-            <RouterLink v-for="item in menuItems" :key="item.to" :to="item.to" class="text-white text-uppercase">
-                {{ item.name }}
-            </RouterLink>
+            <RouterLink v-for="item in menuItems" :key="item.to" :to="item.to" v-t="item.name"
+                class="text-white text-uppercase"> </RouterLink>
         </nav>
 
         <!-- Burger button chỉ hiện trên mobile -->
+        <LanguageSwitcher />
         <button class="burger" @click="isOpen = !isOpen">☰</button>
 
         <!-- Sidebar mobile -->
@@ -26,18 +26,21 @@
     </header>
 </template>
 
+
 <script setup>
-    import { ref } from "vue";
+    import { ref } from 'vue';
+    import LanguageSwitcher from '@/components/others/LanguageSwitcher.vue'
 
     const isOpen = ref(false);
 
     const menuItems = [
-        { name: "Thông tin", to: "/infomation" },
-        { name: "Nhân sự", to: "/staff" },
-        { name: "Phòng ban", to: "/department" },
-        { name: "Vị trí", to: "/job" },
-        { name: "Tuyển dụng", to: "/recruitment" },
-        { name: "Chatbot", to: "/chatbot" },
-        { name: "Đăng xuất", to: "/login" },
+        { name: "infomation", to: "/infomation" },
+        { name: "staff", to: "/staff" },
+        { name: "department", to: "/department" },
+        { name: "job", to: "/job" },
+        { name: "recruitment", to: "/recruitment" },
+        { name: "profile", to: "/profile" },
+        { name: "chatbot", to: "/chatbot" },
+        { name: "logout", to: "/login" },
     ];
 </script>

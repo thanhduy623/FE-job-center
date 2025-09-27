@@ -6,7 +6,7 @@ import AuthLayout from '@/layouts/AuthLayout.vue'
 import StaffLayout from '@/layouts/StaffLayout.vue'
 
 // Public
-import Home from '@/views/HomeView.vue'
+import Home from '@/views/public/HomeView.vue'
 import Recruitment from '@/views/public/RecruitmentView.vue'
 import Register from '@/views/public/RecruitmentRegister.vue'
 import Chatbot from '@/views/public/ChatbotView.vue'
@@ -21,13 +21,6 @@ import StaffAdd from '@/views/auth/staff/StaffAdd.vue'
 
 
 const routes = [
-    {
-        path: '/',
-        component: AuthLayout,
-        children: [
-            { path: 'login', name: 'login', component: Login }
-        ]
-    },
     {
         path: '/',
         component: MainLayout,
@@ -46,6 +39,13 @@ const routes = [
             { path: 'staff/add', name: 'staffAdd', component: StaffAdd }
         ]
     },
+    {
+        path: '/',
+        component: AuthLayout,
+        children: [
+            { path: 'login', name: 'login', component: Login }
+        ]
+    }
 ]
 
 const router = createRouter({

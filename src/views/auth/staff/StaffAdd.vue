@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="flex flex-row items-center">
-            <h2 class="text-primary text-title flex-1">Thêm nhân sự</h2>
+            <h2 class="text-primary text-title flex-1" v-t="'pageStaff.title'"></h2>
         </div>
 
         <!-- gắn ref thay vì id -->
@@ -9,11 +9,11 @@
             <!-- Họ lót & Tên -->
             <div class="flex flex-row gap-1 wrap">
                 <div class="flex-1">
-                    <label for="lastName">Họ lót</label>
+                    <label for="lastName" v-t="'lastname'"></label>
                     <input id="lastName" name="lastName" type="text" required />
                 </div>
                 <div class="flex-1">
-                    <label for="firstName">Tên</label>
+                    <label for="firstName" v-t="'firstname'"></label>
                     <input id="firstName" name="firstName" type="text" required />
                 </div>
             </div>
@@ -21,14 +21,14 @@
             <!-- Giới tính & Ngày sinh -->
             <div class="flex flex-row gap-1 wrap">
                 <div class="flex-1">
-                    <label for="gender">Giới tính</label>
+                    <label for="gender" v-t="'gender'"></label>
                     <select id="gender" name="gender" required>
                         <option value="Nam">Nam</option>
                         <option value="Nữ">Nữ</option>
                     </select>
                 </div>
                 <div class="flex-1">
-                    <label for="birthday">Ngày sinh</label>
+                    <label for="birthday" v-t="'birthday'"></label>
                     <input id="birthday" name="birthday" type="date" />
                 </div>
             </div>
@@ -36,11 +36,11 @@
             <!-- Điện thoại & Email -->
             <div class="flex flex-row gap-1 wrap">
                 <div class="flex-1">
-                    <label for="phone">Số điện thoại</label>
+                    <label for="phone" v-t="'phone'"></label>
                     <input id="phone" name="phone" type="text" />
                 </div>
                 <div class="flex-1">
-                    <label for="email">Địa chỉ email</label>
+                    <label for="email" v-t="'email'"></label>
                     <input id="email" name="email" type="email" required />
                 </div>
             </div>
@@ -48,7 +48,7 @@
             <!-- Phòng ban & Phân quyền -->
             <div class="flex flex-row gap-1 wrap">
                 <div class="flex-1">
-                    <label for="departmentId">Phòng ban</label>
+                    <label for="departmentId" v-t="'department'"></label>
                     <select id="departmentId" name="departmentId" required>
                         <option value="1">Phòng Kinh doanh</option>
                         <option value="2">Phòng Nhân sự</option>
@@ -56,7 +56,7 @@
                     </select>
                 </div>
                 <div class="flex-1">
-                    <label for="role">Phân quyền</label>
+                    <label for="role" v-t="'role'"></label>
                     <select id="role" name="role" required>
                         <option value="false">Người dùng</option>
                         <option value="true">Quản trị viên</option>
@@ -65,8 +65,8 @@
             </div>
 
             <div class="flex flex-row justify-end gap-1 wrap">
-                <button type="reset">LÀM MỚI</button>
-                <button type="submit" class="bg-primary">THÊM MỚI</button>
+                <button type="reset" v-t="'reset'"></button>
+                <button type="submit" class="bg-primary" v-t="'submit'"></button>
             </div>
         </form>
     </div>

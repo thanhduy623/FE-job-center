@@ -8,9 +8,6 @@ export const EventBus = {
     on: emitter.on,
     off: emitter.off,
 
-    // ==== Các hàm overlay tiện lợi ====
-
-    // Loading
     showLoading(message = 'Loading...') {
         emitter.emit('loading:show', message);
     },
@@ -18,12 +15,10 @@ export const EventBus = {
         emitter.emit('loading:hide');
     },
 
-    // Notify
     showNotify(message, status = 'info') {
         emitter.emit('notify:show', { message, status });
     },
 
-    // Confirm (trả Promise)
     confirm(message) {
         return new Promise(resolve => {
             const handler = (result) => {

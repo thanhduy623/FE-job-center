@@ -2,8 +2,8 @@
     <table class="table-auto border-collapse border border-gray-300 w-full">
         <thead>
             <tr>
-                <th v-for="(col, i) in columns" :key="i" class="border border-gray-300 px-3 py-2 bg-gray-100 text-left">
-                    {{ col.label }}
+                <th v-for="(col, i) in columns" :key="i" v-t="col.label"
+                    class="border border-gray-300 px-3 py-2 bg-gray-100 text-left">
                 </th>
             </tr>
         </thead>

@@ -3,8 +3,8 @@
         <div class="modal">
             <p class="icon">ⓘ</p>
             <p>{{ message }}</p>
-            <button class="cancel" @click="cancel">Hủy</button>
-            <button class="confirm" @click="confirm">Xác nhận</button>
+            <button class="cancel" @click="cancel" v-t="'cancel'"></button>
+            <button class="confirm" @click="confirm" v-t="'confirm'"></button>
         </div>
     </div>
 </template>

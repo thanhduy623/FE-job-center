@@ -10,7 +10,7 @@
 
         <div class="input-container flex flex-row">
             <input type="text" class="chat-input" v-model="mess" @keydown.enter="addMessage"
-                placeholder="Nhập tin nhắn..." />
+                :placeholder="$t('pageChatbot.suggetInput')" />
             <button class="chat-submit" @click="addMessage">➤</button>
         </div>
     </div>
