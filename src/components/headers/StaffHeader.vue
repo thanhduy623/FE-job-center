@@ -32,8 +32,12 @@
     const isOpen = ref(false);
 
     const menuItems = [
-        { name: "Trang chủ", to: "/" },
-        { name: "Công việc", to: "/recruitment" },
-        { name: "Hỏi đáp", to: "/chatbot" },
+        { name: "Thông tin", to: "/infomation" },
+        { name: "Nhân sự", to: "/staff" },
+        { name: "Phòng ban", to: "/department" },
+        { name: "Vị trí", to: "/job" },
+        { name: "Tuyển dụng", to: "/recruitment" },
+        { name: "Chatbot", to: "/chatbot" },
+        { name: "Đăng xuất", to: "/login" },
     ];
 </script>

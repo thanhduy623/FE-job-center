@@ -54,6 +54,10 @@
     justify-content: center !important;
 }
 
+.justify-end {
+    justify-content: end !important;
+}
+
 .justify-between {
     justify-content: space-between !important;
 }
