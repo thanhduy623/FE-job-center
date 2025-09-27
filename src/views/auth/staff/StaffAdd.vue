@@ -83,37 +83,16 @@
         const data = getFormData(formStaffAdd.value);
 
         // 1. Tạo user trong Supabase Auth với mật khẩu mặc định "123"
-        const { data: authData, error: authError } = await supabase.auth.signUp({
+        const { error: authError } = await supabase.auth.signUp({
             email: data.email,
-            password: "123456"
+            password: "123456",
+            role: "admin",
+            ...data
         });
 
         if (authError) {
             alert("Tạo tài khoản Auth thất bại: " + authError.message);
             return;
         }
-
-        const authId = authData.user.id;
-
-        // 2. Thêm thông tin user vào bảng User
-        const { data: userData, error: userError } = await supabase
-            .from("User")
-            .insert([
-                {
-                    id: authId,    // ánh xạ với auth.users.id
-                    role: "staff", // mặc định
-                    ...data        // các trường khác từ form
-                }
-            ])
-            .select()
-            .single();
-
-        if (userError) {
-            alert("Thêm user vào bảng User thất bại: " + userError.message);
-            return;
-        }
-
-        alert("Thêm user thành công với mật khẩu mặc định là '123456'!");
-        console.log("User data:", userData);
     }
 </script>

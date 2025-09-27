@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+// import { Database } from '@/models/database.types.ts'
 
 const supabaseUrl = process.env.VUE_APP_SUPABASE_URL
 const supabaseAnonKey = process.env.VUE_APP_SUPABASE_ANON_KEY
