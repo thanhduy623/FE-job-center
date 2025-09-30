@@ -17,8 +17,6 @@ export default {
     logout: "Đăng xuất",
     confirm: "Xác nhận",
     cancel: "Hủy",
-    reset: "Làm mới",
-    submit: "Gửi đi",
     num: "STT",
     fullname: "Họ tên",
     firstname: "Tên",
@@ -33,6 +31,11 @@ export default {
     action: "Hành động",
 
     // Usual
+    add: "Thêm",
+    update: "Cập nhật",
+    submit: "Gửi đi",
+    delete: "Xóa",
+    reset: "Làm mới",
     introduction: "Giới thiệu",
     contact: "Liên hệ",
     feedback: "Góp ý",
@@ -46,9 +49,15 @@ export default {
     password: "Mật khẩu",
     profile: "Hồ sơ",
     id: "ID",
-    email: "email",
+    email: "Email",
     nameVN: "Tên tiếng Việt",
     nameEN: "Tên tiếng Anh",
+    resetPassword: "Khôi phục mật khẩu",
+    confirmPassword: "Xác thực mật khẩu",
+    applyFilter: "Áp dụng bộ lọc",
+    description: "Mô tả",
+    fromDate: "Từ ngày",
+    toDate: "đến ngày",
 
     // Thông tin trường
     schoolInfo: {

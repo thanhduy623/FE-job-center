@@ -6,8 +6,8 @@ import { EventBus } from "@/utils/eventBus";
  * Lấy danh sách công việc
  * @returns {Object} { success, status, message, data }  
  */
-export async function getAllJob() {
-    const res = await getData(tableName);
+export async function getJob(conditions = {}) {
+    const res = await getData(tableName, conditions);
     if (!res.success) { EventBus.showNotify(res.message, "error") }
     return res;
 }
@@ -51,7 +51,7 @@ export async function deleteJob(conditions) {
 
 
 export default {
-    getAllJob,
+    getJob,
     addJob,
     updateJob,
     deleteJob

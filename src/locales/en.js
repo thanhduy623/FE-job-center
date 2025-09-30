@@ -17,8 +17,6 @@ export default {
     logout: "Logout",
     confirm: "Confirm",
     cancel: "Cancel",
-    reset: "Reset",
-    submit: "Submiit",
     num: "No",
     fullname: "Fullname",
     firstname: "Firstname",
@@ -32,11 +30,18 @@ export default {
     admin: "Admin",
     action: "Action",
     id: "ID",
-    email: "email",
+    email: "Email",
     nameVN: "Vietnamese name",
     nameEN: "English name",
+    resetPassword: "Reset password",
+    confirmPassword: "Confirm password",
 
     // Usual
+    add: "Add",
+    update: "Update",
+    submit: "Submit",
+    delete: "Delete",
+    reset: "Reset",
     introduction: "Introduction",
     contact: "Contact",
     feedback: "Feedback",
@@ -49,6 +54,10 @@ export default {
     account: "Account",
     password: "Password",
     profile: "Profile",
+    applyFilter: "Apply filter",
+    description: "Description",
+    fromDate: "From",
+    toDate: "to",
 
     // School information
     schoolInfo: {
@@ -56,7 +65,6 @@ export default {
         fullname: "Viet Anh Primary, Secondary and High School 2",
         introduction: "Viet Anh School was built with modern architecture, located in the center of Di An city with the most modern equipment",
         address: "Street 13, Di An Ward, Ho Chi Minh City",
-        email: "hoc@vietanhschool2.edu.vn",
         phone: "0868575707",
         tax: "3702510617",
         type: "Administrative units, public service units",

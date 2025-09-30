@@ -11,12 +11,14 @@ import Recruitment from '@/views/public/RecruitmentView.vue'
 import Register from '@/views/public/RecruitmentRegister.vue'
 import Chatbot from '@/views/public/ChatbotView.vue'
 import Login from '@/views/public/LoginView.vue'
+import ResetPassword from '@/views/public/ResetPassword.vue'
 
 
 // Auth
 // Auth/Staff
 import StaffView from '@/views/auth/staff/StaffView.vue'
 import StaffAdd from '@/views/auth/staff/StaffAdd.vue'
+import StaffInfo from '@/views/auth/staff/StaffInfo.vue'
 // Auth/Department
 import DepartmentView from '@/views/auth/department/DepartmentView.vue'
 // Auth/Job
@@ -43,6 +45,7 @@ const routes = [
         children: [
             { path: 'staff', name: 'staff', component: StaffView },
             { path: 'staff/add', name: 'staffAdd', component: StaffAdd },
+            { path: 'staff/:id', name: 'staffInfo', component: StaffInfo },
             { path: 'department', name: 'department', component: DepartmentView },
             { path: 'job', name: 'job', component: JobView },
             { path: 'job/add', name: 'jobAdd', component: JobAdd },
@@ -53,7 +56,8 @@ const routes = [
         path: '/',
         component: AuthLayout,
         children: [
-            { path: 'login', name: 'login', component: Login }
+            { path: 'login', name: 'login', component: Login },
+            { path: 'reset-password', name: 'reset-password', component: ResetPassword }
         ]
     }
 ]

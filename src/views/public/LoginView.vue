@@ -18,12 +18,12 @@
 <script setup>
     import { ref } from 'vue';
     import router from '@/router/index.js';
-    import { login } from '@/services/auth.js'
+    import { login } from '@/services/AuthService.js'
     import { setSession } from '@/utils/authSession.js'
     import { EventBus } from '@/utils/eventBus.js'
 
     const us = ref('nguyenduy.6203@gmail.com')
-    const ps = ref('123456')
+    const ps = ref('123456789')
     const errorMessage = ref('')
 
     async function handleLogin() {

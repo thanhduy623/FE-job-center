@@ -36,8 +36,8 @@
         <div class="footer-col">
             <h5 v-t="'contact'"></h5>
             <p>{{ $t('phone') }}: {{ $t('schoolInfo.phone') }}</p>
-            <p>{{ $t('email') }}: {{ $t('schoolInfo.email') }}</p>
-            <p>{{ $t('address') }}: {{ $t('schoolInfo.adress') }}</p>
+            <p>Email: info@vietanhschool.edu.vn</p>
+            <p>{{ $t('address') }}: {{ $t('schoolInfo.address') }}</p>
         </div>
 
         <!-- Góp ý -->

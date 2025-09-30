@@ -54,20 +54,23 @@
             <!-- Buttons -->
             <div class="flex justify-end gap-1">
                 <button type="reset" v-t="'reset'"></button>
-                <button type="submit" class="bg-primary" v-t="'submit'"></button>
+                <button type="submit" class="bg-primary" v-t="'update'"></button>
             </div>
         </form>
     </div>
 </template>
 
 <script setup>
-    import { ref } from 'vue'
-    import { signIn } from '@/services/AuthService'
-    import { updateUser } from '@/services/UserService'
+    import { ref, onMounted } from 'vue'
+    import { useRoute } from 'vue-router'
+    import { updateUser, getUser } from '@/services/UserService'
 
     import GenderSelect from '@/components/selects/GenderSelect.vue'
     import DepartmentSelect from '@/components/selects/DepartmentSelect.vue'
     import RoleSelect from '@/components/selects/RoleSelect.vue'
+
+    const route = useRoute()
+    const idUser = route.params.id   // lấy id từ URL
 
     const form = ref({
         firstname: '',
@@ -80,29 +83,12 @@
         role: ''
     })
 
-    function formReset() {
-        form.value = {
-            firstname: '',
-            lastname: '',
-            gender: '1',
-            birthday: '',
-            phone: '',
-            email: '',
-            departmentId: '',
-            role: ''
-        }
-    }
-
     async function formSubmit() {
         const data = form.value
 
-        // Tạo tài khoản Auth
-        const authRes = await signIn(data.email, '123456')
-        if (!authRes.success) return console.error(authRes.message)
-
         // Cập nhật User
         const userRes = await updateUser({
-            id: authRes.data.id,
+            id: idUser,
             firstname: data.firstname,
             lastname: data.lastname,
             gender: data.gender,
@@ -116,4 +102,22 @@
 
         console.log('Tạo nhân viên thành công!')
     }
+
+    onMounted(async () => {
+        const res = await getUser({ id: idUser })
+        if (!res.success) { console.error(res.message); return }
+        const user = res.data[0];
+
+
+        form.value = {
+            firstname: user.firstname,
+            lastname: user.lastname,
+            gender: user.gender ?? '1',
+            birthday: user.birthday ? user.birthday.slice(0, 10) : '',
+            phone: user.phone,
+            email: user.email,
+            departmentId: user.departmentId,
+            role: user.roleId
+        }
+    })
 </script>
