@@ -35,6 +35,7 @@ export default {
     nameEN: "English name",
     resetPassword: "Reset password",
     confirmPassword: "Confirm password",
+    application: "Application",
 
     // Usual
     add: "Add",
@@ -58,6 +59,11 @@ export default {
     description: "Description",
     fromDate: "From",
     toDate: "to",
+    salary: "Salary",
+    name: "Name",
+    benifit: "Benifit",
+    request: "Request",
+    location: "Location",
 
     // School information
     schoolInfo: {
@@ -86,7 +92,9 @@ export default {
 
     // Job
     pageJob: {
-        title: "Job Management"
+        title: "Job Management",
+        editTitle: "Edit Job",
+        updateTitle: "Update Job",
     },
 
     // Recruitment

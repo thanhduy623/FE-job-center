@@ -1,24 +1,19 @@
 <template>
-    <form @submit.prevent="submitForm" class="flex flex-col gap-1 p-4 border rounded">
+    <form @submit.prevent="submitForm" class="flex flex-col gap-1">
         <!-- Department -->
         <div class="flex flex-col">
-            <label for="department">Phòng ban</label>
-            <select id="department" v-model="formData.departmentId" required>
-                <option value="">-- Chọn phòng ban --</option>
-                <option v-for="dept in departments" :key="dept.id" :value="dept.id">
-                    {{ dept.name_vi }}
-                </option>
-            </select>
+            <label for="departmentId">{{ $t('department') }}</label>
+            <DepartmentSelect v-model="formData.departmentId" required />
         </div>
 
         <!-- Name -->
         <div class="flex flex-row gap-1">
             <div class="flex-1">
-                <label for="name_vi">Tên (VI)</label>
+                <label for="name_vi">{{ $t('name') }} (VI)</label>
                 <input id="name_vi" v-model="formData.name_vi" type="text" required />
             </div>
             <div class="flex-1">
-                <label for="name_en">Tên (EN)</label>
+                <label for="name_en">{{ $t('name') }} (EN)</label>
                 <input id="name_en" v-model="formData.name_en" type="text" required />
             </div>
         </div>
@@ -26,23 +21,39 @@
         <!-- Position -->
         <div class="flex flex-row gap-1">
             <div class="flex-1">
-                <label for="position_vi">Vị trí (VI)</label>
+                <label for="position_vi">{{ $t('position') }} (VI)</label>
                 <input id="position_vi" v-model="formData.position_vi" type="text" />
             </div>
             <div class="flex-1">
-                <label for="position_en">Vị trí (EN)</label>
+                <label for="position_en">{{ $t('position') }} (EN)</label>
                 <input id="position_en" v-model="formData.position_en" type="text" />
+            </div>
+        </div>
+
+        <!-- Job type & Salary & Status -->
+        <div class="flex flex-row gap-1">
+            <div class="flex-1">
+                <label for="jobType">{{ $t('type') }}</label>
+                <JobTypeSelect v-model="formData.jobType" />
+            </div>
+            <div class="flex-1">
+                <label for="salary">{{ $t('salary') }}</label>
+                <input id="salary" v-model="formData.salary" type="text" />
+            </div>
+            <div class="flex-1">
+                <label for="status">{{ $t('status') }}</label>
+                <StatusSelect v-model="formData.status" />
             </div>
         </div>
 
         <!-- Description -->
         <div class="flex flex-row gap-1">
             <div class="flex-1">
-                <label for="description_vi">Mô tả (VI)</label>
+                <label for="description_vi">{{ $t('description') }} (VI)</label>
                 <textarea id="description_vi" v-model="formData.description_vi" rows="3"></textarea>
             </div>
             <div class="flex-1">
-                <label for="description_en">Mô tả (EN)</label>
+                <label for="description_en">{{ $t('description') }} (EN)</label>
                 <textarea id="description_en" v-model="formData.description_en" rows="3"></textarea>
             </div>
         </div>
@@ -50,11 +61,11 @@
         <!-- Requirements -->
         <div class="flex flex-row gap-1">
             <div class="flex-1">
-                <label for="requirements_vi">Yêu cầu (VI)</label>
+                <label for="requirements_vi">{{ $t('request') }} (VI)</label>
                 <textarea id="requirements_vi" v-model="formData.requirements_vi" rows="3"></textarea>
             </div>
             <div class="flex-1">
-                <label for="requirements_en">Yêu cầu (EN)</label>
+                <label for="requirements_en">{{ $t('request') }} (EN)</label>
                 <textarea id="requirements_en" v-model="formData.requirements_en" rows="3"></textarea>
             </div>
         </div>
@@ -62,11 +73,11 @@
         <!-- Benefits -->
         <div class="flex flex-row gap-1">
             <div class="flex-1">
-                <label for="benefits_vi">Quyền lợi (VI)</label>
+                <label for="benefits_vi">{{ $t('benifit') }} (VI)</label>
                 <textarea id="benefits_vi" v-model="formData.benefits_vi" rows="3"></textarea>
             </div>
             <div class="flex-1">
-                <label for="benefits_en">Quyền lợi (EN)</label>
+                <label for="benefits_en">{{ $t('benifit') }} (EN)</label>
                 <textarea id="benefits_en" v-model="formData.benefits_en" rows="3"></textarea>
             </div>
         </div>
@@ -74,45 +85,26 @@
         <!-- Application Deadline -->
         <div class="flex flex-row gap-1">
             <div class="flex-1">
-                <label for="applicationDeadlineStart">Bắt đầu nhận hồ sơ</label>
+                <label for="applicationDeadlineStart">{{ $t('fromDate') }}</label>
                 <input id="applicationDeadlineStart" v-model="formData.applicationDeadlineStart" type="date" />
             </div>
             <div class="flex-1">
-                <label for="applicationDeadlineEnd">Kết thúc nhận hồ sơ</label>
+                <label for="applicationDeadlineEnd">{{ $t('toDate') }}</label>
                 <input id="applicationDeadlineEnd" v-model="formData.applicationDeadlineEnd" type="date" />
-            </div>
-        </div>
-
-        <!-- Job type & Salary & Status -->
-        <div class="flex flex-row gap-1">
-            <div class="flex-1">
-                <label for="jobType">Loại công việc</label>
-                <input id="jobType" v-model="formData.jobType" type="text" />
-            </div>
-            <div class="flex-1">
-                <label for="salary">Mức lương</label>
-                <input id="salary" v-model="formData.salary" type="text" />
-            </div>
-            <div class="flex-1">
-                <label for="status">Trạng thái</label>
-                <select id="status" v-model="formData.status">
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
-                </select>
             </div>
         </div>
 
         <!-- Location -->
         <div class="flex flex-row gap-1">
             <div class="flex-1">
-                <label for="location">Địa điểm</label>
-                <input id="location" v-model="formData.location" type="text" />
+                <label for="location">{{ $t('location') }}</label>
+                <LocationSelect v-model="formData.location" />
             </div>
         </div>
 
         <!-- Submit -->
         <div class="flex justify-end gap-1">
-            <button type="submit" class="bg-primary text-white px-4 py-2 rounded">
+            <button type="submit" class="bg-primary text-white px-4 py-2">
                 {{ jobId ? 'Cập nhật' : 'Thêm mới' }}
             </button>
         </div>
@@ -121,9 +113,14 @@
 
 <script setup>
     import { ref, onMounted } from 'vue';
-    import JobService from '@/services/JobService.js';
-    import DepartmentService from '@/services/DepartmentService.js';
     import { defineProps, defineEmits } from 'vue';
+
+    import DepartmentSelect from '@/components/selects/DepartmentSelect.vue'
+    import JobTypeSelect from '@/components/selects/JobTypeSelect.vue'
+    import StatusSelect from '@/components/selects/StatusSelect.vue'
+    import LocationSelect from '@/components/selects/LocationSelect.vue'
+
+    import JobService from '@/services/JobService.js';
 
     const props = defineProps({ jobId: { type: [String, Number], default: null } });
     const emit = defineEmits(['saved']);
@@ -144,30 +141,51 @@
         applicationDeadlineEnd: '',
         jobType: '',
         salary: '',
-        status: 'active',
+        status: '',
         location: ''
     });
 
-    const departments = ref([]);
 
     onMounted(async () => {
-        const deptRes = await DepartmentService.getAllDepartment();
-        departments.value = deptRes.success ? deptRes.data : [];
-
         if (props.jobId) {
-            const res = await JobService.getAllJob();
-            const job = res.success ? res.data.find(j => j.id == props.jobId) : null;
-            if (job) Object.assign(formData.value, job);
+            const res = await JobService.getJob({ id: props.jobId })
+            if (res.success && res.data.length > 0) {
+                const job = res.data[0]
+
+                // Chuyển định dạng datetime sang date (YYYY-MM-DD)
+                job.applicationDeadlineStart = job.applicationDeadlineStart
+                    ? job.applicationDeadlineStart.split('T')[0] || job.applicationDeadlineStart.split(' ')[0]
+                    : ''
+                job.applicationDeadlineEnd = job.applicationDeadlineEnd
+                    ? job.applicationDeadlineEnd.split('T')[0] || job.applicationDeadlineEnd.split(' ')[0]
+                    : ''
+
+                formData.value = { ...job }
+            }
         }
-    });
+    })
 
     async function submitForm() {
+        const dataToSave = { ...formData.value }
+
+        // Nếu cần gửi lại dạng full datetime
+        if (dataToSave.applicationDeadlineStart)
+            dataToSave.applicationDeadlineStart = `${dataToSave.applicationDeadlineStart} 00:00:00+00`
+        if (dataToSave.applicationDeadlineEnd)
+            dataToSave.applicationDeadlineEnd = `${dataToSave.applicationDeadlineEnd} 00:00:00+00`
+
         if (props.jobId) {
-            const res = await JobService.updateJob(formData.value, { id: props.jobId });
-            if (res.success) emit('saved');
+            const res = await JobService.updateJob(dataToSave, { id: props.jobId })
+            if (res.success) emit('saved')
         } else {
-            const res = await JobService.addJob(formData.value);
-            if (res.success) emit('saved');
+            const res = await JobService.addJob(dataToSave)
+            if (res.success) emit('saved')
         }
     }
 </script>
+
+<style scoped>
+    textarea {
+        min-height: calc(1.4em * 6 + 1rem);
+    }
+</style>

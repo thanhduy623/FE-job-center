@@ -39,7 +39,6 @@
             label: "action",
             actions: [
                 { icon: "📄", label: "Xem thông tin", func: (row) => router.push(`/staff/${row.id}`) },
-                // { icon: "📄", label: "Xem thông tin", func: (row, index, all) => all.splice(index, 1) },
                 { icon: "🔄", label: "Khôi phục mật khẩu", func: (row) => sendPasswordResetEmail(row.email) },
             ]
         }

@@ -19,6 +19,7 @@ import ResetPassword from '@/views/public/ResetPassword.vue'
 import StaffView from '@/views/auth/staff/StaffView.vue'
 import StaffAdd from '@/views/auth/staff/StaffAdd.vue'
 import StaffInfo from '@/views/auth/staff/StaffInfo.vue'
+import StaffProfile from '@/views/auth/staff/StaffProfile.vue'
 // Auth/Department
 import DepartmentView from '@/views/auth/department/DepartmentView.vue'
 // Auth/Job
@@ -46,6 +47,7 @@ const routes = [
             { path: 'staff', name: 'staff', component: StaffView },
             { path: 'staff/add', name: 'staffAdd', component: StaffAdd },
             { path: 'staff/:id', name: 'staffInfo', component: StaffInfo },
+            { path: 'profile', name: 'staffInfo', component: StaffProfile },
             { path: 'department', name: 'department', component: DepartmentView },
             { path: 'job', name: 'job', component: JobView },
             { path: 'job/add', name: 'jobAdd', component: JobAdd },

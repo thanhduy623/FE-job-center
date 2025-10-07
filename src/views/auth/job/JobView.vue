@@ -1,7 +1,11 @@
 <template>
     <div class="main-container">
-        <h2 v-t="'pageJob.title'" class="text-primary text-title"></h2>
-        <button @click="$router.push('/job/add')" class="bg-primary">Thêm mới</button>
+        <div class="flex flex-row items-center">
+            <h2 v-t="'pageJob.title'" class="text-primary text-title flex-1"></h2>
+            <router-link to="/job/add">
+                <button class="bg-primary">{{ $t('add') }}</button>
+            </router-link>
+        </div>
 
         <TableComponent v-model:rows="jobList" :columns="headers" />
     </div>
@@ -9,27 +13,34 @@
 
 <script setup>
     import { ref, onMounted } from 'vue';
+    import { mapLocaleField } from '@/utils/mapLocaleField.js'
+    import { useRouter } from 'vue-router'
+
+
     import TableComponent from '@/components/tables/tableComponent.vue';
     import JobService from '@/services/JobService.js';
 
-    const jobList = ref([]);
+    const router = useRouter()
+    const rawJobList = ref([])
+    const jobList = mapLocaleField(rawJobList, [
+        { newKey: 'position' },
+        { newKey: 'description' },
+        { newKey: 'requirements' },
+        { newKey: 'benefits' },
+        { newKey: 'name' },
+    ])
 
     const headers = ref([
-        { key: 'name_vi', label: 'nameVN' },
-        { key: 'name_en', label: 'nameEN' },
-        { key: 'position_vi', label: 'positionVN' },
-        { key: 'position_en', label: 'positionEN' },
-        { key: 'status', label: 'status' },
+        { key: 'name', label: 'name' },
+        { key: 'position', label: 'position' },
+        { key: 'salary', label: 'salary' },
         {
             key: 'action',
             label: 'action',
             actions: [
                 {
                     icon: '✏️', label: 'Sửa',
-                    func: (row) => {
-                        // Chuyển đến trang edit
-                        window.location.href = `/job/${row.id}`;
-                    }
+                    func: (row) => router.push(`/job/${row.id}`),
                 },
                 {
                     icon: '🗑️', label: 'Xóa',
@@ -43,7 +54,7 @@
     ]);
 
     onMounted(async () => {
-        const res = await JobService.getAllJob();
-        jobList.value = res.success ? res.data : [];
+        const res = await JobService.getJob();
+        rawJobList.value = res.success ? res.data : [];
     });
 </script>

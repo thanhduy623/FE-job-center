@@ -87,7 +87,7 @@
     }
 
     onMounted(async () => {
-        const res = await DepartmentService.getAllDepartment();
+        const res = await DepartmentService.getDepartment();
         userList.value = res.success ? res.data : [];
     })
 </script>

@@ -272,6 +272,18 @@ select {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
+textarea {
+    width: 100%;
+    box-sizing: border-box;
+    line-height: 1.4;
+    min-height: calc(1.4em * 3 + 1rem);
+    max-height: calc(1.4em * 10 + 1rem);
+    resize: vertical;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+
 /* Remove animations/transitions during reduced-motion preference */
 @media (prefers-reduced-motion: reduce) {
 

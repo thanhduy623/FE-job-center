@@ -1,5 +1,7 @@
 import { supabase } from '@/supabase.js'
 import { EventBus } from "@/utils/eventBus";
+import { clearAllSessions } from "@/utils/authSession"
+import router from "@/router"
 
 /**
  * Đăng nhập user bằng email và password
@@ -91,6 +93,28 @@ export async function updatePassword(newPassword) {
         return { success: true, message: "Cập nhật mật khẩu thành công", data };
     } catch (err) {
         EventBus.showNotify(err.message, 'error');
+        return { success: false, message: err.message };
+    }
+}
+
+
+/**
+ * Đăng xuất
+ */
+export async function logout() {
+    try {
+        const confirmed = await EventBus.confirm("Bạn có chắc muốn đăng xuất?");
+        if (!confirmed) return { success: false, message: "Hủy đăng xuất" };
+
+        await supabase.auth.signOut();
+        clearAllSessions();
+        EventBus.showNotify("Đăng xuất thành công", "success");
+        router.push("/login");
+
+        return { success: true, message: "Đăng xuất thành công" };
+    } catch (err) {
+        console.error("Lỗi đăng xuất:", err);
+        EventBus.showNotify("Lỗi đăng xuất: " + err.message, "error");
         return { success: false, message: err.message };
     }
 }

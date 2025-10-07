@@ -29,6 +29,7 @@ export default {
     role: "Phân quyền",
     admin: "Quản trị viên",
     action: "Hành động",
+    application: "Ứng tuyển",
 
     // Usual
     add: "Thêm",
@@ -58,6 +59,11 @@ export default {
     description: "Mô tả",
     fromDate: "Từ ngày",
     toDate: "đến ngày",
+    salary: "Mức lương",
+    name: "Tên",
+    benifit: "Quyền lợi",
+    request: "Yêu cầu",
+    location: "Cơ sở",
 
     // Thông tin trường
     schoolInfo: {
@@ -87,7 +93,9 @@ export default {
 
     // Công việc
     pageJob: {
-        title: "Quản lý công việc"
+        title: "Quản lý công việc",
+        editTitle: "Thông tin công việc",
+        updateTitle: "Cập nhật công việc",
     },
 
     // Tuyển dụng

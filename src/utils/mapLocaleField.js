@@ -8,16 +8,19 @@ export function mapLocaleField(data, mappings) {
     const mappedData = computed(() =>
         data.value.map(item => {
             const newItem = { ...item }
+
             mappings.forEach(({ newKey, parentKey, viKey, enKey }) => {
+                const viField = viKey || `${newKey}_vi`
+                const enField = enKey || `${newKey}_en`
+
                 if (parentKey) {
                     const obj = item[parentKey] || {}
-                    const vKey = viKey || 'name_vi'
-                    const eKey = enKey || 'name_en'
-                    newItem[newKey] = locale.value === 'vi' ? obj[vKey] ?? '' : obj[eKey] ?? ''
+                    newItem[newKey] = locale.value === 'vi' ? obj[viField] ?? '' : obj[enField] ?? ''
                 } else {
-                    newItem[newKey] = locale.value === 'vi' ? item[viKey] ?? '' : item[enKey] ?? ''
+                    newItem[newKey] = locale.value === 'vi' ? item[viField] ?? '' : item[enField] ?? ''
                 }
             })
+
             return newItem
         })
     )

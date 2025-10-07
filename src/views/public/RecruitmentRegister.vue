@@ -1,186 +1,130 @@
 <template>
-    <form class="flex flex-col wrap gap-1">
-        <!-- Cột 1: Thông tin cá nhân -->
-        <h3>Thông tin cá nhân</h3>
+    <div class="main-container">
+        <h2 class="text-xl font-bold mb-2">Đăng ký ứng tuyển</h2>
 
-        <div class="flex flex-row wrap gap-1">
-            <div class="flex flex-col">
-                <label for="firstname">Họ và lót</label>
-                <input type="text" id="firstname" name="firstname">
-            </div>
-            <div class="flex flex-col">
-                <label for="lastname">Tên</label>
-                <input type="text" id="lastname" name="lastname">
-            </div>
-        </div>
+        <form @submit.prevent="handleSubmit" class="flex flex-col gap-2">
+            <!-- Thông tin cá nhân -->
+            <div class="flex flex-col gap-1">
+                <h3 class="font-semibold">Thông tin cá nhân</h3>
 
-        <!-- Nhóm 2: Giới tính + Ngày sinh -->
-        <div class="flex flex-row wrap gap-1">
-            <div class="flex flex-col">
-                <label for="gender">Giới tính</label>
-                <select id="gender" name="gender">
-                    <option value="Nam">Nam</option>
-                    <option value="Nữ">Nữ</option>
-                </select>
-            </div>
-            <div class="flex flex-col">
-                <label for="birthday">Ngày sinh</label>
-                <input type="date" id="birthday" name="birthday">
-            </div>
-        </div>
+                <div class="flex flex-row wrap gap-1">
+                    <div class="flex flex-col flex-1">
+                        <label for="firstname">Họ và lót</label>
+                        <input v-model="formData.firstname" type="text" id="firstname" required>
+                    </div>
+                    <div class="flex flex-col flex-1">
+                        <label for="lastname">Tên</label>
+                        <input v-model="formData.lastname" type="text" id="lastname" required>
+                    </div>
+                </div>
 
-        <!-- Nhóm 3: Căn cước + Ngày cấp -->
-        <div class="flex flex-row wrap gap-1">
-            <div class="flex flex-col">
-                <label for="cityzenID">Căn cước</label>
-                <input type="text" id="cityzenID" name="cityzenID">
-            </div>
-            <div class="flex flex-col">
-                <label for="cityzenDate">Ngày cấp</label>
-                <input type="date" id="cityzenDate" name="cityzenDate">
-            </div>
-        </div>
+                <div class="flex flex-row wrap gap-1">
+                    <div class="flex flex-col flex-1">
+                        <label for="gender">Giới tính</label>
+                        <select v-model="formData.gender" id="gender" required>
+                            <option value="Nam">Nam</option>
+                            <option value="Nữ">Nữ</option>
+                        </select>
+                    </div>
+                    <div class="flex flex-col flex-1">
+                        <label for="birthday">Ngày sinh</label>
+                        <input v-model="formData.birthday" type="date" id="birthday" required>
+                    </div>
+                </div>
 
-        <!-- Nhóm 4: Số điện thoại + Email -->
-        <div class="flex flex-row wrap gap-1">
-            <div class="flex flex-col">
-                <label for="phone">Số điện thoại</label>
-                <input type="text" id="phone" name="phone">
-            </div>
-            <div class="flex flex-col">
-                <label for="email">Địa chỉ email</label>
-                <input type="text" id="email" name="email">
-            </div>
-        </div>
-
-        <!-- Cột 2: Đào tạo -->
-        <div class="flex flex-col gap-1">
-
-            <!-- Chứng chỉ -->
-            <div>
-                <h3>Chứng chỉ</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Số chứng chỉ</th>
-                            <th>Tên chứng chỉ</th>
-                            <th>Năm cấp</th>
-                            <th>Thao tác</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td data-label="Số chứng chỉ">1</td>
-                            <td data-label="Tên chứng chỉ">1</td>
-                            <td data-label="Năm cấp">1</td>
-                            <td data-label="Thao tác">
-                                <button class="table-action-btn edit">Sửa</button>
-                                <button class="table-action-btn delete">Xóa</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="flex flex-row wrap gap-1">
+                    <div class="flex flex-col flex-1">
+                        <label for="phone">Số điện thoại</label>
+                        <input v-model="formData.phone" type="text" id="phone" required>
+                    </div>
+                    <div class="flex flex-col flex-1">
+                        <label for="email">Email</label>
+                        <input v-model="formData.email" type="email" id="email" required>
+                    </div>
+                </div>
             </div>
 
-            <!-- Bằng cấp -->
-            <div>
-                <h3>Bằng cấp</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Trình độ</th>
-                            <th>Tên ngành</th>
-                            <th>Năm cấp</th>
-                            <th>Thao tác</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td data-label="Trình độ">
-                                <select name="" id="">
-                                    <option value="">A</option>
-                                    <option value="">B</option>
-                                    <option value="">C</option>
-                                </select>
-                            </td>
-                            <td data-label="Tên ngành">1</td>
-                            <td data-label="Năm cấp">1</td>
-                            <td data-label="Thao tác">
-                                <button class="table-action-btn edit">Sửa</button>
-                                <button class="table-action-btn delete">Xóa</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td data-label="Trình độ">
-                                <select name="" id="">
-                                    <option value="">A</option>
-                                    <option value="">B</option>
-                                    <option value="">C</option>
-                                </select>
-                            </td>
-                            <td data-label="Tên ngành">1</td>
-                            <td data-label="Năm cấp">1</td>
-                            <td data-label="Thao tác">
-                                <button class="table-action-btn edit">Sửa</button>
-                                <button class="table-action-btn delete">Xóa</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <!-- Dynamic fields -->
+            <div v-if="fields.length" class="flex flex-col gap-1">
+                <h3 class="font-semibold">Thông tin bổ sung</h3>
+
+                <div v-for="f in fields" :key="f.id" class="flex flex-col">
+                    <label :for="f.id">
+                        {{ f.JobCustomFieldAssignment_customFieldId_fkey.fieldName_vi ||
+                        f.JobCustomFieldAssignment_customFieldId_fkey.fieldName_en }}
+                        <span v-if="f.isRequired">*</span>
+                    </label>
+
+                    <input v-if="f.JobCustomFieldAssignment_customFieldId_fkey.fieldType === 'TEXT'"
+                        v-model="formData[f.id]" type="text" :id="f.id" :required="f.isRequired">
+
+                    <input v-else-if="f.JobCustomFieldAssignment_customFieldId_fkey.fieldType === 'DATE'"
+                        v-model="formData[f.id]" type="date" :id="f.id" :required="f.isRequired">
+
+                    <select v-else-if="f.JobCustomFieldAssignment_customFieldId_fkey.fieldType === 'DROPDOWN'"
+                        v-model="formData[f.id]" :id="f.id" :required="f.isRequired">
+                        <option value="" disabled selected>Chọn...</option>
+                        <option
+                            v-for="opt in f.JobCustomFieldAssignment_customFieldId_fkey.options_vi || f.JobCustomFieldAssignment_customFieldId_fkey.options_en"
+                            :key="opt" :value="opt">{{ opt }}</option>
+                    </select>
+
+                    <FileUpload v-else-if="f.JobCustomFieldAssignment_customFieldId_fkey.fieldType === 'FILE'"
+                        :ref="'file_' + f.id" :is-multiple="false"
+                        :allowed-file-types="['.png', '.jpg', '.pdf', '.docx']"
+                        @file-selected="file => formData[f.id] = file" @upload-error="err => alert(err)" />
+                </div>
             </div>
 
-            <!-- Học vị -->
-            <div>
-                <h3>Học vị</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Chức danh</th>
-                            <th>Tên ngành</th>
-                            <th>Năm bổ nhiệm</th>
-                            <th>Thao tác</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td data-label="Chức danh">1</td>
-                            <td data-label="Tên ngành">1</td>
-                            <td data-label="Năm bổ nhiệm">1</td>
-                            <td data-label="Thao tác">
-                                <button class="table-action-btn edit">Sửa</button>
-                                <button class="table-action-btn delete">Xóa</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-
-        <div class="custom-file-upload">
-            <label for="cv-upload">
-                <span class="label-text">CV của bạn *</span>
-                <span class="instruction-text" id="file-name-display">Click để chọn & tải lên CV của bạn</span>
-            </label>
-            <input type="file" id="cv-upload" accept=".pdf,.doc,.docx" />
-        </div>
-
-        <button type="submi" class="bg-primary">NỘP HỒ SƠ</button>
-    </form>
+            <button type="submit" class="bg-primary text-white rounded p-1 mt-2">NỘP HỒ SƠ</button>
+        </form>
+    </div>
 </template>
 
+<script setup>
+    import { ref, onMounted } from "vue";
+    import { useRoute } from "vue-router";
+    import { getJobCustomFields } from "@/services/JobCustomFieldAssignmentService.js";
+    import FileUpload from '@/components/others/FileUpload.vue';
 
-<style scoped>
-    form {
-        margin: 16px auto;
-        max-width: fit-content;
+    const route = useRoute();
+    const jobId = route.params.id;
 
-    }
+    const fields = ref([]);
+    const formData = ref({
+        firstname: "",
+        lastname: "",
+        gender: "",
+        birthday: "",
+        phone: "",
+        email: ""
+    });
 
-    table {
-        width: 100%;
-        /* take full width of parent div */
-        border-collapse: collapse;
-        /* optional, cleaner look */
-    }
-</style>
+    // Load dynamic fields
+    onMounted(async () => {
+        const res = await getJobCustomFields(jobId);
+        if (res.success) {
+            fields.value = res.data;
+            fields.value.forEach(f => {
+                formData.value[f.id] = null;
+            });
+        }
+    });
+
+    // Submit form with files
+    const handleSubmit = async () => {
+        const payload = new FormData();
+        for (const key in formData.value) {
+            const value = formData.value[key];
+            if (value instanceof File) {
+                payload.append(key, value);
+            } else {
+                payload.append(key, value ?? "");
+            }
+        }
+
+        // TODO: Gửi payload lên API
+        console.log("FormData ready for submit:", payload);
+        alert("Submit thành công! Kiểm tra console.");
+    };
+</script>
