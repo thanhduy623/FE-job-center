@@ -1,5 +1,5 @@
 <template>
-    <div class="main-layout">
+    <div class="main-layout flex flex-col justify-center">
         <AppHeader />
         <main>
             <router-view />

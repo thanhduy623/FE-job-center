@@ -1,4 +1,5 @@
-form {
+form,
+.card {
     width: 100%;
     flex-direction: column;
     gap: 0.5rem;

@@ -64,6 +64,9 @@ export default {
     benifit: "Quyền lợi",
     request: "Yêu cầu",
     location: "Cơ sở",
+    requirement: "Yêu cầu",
+    benefit: "Quyền lợi",
+    coverLetter: "Thư ứng tuyển",
 
     // Thông tin trường
     schoolInfo: {
@@ -100,7 +103,8 @@ export default {
 
     // Tuyển dụng
     pageRecruitment: {
-        title: "Quản lý tuyển dụng"
+        title: "Quản lý tuyển dụng",
+        detail: "Thông tin tuyển dụng",
     },
 
     // Chatbot

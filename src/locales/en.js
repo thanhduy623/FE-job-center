@@ -64,6 +64,9 @@ export default {
     benifit: "Benifit",
     request: "Request",
     location: "Location",
+    requirement: "Requirement",
+    benefit: "Benefit",
+    coverLetter: "Cover letter",
 
     // School information
     schoolInfo: {
@@ -99,7 +102,8 @@ export default {
 
     // Recruitment
     pageRecruitment: {
-        title: "Recruitment Management"
+        title: "Recruitment Management",
+        detail: "Recruitment Detail",
     },
 
     // Chatbot
