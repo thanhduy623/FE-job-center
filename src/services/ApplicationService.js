@@ -11,6 +11,25 @@ export async function getApplication(conditions = {}) {
 }
 
 /**
+ * Lấy chi tiết hồ sơ ứng tuyển theo ID
+ */
+export async function getApplicationById(id) {
+    if (!id) return { success: false, message: "Thiếu ID hồ sơ ứng tuyển" }
+
+    const res = await getData(
+        tableName,
+        { id },
+        ["Application_jobId_fkey"]
+    )
+
+    if (res.success && res.data?.length) {
+        return { success: true, data: res.data }
+    }
+
+    return { success: false, message: res.message || "Không tìm thấy hồ sơ" }
+}
+
+/**
  * Thêm hồ sơ ứng tuyển
  */
 export async function addApplication(data) {
@@ -25,6 +44,14 @@ export async function updateApplication(newData, keys = ["id"]) {
 }
 
 /**
+ * Cập nhật trạng thái hồ sơ ứng tuyển
+ */
+export async function updateApplicationStatus(id, status) {
+    if (!id) return { success: false, message: "Thiếu ID hồ sơ ứng tuyển" }
+    return await updateData(tableName, { id, status }, ["id"])
+}
+
+/**
  * Xóa hồ sơ ứng tuyển
  */
 export async function deleteApplication(conditions) {
@@ -35,7 +62,9 @@ export async function deleteApplication(conditions) {
 
 export default {
     getApplication,
+    getApplicationById,
     addApplication,
     updateApplication,
+    updateApplicationStatus,
     deleteApplication
 }

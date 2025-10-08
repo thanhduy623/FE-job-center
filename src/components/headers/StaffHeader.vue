@@ -22,7 +22,7 @@
                     {{ item.name }}
                 </RouterLink>
 
-                <button class="text-white text-uppercase" @click="handleLogout">
+                <button id="logout-btn" class="text-white text-uppercase" @click="handleLogout">
                     {{ $t('logout') }}
                 </button>
             </nav>
@@ -53,14 +53,14 @@
 
 
 <style scoped>
-    button {
+    #logout-btn {
         background: none;
         padding: 0;
         text-align: start;
         margin: 0;
     }
 
-    button:hover {
+    #logout-btn:hover {
         background-color: inherit;
     }
 </style>

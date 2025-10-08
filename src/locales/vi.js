@@ -67,6 +67,8 @@ export default {
     requirement: "Yêu cầu",
     benefit: "Quyền lợi",
     coverLetter: "Thư ứng tuyển",
+    aiEvaluate: "AI đánh giá",
+    viewFile: "Xem tệp",
 
     // Thông tin trường
     schoolInfo: {
@@ -105,6 +107,11 @@ export default {
     pageRecruitment: {
         title: "Quản lý tuyển dụng",
         detail: "Thông tin tuyển dụng",
+    },
+
+    pageApplication: {
+        title: "Quản lí ứng viên",
+        detail: "Hồ sơ ứng viên",
     },
 
     // Chatbot

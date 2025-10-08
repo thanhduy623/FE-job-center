@@ -67,6 +67,8 @@ export default {
     requirement: "Requirement",
     benefit: "Benefit",
     coverLetter: "Cover letter",
+    aiEvaluate: "AI Evaluate",
+    viewFile: "View file",
 
     // School information
     schoolInfo: {
@@ -104,6 +106,11 @@ export default {
     pageRecruitment: {
         title: "Recruitment Management",
         detail: "Recruitment Detail",
+    },
+
+    pageApplication: {
+        title: "Application Management",
+        detail: "Application Detail",
     },
 
     // Chatbot

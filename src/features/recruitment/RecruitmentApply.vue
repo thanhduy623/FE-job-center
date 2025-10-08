@@ -65,7 +65,7 @@
 
     import { uploadFile, deleteFile } from "@/utils/supabaseFileUtils.js"
     import ApplicationService from "@/services/ApplicationService.js"
-    import ApplicationCustomFieldValueService from "@/services/ApplicationCustomFieldValue.js"
+    import ApplicationCustomFieldValueService from "@/services/ApplicationCustomFieldValueService.js"
 
     import FileUpload from "@/components/others/FileUpload.vue"
 
@@ -182,7 +182,7 @@
                 }
             }
 
-            // Rollback (nếu đã tạo Application)
+            // 🧹 Rollback (nếu đã tạo Application)
             if (err.message.includes("custom field") || err.message.includes("upload")) {
                 const lastApp = await ApplicationService.getApplication({ email: form.value.email })
                 if (lastApp.success && lastApp.data.length > 0) {

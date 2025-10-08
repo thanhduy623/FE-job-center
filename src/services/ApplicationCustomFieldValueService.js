@@ -14,6 +14,22 @@ export async function getApplicationCustomFieldValue(conditions = {}) {
 }
 
 /**
+ * Lấy tất cả custom field theo ID hồ sơ ứng tuyển
+ */
+export async function getByApplicationId(applicationId) {
+    if (!applicationId) return { success: false, message: "Thiếu applicationId" }
+
+    return await getData(
+        tableName,
+        { applicationId },
+        [
+            "ApplicationCustomFieldValue_applicationId_fkey",
+            "ApplicationCustomFieldValue_jobCustomFieldId_fkey"
+        ]
+    )
+}
+
+/**
  * Thêm giá trị custom field cho hồ sơ ứng tuyển
  */
 export async function addApplicationCustomFieldValue(data) {
@@ -38,6 +54,7 @@ export async function deleteApplicationCustomFieldValue(conditions) {
 
 export default {
     getApplicationCustomFieldValue,
+    getByApplicationId,
     addApplicationCustomFieldValue,
     updateApplicationCustomFieldValue,
     deleteApplicationCustomFieldValue
