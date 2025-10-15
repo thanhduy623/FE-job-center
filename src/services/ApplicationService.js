@@ -1,4 +1,5 @@
 const tableName = "Application"
+const foreignKey = ["Application_jobId_fkey"]
 import { EventBus } from "@/utils/eventBus"
 import { getData, addData, updateData, deleteData } from "@/utils/supabaseUtils"
 
@@ -16,11 +17,7 @@ export async function getApplication(conditions = {}) {
 export async function getApplicationById(id) {
     if (!id) return { success: false, message: "Thiếu ID hồ sơ ứng tuyển" }
 
-    const res = await getData(
-        tableName,
-        { id },
-        ["Application_jobId_fkey"]
-    )
+    const res = await getData(tableName, { id }, foreignKey)
 
     if (res.success && res.data?.length) {
         return { success: true, data: res.data }
@@ -33,7 +30,7 @@ export async function getApplicationById(id) {
  * Thêm hồ sơ ứng tuyển
  */
 export async function addApplication(data) {
-    return await addData(tableName, data)
+    return await addData(tableName, data, false)
 }
 
 /**

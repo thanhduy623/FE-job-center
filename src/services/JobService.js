@@ -7,7 +7,7 @@ import { EventBus } from "@/utils/eventBus";
  * @returns {Object} { success, status, message, data }  
  */
 export async function getJob(conditions = {}) {
-    const res = await getData(tableName, conditions);
+    const res = await getData(tableName, conditions, [], false);
     if (!res.success) { EventBus.showNotify(res.message, "error") }
     return res;
 }

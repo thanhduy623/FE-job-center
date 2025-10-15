@@ -26,9 +26,11 @@ import DepartmentView from '@/views/auth/department/DepartmentView.vue'
 import JobView from '@/views/auth/job/JobView.vue'
 import JobAdd from '@/views/auth/job/JobAdd.vue'
 import JobUpdate from '@/views/auth/job/JobUpdate.vue'
-// Application
+// Auth/Application
 import ApplicationView from '@/views/auth/application/ApplicationView.vue'
 import ApplicationDetail from '@/views/auth/application/ApplicationDetail.vue'
+// Auth/Document
+import DocumentView from '@/views/auth/document/DocumentView.vue'
 
 
 
@@ -57,6 +59,7 @@ const routes = [
             { path: 'job/:id', name: 'jobUpdate', component: JobUpdate },
             { path: 'application', name: 'application', component: ApplicationView },
             { path: 'application/:id', name: 'applicationDetail', component: ApplicationDetail },
+            { path: 'document', name: 'document', component: DocumentView },
         ]
     },
     {

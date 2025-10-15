@@ -66,12 +66,13 @@
 
     const formSubmit = async () => {
         if (editId.value) {
-            const res = await DepartmentService.updateDepartment(formData.value, { id: editId.value });
+            const res = await DepartmentService.updateDepartment({ ...formData.value, id: editId.value })
             if (res.success) {
                 const index = userList.value.findIndex(u => u.id === editId.value);
                 if (index !== -1) userList.value[index] = res.data[0];
                 resetForm();
             }
+
         } else {
             const res = await DepartmentService.addDepartment(formData.value);
             if (res.success) {

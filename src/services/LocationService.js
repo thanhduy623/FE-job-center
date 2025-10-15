@@ -7,7 +7,7 @@ import { EventBus } from "@/utils/eventBus";
  * @returns {Object} { success, status, message, data }  
  */
 export async function getLocation() {
-    const res = await getData(tableName);
+    const res = await getData(tableName, {}, [], false);
     if (!res.success) { EventBus.showNotify(res.message, "error"); }
     return res;
 }

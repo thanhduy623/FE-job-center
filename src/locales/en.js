@@ -69,6 +69,9 @@ export default {
     coverLetter: "Cover letter",
     aiEvaluate: "AI Evaluate",
     viewFile: "View file",
+    document: "Document",
+    name_vi: "Vietnamese name",
+    name_en: "English name",
 
     // School information
     schoolInfo: {

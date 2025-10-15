@@ -120,8 +120,9 @@
             }
 
             const appRes = await ApplicationService.addApplication(appData)
-            if (!appRes.success || !appRes.data?.length)
+            if (!appRes.success || !appRes.data?.length) {
                 throw new Error("Không thể tạo hồ sơ ứng tuyển.")
+            }
 
             const applicationId = appRes.data[0].id
 
@@ -163,11 +164,12 @@
             // Lưu danh sách custom field values
             if (customFields.length > 0) {
                 const valueRes = await ApplicationCustomFieldValueService.addApplicationCustomFieldValue(customFields)
-                if (!valueRes.success) throw new Error("Không thể lưu thông tin custom field.")
+                if (!valueRes.success) {
+                    throw new Error("Không thể lưu thông tin custom field.")
+                }
             }
 
             // Hoàn tất
-            alert("🎉 Nộp hồ sơ thành công!")
             console.log("Đã lưu:", { applicationId, customFields })
 
             // (Tuỳ chọn) Reset form
@@ -190,7 +192,7 @@
                 }
             }
 
-            alert("⚠️ Lỗi khi nộp hồ sơ: " + err.message)
+            console.error("⚠️ Lỗi khi nộp hồ sơ: " + err.message)
         }
     }
 </script>

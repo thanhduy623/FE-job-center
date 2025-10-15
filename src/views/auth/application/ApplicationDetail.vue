@@ -199,9 +199,7 @@
                 selectedStatus.value = newStatus
                 EventBus.showNotify('Cập nhật trạng thái thành công!', 'success')
                 if (['INTERVIEW', 'HIRED', 'REJECTED'].includes(newStatus)) {
-                    alert(
-                        `Ứng viên đã được cập nhật trạng thái: ${newStatus}. Gửi mail thông báo...`
-                    )
+                    alert(`Ứng viên đã được cập nhật trạng thái: ${newStatus}`, "success")
                 }
             } else throw new Error(res.message)
         } catch (err) {

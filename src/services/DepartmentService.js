@@ -1,4 +1,5 @@
 const tableName = "Department"
+const primaryKey = ["id"];
 import { EventBus } from "@/utils/eventBus";
 import { getData, addData, updateData, deleteData } from "@/utils/supabaseUtils";
 
@@ -6,7 +7,7 @@ import { getData, addData, updateData, deleteData } from "@/utils/supabaseUtils"
  * Lấy danh sách phòng ban
  */
 export async function getDepartment(conditions = {}) {
-    return await getData(tableName, conditions);
+    return await getData(tableName, conditions, [], false);
 }
 
 /**
@@ -19,7 +20,7 @@ export async function addDepartment(data) {
 /**
  * Cập nhật phòng ban
  */
-export async function updateDepartment(data, keys) {
+export async function updateDepartment(data, keys = primaryKey) {
     return await updateData(tableName, data, keys);
 }
 

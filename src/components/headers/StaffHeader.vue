@@ -43,6 +43,7 @@
         { name: "department", to: "/department" },
         { name: "job", to: "/job" },
         { name: "application", to: "/application" },
+        { name: "document", to: "/document" },
         { name: "chatbot", to: "/chatbot/statistic" },
     ];
 

@@ -54,6 +54,6 @@
     // 🔹 Khi load trang → lấy danh sách hồ sơ
     onMounted(async () => {
         const res = await ApplicationService.getApplication()
-        if (res.success) rawApplications.value = res.data
+        if (res.success) rawApplications.value = res.data;
     })
 </script>

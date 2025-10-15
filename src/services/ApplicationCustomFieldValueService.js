@@ -1,4 +1,5 @@
 const tableName = "ApplicationCustomFieldValue"
+const foreignKey = ["ApplicationCustomFieldValue_applicationId_fkey", "ApplicationCustomFieldValue_jobCustomFieldId_fkey"]
 import { EventBus } from "@/utils/eventBus"
 import { getData, addData, updateData, deleteData } from "@/utils/supabaseUtils"
 
@@ -6,11 +7,7 @@ import { getData, addData, updateData, deleteData } from "@/utils/supabaseUtils"
  * Lấy danh sách giá trị custom field của hồ sơ ứng tuyển
  */
 export async function getApplicationCustomFieldValue(conditions = {}) {
-    // Liên kết với Application và JobCustomField
-    return await getData(tableName, conditions, [
-        "ApplicationCustomFieldValue_applicationId_fkey",
-        "ApplicationCustomFieldValue_jobCustomFieldId_fkey"
-    ])
+    return await getData(tableName, conditions, foreignKey, false)
 }
 
 /**
@@ -19,14 +16,7 @@ export async function getApplicationCustomFieldValue(conditions = {}) {
 export async function getByApplicationId(applicationId) {
     if (!applicationId) return { success: false, message: "Thiếu applicationId" }
 
-    return await getData(
-        tableName,
-        { applicationId },
-        [
-            "ApplicationCustomFieldValue_applicationId_fkey",
-            "ApplicationCustomFieldValue_jobCustomFieldId_fkey"
-        ]
-    )
+    return await getData(tableName, { applicationId }, foreignKey, false)
 }
 
 /**

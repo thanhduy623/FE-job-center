@@ -1,4 +1,5 @@
 const tableName = "User"
+const foreignKey = ["User_roleId_fkey", "User_departmentId_fkey"];
 import { EventBus } from "@/utils/eventBus"
 import { getData, addData, updateData, deleteData } from "@/utils/supabaseUtils"
 
@@ -6,7 +7,7 @@ import { getData, addData, updateData, deleteData } from "@/utils/supabaseUtils"
  * Lấy danh sách người dùng
  */
 export async function getUser(conditions = {}) {
-    return await getData("User", conditions, ["User_roleId_fkey", "User_departmentId_fkey"]);
+    return await getData("User", conditions, foreignKey);
 }
 
 

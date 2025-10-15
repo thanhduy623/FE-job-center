@@ -1,4 +1,5 @@
 const tableName = "JobCustomFieldAssignment";
+const foreignKey = ["JobCustomFieldAssignment_customFieldId_fkey"];
 import { getData, addData, updateData, deleteData } from "@/utils/supabaseUtils";
 import { EventBus } from "@/utils/eventBus";
 
@@ -6,11 +7,7 @@ import { EventBus } from "@/utils/eventBus";
  * Lấy danh sách field gán cho một Job (kèm thông tin chi tiết từ JobCustomField)
  */
 export async function getJobCustomFields(jobId) {
-    return await getData(
-        tableName,
-        { jobId },
-        ["JobCustomFieldAssignment_customFieldId_fkey"] // join sang JobCustomField
-    );
+    return await getData(tableName, { jobId }, foreignKey, false);
 }
 
 /**

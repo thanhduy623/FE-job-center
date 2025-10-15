@@ -1,49 +1,28 @@
-import { supabase } from '@/supabase.js'
-import { getSession } from '@/utils/authSession.js'
+import { getSupabaseClient } from '@/supabase.js'
 import { EventBus } from './eventBus'
 
 /**
- * Lấy Supabase client với session hợp lệ
+ * Upload file lên Supabase Storage
  */
-function getSupabaseClient() {
-    const session = getSession('session')
-    if (!session) throw new Error('Phiên làm việc đã hết hạn. Vui lòng đăng nhập lại.')
-
-    supabase.auth.setSession({
-        access_token: session.access_token,
-        refresh_token: session.refresh_token
-    })
-
-    return supabase
-}
-
-/**
- * 📤 Upload file lên Supabase Storage
- * @param {File} file - file upload từ input
- * @param {string} bucket - tên bucket (ví dụ "uploads")
- * @param {string} folder - thư mục con (ví dụ "cv" hoặc "avatars")
- * @returns {Promise<{success, message, path, publicUrl}>}
- */
-export async function uploadFile(file, bucket, folder = '') {
+export async function uploadFile(file, bucket, fileName, useAuth = true) {
     EventBus.showLoading()
     let res
 
     try {
-        const client = getSupabaseClient()
-        const fileName = `${Date.now()}_${file.name}`
-        const filePath = folder ? `${folder}/${fileName}` : fileName
-
-        const { error } = await client.storage.from(bucket).upload(filePath, file)
+        const client = getSupabaseClient(useAuth)
+        const safeFileName = fileName || `${Date.now()}.${file.name.split('.').pop()}`
+        const { error } = await client.storage.from(bucket).upload(safeFileName, file, { upsert: true })
         if (error) throw error
 
-        const { data: publicData } = client.storage.from(bucket).getPublicUrl(filePath)
+        const { data: publicData } = client.storage.from(bucket).getPublicUrl(safeFileName)
 
         res = {
             success: true,
             message: 'Tải file lên thành công',
-            path: filePath,
+            path: safeFileName,
             publicUrl: publicData.publicUrl
         }
+        EventBus.showNotify('Tải file lên thành công', 'success')
     } catch (error) {
         res = {
             success: false,
@@ -51,23 +30,25 @@ export async function uploadFile(file, bucket, folder = '') {
             path: null,
             publicUrl: null
         }
+        EventBus.showNotify('Tải file lên thất bại', 'error')
+        console.error(res.message)
     } finally {
         EventBus.hideLoading()
-        EventBus.showNotify(res.message, res.success ? 'success' : 'error')
     }
 
     return res
 }
 
 /**
- * ✏️ Cập nhật (ghi đè) file — upload lại file cùng đường dẫn cũ
+ * Cập nhật / ghi đè file trong bucket
  */
-export async function updateFile(bucket, path, newFile) {
+export async function updateFile(bucket, path, file, useAuth = true) {
     EventBus.showLoading()
     let res
+
     try {
-        const client = getSupabaseClient()
-        const { error } = await client.storage.from(bucket).update(path, newFile)
+        const client = getSupabaseClient(useAuth)
+        const { error } = await client.storage.from(bucket).upload(path, file, { upsert: true })
         if (error) throw error
 
         const { data: publicData } = client.storage.from(bucket).getPublicUrl(path)
@@ -77,6 +58,7 @@ export async function updateFile(bucket, path, newFile) {
             path,
             publicUrl: publicData.publicUrl
         }
+        EventBus.showNotify('Cập nhật file thành công', 'success')
     } catch (error) {
         res = {
             success: false,
@@ -84,47 +66,53 @@ export async function updateFile(bucket, path, newFile) {
             path: null,
             publicUrl: null
         }
+        EventBus.showNotify('Cập nhật file thất bại', 'error')
+        console.error(res.message)
     } finally {
         EventBus.hideLoading()
-        EventBus.showNotify(res.message, res.success ? 'success' : 'error')
     }
 
     return res
 }
 
 /**
- * ❌ Xóa file trong bucket
+ * Xóa file trong bucket
  */
-export async function deleteFile(bucket, path) {
-    const isConfirmed = await EventBus.confirm('Xác nhận xóa file này?')
-    if (!isConfirmed) return {}
+export async function deleteFile(bucket, path, useAuth = true) {
+    // Kiểm tra EventBus.confirm có tồn tại (tránh lỗi trong unit test / SSR)
+    if (typeof EventBus.confirm === 'function') {
+        const isConfirmed = await EventBus.confirm('Xác nhận xóa file này?')
+        if (!isConfirmed) return { success: false, cancelled: true }
+    }
 
     EventBus.showLoading()
     let res
     try {
-        const client = getSupabaseClient()
+        const client = getSupabaseClient(useAuth)
         const { error } = await client.storage.from(bucket).remove([path])
         if (error) throw error
 
         res = { success: true, message: 'Xóa file thành công', path }
+        EventBus.showNotify('Xóa file thành công', 'success')
     } catch (error) {
         res = { success: false, message: `Xóa file thất bại: ${error.message}`, path }
+        EventBus.showNotify('Xóa file thất bại', 'error')
+        console.error(res.message)
     } finally {
         EventBus.hideLoading()
-        EventBus.showNotify(res.message, res.success ? 'success' : 'error')
     }
 
     return res
 }
 
 /**
- * 🌐 Lấy đường dẫn công khai của file
+ * 🌐 Lấy public URL của file
  */
-export function getPublicUrl(bucket, path) {
+export function getPublicUrl(bucket, path, useAuth = true) {
     try {
-        const client = getSupabaseClient()
+        const client = getSupabaseClient(useAuth)
         const { data } = client.storage.from(bucket).getPublicUrl(path)
-        return data.publicUrl
+        return data?.publicUrl || null
     } catch (error) {
         console.error('Lấy public URL thất bại:', error.message)
         return null

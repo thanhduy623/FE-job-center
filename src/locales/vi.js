@@ -69,6 +69,9 @@ export default {
     coverLetter: "Thư ứng tuyển",
     aiEvaluate: "AI đánh giá",
     viewFile: "Xem tệp",
+    document: "Tài liệu",
+    name_vi: "Tên tiếng Việt",
+    name_en: "Tên tiếng Anh",
 
     // Thông tin trường
     schoolInfo: {

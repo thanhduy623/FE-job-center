@@ -6,8 +6,8 @@ import router from './router'
 // Định dạng ban đầu
 import '@/assets/styles/global.css'
 
-
-// Set up database table
+// Set up eventBus
+import { EventBus } from '@/utils/eventBus'
 
 
 // Set up language
@@ -25,4 +25,5 @@ const i18n = createI18n({
 const app = createApp(App)
 app.use(router)
 app.use(i18n)
+app.config.globalProperties.$eventBus = EventBus
 app.mount('#app')
