@@ -7,7 +7,7 @@
         </div>
 
         <!-- Name -->
-        <div class="flex flex-row gap-1">
+        <div class="flex flex-row wrap gap-1">
             <div class="flex-1">
                 <label for="name_vi">{{ $t('name') }} (VI)</label>
                 <input id="name_vi" v-model="formData.name_vi" type="text" required />
@@ -19,35 +19,35 @@
         </div>
 
         <!-- Position -->
-        <div class="flex flex-row gap-1">
+        <div class="flex flex-row wrap gap-1">
             <div class="flex-1">
                 <label for="position_vi">{{ $t('position') }} (VI)</label>
-                <input id="position_vi" v-model="formData.position_vi" type="text" />
+                <input id="position_vi" v-model="formData.position_vi" type="text" required />
             </div>
             <div class="flex-1">
                 <label for="position_en">{{ $t('position') }} (EN)</label>
-                <input id="position_en" v-model="formData.position_en" type="text" />
+                <input id="position_en" v-model="formData.position_en" type="text" required />
             </div>
         </div>
 
         <!-- Job type & Salary & Status -->
-        <div class="flex flex-row gap-1">
+        <div class="flex flex-row wrap gap-1">
             <div class="flex-1">
                 <label for="jobType">{{ $t('type') }}</label>
-                <JobTypeSelect v-model="formData.jobType" />
+                <JobTypeSelect v-model="formData.jobType" required />
             </div>
             <div class="flex-1">
                 <label for="salary">{{ $t('salary') }}</label>
-                <input id="salary" v-model="formData.salary" type="text" />
+                <input id="salary" v-model="formData.salary" type="text" required />
             </div>
             <div class="flex-1">
                 <label for="status">{{ $t('status') }}</label>
-                <StatusSelect v-model="formData.status" />
+                <StatusSelect v-model="formData.status" required />
             </div>
         </div>
 
         <!-- Description -->
-        <div class="flex flex-row gap-1">
+        <div class="flex flex-row wrap gap-1">
             <div class="flex-1">
                 <label for="description_vi">{{ $t('description') }} (VI)</label>
                 <textarea id="description_vi" v-model="formData.description_vi" rows="3"></textarea>
@@ -59,7 +59,7 @@
         </div>
 
         <!-- Requirements -->
-        <div class="flex flex-row gap-1">
+        <div class="flex flex-row wrap gap-1">
             <div class="flex-1">
                 <label for="requirements_vi">{{ $t('request') }} (VI)</label>
                 <textarea id="requirements_vi" v-model="formData.requirements_vi" rows="3"></textarea>
@@ -71,7 +71,7 @@
         </div>
 
         <!-- Benefits -->
-        <div class="flex flex-row gap-1">
+        <div class="flex flex-row wrap gap-1">
             <div class="flex-1">
                 <label for="benefits_vi">{{ $t('benifit') }} (VI)</label>
                 <textarea id="benefits_vi" v-model="formData.benefits_vi" rows="3"></textarea>
@@ -83,7 +83,7 @@
         </div>
 
         <!-- Application Deadline -->
-        <div class="flex flex-row gap-1">
+        <div class="flex flex-row wrap gap-1">
             <div class="flex-1">
                 <label for="applicationDeadlineStart">{{ $t('fromDate') }}</label>
                 <input id="applicationDeadlineStart" v-model="formData.applicationDeadlineStart" type="date" />
@@ -95,10 +95,10 @@
         </div>
 
         <!-- Location -->
-        <div class="flex flex-row gap-1">
+        <div class="flex flex-row wrap gap-1">
             <div class="flex-1">
                 <label for="location">{{ $t('location') }}</label>
-                <LocationSelect v-model="formData.location" />
+                <LocationSelect v-model="formData.locationId" />
             </div>
         </div>
 
@@ -142,7 +142,7 @@
         jobType: '',
         salary: '',
         status: '',
-        location: ''
+        locationId: ''
     });
 
 
@@ -161,27 +161,65 @@
                     : ''
 
                 formData.value = { ...job }
+
+                console.log(res.data[0]);
+
             }
         }
     })
 
     async function submitForm() {
-        const dataToSave = { ...formData.value }
+        // Chỉ lấy các cột thực sự có trong bảng Job
+        const allowedFields = [
+            "id",
+            "departmentId",
+            "name_vi",
+            "name_en",
+            "position_vi",
+            "position_en",
+            "description_vi",
+            "description_en",
+            "requirements_vi",
+            "requirements_en",
+            "benefits_vi",
+            "benefits_en",
+            "applicationDeadlineStart",
+            "applicationDeadlineEnd",
+            "jobType",
+            "salary",
+            "status",
+            "locationId"
+        ];
 
-        // Nếu cần gửi lại dạng full datetime
+        // Lọc formData
+        const dataToSave = {};
+        allowedFields.forEach(key => {
+            if (formData.value[key] !== undefined) {
+                dataToSave[key] = formData.value[key];
+            }
+        });
+
+        // Chuyển định dạng datetime sang timestamptz
         if (dataToSave.applicationDeadlineStart)
-            dataToSave.applicationDeadlineStart = `${dataToSave.applicationDeadlineStart} 00:00:00+00`
+            dataToSave.applicationDeadlineStart = `${dataToSave.applicationDeadlineStart} 00:00:00+00`;
         if (dataToSave.applicationDeadlineEnd)
-            dataToSave.applicationDeadlineEnd = `${dataToSave.applicationDeadlineEnd} 00:00:00+00`
+            dataToSave.applicationDeadlineEnd = `${dataToSave.applicationDeadlineEnd} 00:00:00+00`;
 
-        if (props.jobId) {
-            const res = await JobService.updateJob(dataToSave, { id: props.jobId })
-            if (res.success) emit('saved')
-        } else {
-            const res = await JobService.addJob(dataToSave)
-            if (res.success) emit('saved')
+        try {
+            if (props.jobId) {
+                // Cập nhật
+                const res = await JobService.updateJob(dataToSave);
+                if (res.success) emit('saved');
+            } else {
+                // Thêm mới
+                const res = await JobService.addJob(dataToSave);
+                if (res.success) emit('saved');
+            }
+        } catch (error) {
+            console.error("Lỗi khi lưu job:", error);
         }
     }
+
 </script>
 
 <style scoped>

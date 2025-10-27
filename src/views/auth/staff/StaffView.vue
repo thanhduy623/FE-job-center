@@ -4,10 +4,10 @@
             <h2 v-t="'pageStaff.title'" class="text-primary text-title flex-1"></h2>
             <router-link to="/staff/add">
                 <button class="bg-primary">{{ $t('add') }}</button>
-
             </router-link>
         </div>
-        <TableComponent v-model:rows="userList" :columns="headers" />
+
+        <TableComponent :rows="userList" :columns="headers" />
     </div>
 </template>
 
@@ -16,7 +16,6 @@
     import { useRouter } from 'vue-router'
     import TableComponent from "@/components/tables/tableComponent.vue"
     import StaffService from "@/services/UserService.js"
-
     import { mapLocaleField } from '@/utils/mapLocaleField.js'
     import { sendPasswordResetEmail } from '@/services/AuthService.js'
 
@@ -24,8 +23,8 @@
     const rawUserList = ref([])
 
     const userList = mapLocaleField(rawUserList, [
-        { newKey: 'departmentName', parentKey: 'User_departmentId_fkey' },
-        { newKey: 'roleName', parentKey: 'User_roleId_fkey' }
+        { newKey: 'departmentName', parentKey: 'User_departmentId_fkey', viKey: 'name_vi', enKey: 'name_en' },
+        { newKey: 'roleName', parentKey: 'User_roleId_fkey', viKey: 'name_vi', enKey: 'name_en' }
     ])
 
     const headers = [
@@ -33,7 +32,6 @@
         { key: "firstname", label: "firstname" },
         { key: "departmentName", label: "department" },
         { key: "roleName", label: "role" },
-        { key: "email", label: "email" },
         {
             key: "action",
             label: "action",

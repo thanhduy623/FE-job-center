@@ -1,10 +1,10 @@
 <template>
     <div>
-        <h2 class="text-primary text-title" v-t="'pageStaff.title'"></h2>
+        <h2 class="text-primary text-title" v-t="'pageStaff.editTitle'"></h2>
 
         <form @submit.prevent="formSubmit" @reset="formReset" class="flex flex-col gap-1">
             <!-- Họ & Tên -->
-            <div class="flex gap-1">
+            <div class="flex flex-row gap-1 wrap">
                 <div class="flex-1">
                     <label v-t="'lastname'"></label>
                     <input v-model="form.lastname" type="text" required />
@@ -16,7 +16,7 @@
             </div>
 
             <!-- Giới tính & Ngày sinh -->
-            <div class="flex gap-1">
+            <div class="flex flex-row gap-1 wrap">
                 <div class="flex-1">
                     <label v-t="'gender'"></label>
                     <GenderSelect v-model="form.gender" />
@@ -28,31 +28,31 @@
             </div>
 
             <!-- Điện thoại & Email -->
-            <div class="flex gap-1">
+            <div class="flex flex-row gap-1 wrap">
                 <div class="flex-1">
                     <label v-t="'phone'"></label>
                     <input v-model="form.phone" type="text" />
                 </div>
                 <div class="flex-1">
                     <label v-t="'email'"></label>
-                    <input v-model="form.email" type="email" required />
+                    <input v-model="form.email" type="email" readonly />
                 </div>
             </div>
 
             <!-- Phòng ban & Phân quyền -->
-            <div class="flex gap-1">
+            <div class="flex flex-row gap-1 wrap">
                 <div class="flex-1">
                     <label v-t="'department'"></label>
                     <DepartmentSelect v-model="form.departmentId" />
                 </div>
                 <div class="flex-1">
                     <label v-t="'role'"></label>
-                    <RoleSelect v-model="form.role" />
+                    <RoleSelect v-model="form.roleId" />
                 </div>
             </div>
 
             <!-- Buttons -->
-            <div class="flex justify-end gap-1">
+            <div class="flex justify-end gap-1 mt-2">
                 <button type="reset" v-t="'reset'"></button>
                 <button type="submit" class="bg-primary" v-t="'update'"></button>
             </div>
@@ -63,16 +63,17 @@
 <script setup>
     import { ref, onMounted } from 'vue'
     import { useRoute } from 'vue-router'
-    import { updateUser, getUser } from '@/services/UserService'
+    import { getUser, updateUser } from '@/services/UserService'
 
     import GenderSelect from '@/components/selects/GenderSelect.vue'
     import DepartmentSelect from '@/components/selects/DepartmentSelect.vue'
     import RoleSelect from '@/components/selects/RoleSelect.vue'
 
     const route = useRoute()
-    const idUser = route.params.id   // lấy id từ URL
+    const userId = route.params.id
 
     const form = ref({
+        id: '',
         firstname: '',
         lastname: '',
         gender: '1',
@@ -80,44 +81,44 @@
         phone: '',
         email: '',
         departmentId: '',
-        role: ''
+        roleId: ''
     })
 
-    async function formSubmit() {
-        const data = form.value
-
-        // Cập nhật User
-        const userRes = await updateUser({
-            id: idUser,
-            firstname: data.firstname,
-            lastname: data.lastname,
-            gender: data.gender,
-            birthday: data.birthday,
-            phone: data.phone,
-            departmentId: data.departmentId,
-            roleId: data.role
-        })
-
-        if (!userRes.success) return console.error(userRes.message)
-
-        console.log('Tạo nhân viên thành công!')
-    }
+    let originalData = {}
 
     onMounted(async () => {
-        const res = await getUser({ id: idUser })
-        if (!res.success) { console.error(res.message); return }
-        const user = res.data[0];
-
-
-        form.value = {
-            firstname: user.firstname,
-            lastname: user.lastname,
-            gender: user.gender ?? '1',
-            birthday: user.birthday ? user.birthday.slice(0, 10) : '',
-            phone: user.phone,
-            email: user.email,
-            departmentId: user.departmentId,
-            role: user.roleId
-        }
+        await loadUser()
     })
+
+    async function loadUser() {
+        const res = await getUser({ id: userId })
+        if (!res || !res.data || res.data.length === 0) {
+            console.error('Không tìm thấy nhân viên')
+            return
+        }
+        const user = res.data[0]
+        form.value = {
+            id: user.id,
+            firstname: user.firstname || '',
+            lastname: user.lastname || '',
+            gender: user.gender || '1',
+            birthday: user.birthday || '',
+            phone: user.phone || '',
+            email: user.email || '',
+            departmentId: user.departmentId || '',
+            roleId: user.roleId || ''
+        }
+        // lưu bản gốc để reset
+        originalData = JSON.parse(JSON.stringify(form.value))
+    }
+
+    function formReset() {
+        form.value = JSON.parse(JSON.stringify(originalData))
+    }
+
+    async function formSubmit() {
+        const res = await updateUser(form.value, ['id'])
+        if (!res.success) return console.error(res.message)
+        console.log('Cập nhật thông tin nhân viên thành công!')
+    }
 </script>

@@ -1,4 +1,5 @@
 const tableName = "Job"
+const foreignKey = ["Job_departmentId_fkey", "Job_locationId_fkey"];
 import { getData, addData, updateData, deleteData } from "@/utils/supabaseUtils";
 import { EventBus } from "@/utils/eventBus";
 
@@ -7,7 +8,7 @@ import { EventBus } from "@/utils/eventBus";
  * @returns {Object} { success, status, message, data }  
  */
 export async function getJob(conditions = {}) {
-    const res = await getData(tableName, conditions, [], false);
+    const res = await getData(tableName, conditions, foreignKey, false);
     if (!res.success) { EventBus.showNotify(res.message, "error") }
     return res;
 }
@@ -29,11 +30,12 @@ export async function addJob(data) {
  * @param {Object} keys - Điều kiện xác định công việc cần cập nhật
  * @returns {Object} { success, status, message, data }  
  */
-export async function updateJob(data, keys) {
-    const res = await updateData(tableName, data, keys);
-    if (!res.success) { EventBus.showNotify(res.message, "error") }
+export async function updateJob(data, keys = ["id"]) {
+    const res = await updateData("Job", data, keys);
+    if (!res.success) EventBus.showNotify(res.message, "error")
     return res;
 }
+
 
 /**
  * Xóa bỏ công việc

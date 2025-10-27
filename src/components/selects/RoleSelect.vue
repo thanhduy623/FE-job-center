@@ -1,5 +1,6 @@
 <template>
     <select :value="modelValue" @change="$emit('update:modelValue', $event.target.value)">
+        <option value="" disabled>-- {{ $t('role') }} --</option>
         <option v-for="role in displayRoles" :key="role.id" :value="role.id">
             {{ role.displayName }}
         </option>
@@ -11,22 +12,24 @@
     import { useI18n } from 'vue-i18n'
     import { getAllRole } from '@/services/RoleService'
 
-    // Props và emits
+    // Props
     const props = defineProps({
-        modelValue: [String, Number]
+        modelValue: [String, Number],
+        autoSelectFirst: { type: Boolean, default: true }
     })
     const emit = defineEmits(['update:modelValue'])
 
     const { locale } = useI18n()
     const roleList = ref([])
 
-    // Load role
+    // Load danh sách role
     onMounted(async () => {
         const res = await getAllRole()
         if (res.success) {
             roleList.value = res.data
-            // Gán giá trị mặc định nếu chưa có modelValue
-            if (!props.modelValue && roleList.value.length > 0) {
+
+            // Nếu được cho phép và chưa có giá trị => tự chọn item đầu tiên
+            if (props.autoSelectFirst && !props.modelValue && roleList.value.length > 0) {
                 emit('update:modelValue', roleList.value[0].id)
             }
         }
@@ -40,6 +43,5 @@
         }))
     )
 
-    // watch locale để tự cập nhật khi thay đổi
     watch(locale, () => { })
 </script>

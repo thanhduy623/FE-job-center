@@ -52,7 +52,7 @@ const routes = [
             { path: 'staff', name: 'staff', component: StaffView },
             { path: 'staff/add', name: 'staffAdd', component: StaffAdd },
             { path: 'staff/:id', name: 'staffInfo', component: StaffInfo },
-            { path: 'profile', name: 'staffInfo', component: StaffProfile },
+            { path: 'profile', name: 'staffProfile', component: StaffProfile },
             { path: 'department', name: 'department', component: DepartmentView },
             { path: 'job', name: 'job', component: JobView },
             { path: 'job/add', name: 'jobAdd', component: JobAdd },

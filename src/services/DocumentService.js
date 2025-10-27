@@ -34,7 +34,7 @@ export async function updateDocument(data, keys) {
  */
 export async function deleteDocument(conditions) {
     const isConfirmed = await EventBus.confirm("Xác nhận xóa file này?");
-    if (!isConfirmed) return {};
+    if (!isConfirmed) return { success: false, cancelled: true };
 
     return await deleteData(tableName, conditions);
 }

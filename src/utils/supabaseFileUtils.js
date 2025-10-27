@@ -79,12 +79,6 @@ export async function updateFile(bucket, path, file, useAuth = true) {
  * Xóa file trong bucket
  */
 export async function deleteFile(bucket, path, useAuth = true) {
-    // Kiểm tra EventBus.confirm có tồn tại (tránh lỗi trong unit test / SSR)
-    if (typeof EventBus.confirm === 'function') {
-        const isConfirmed = await EventBus.confirm('Xác nhận xóa file này?')
-        if (!isConfirmed) return { success: false, cancelled: true }
-    }
-
     EventBus.showLoading()
     let res
     try {
@@ -104,6 +98,7 @@ export async function deleteFile(bucket, path, useAuth = true) {
 
     return res
 }
+
 
 /**
  * 🌐 Lấy public URL của file

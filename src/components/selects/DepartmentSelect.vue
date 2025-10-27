@@ -1,5 +1,6 @@
 <template>
     <select :value="modelValue" @change="$emit('update:modelValue', $event.target.value)">
+        <option value="" disabled>-- {{ $t('department') }} --</option>
         <option v-for="dep in displayDepartments" :key="dep.id" :value="dep.id">
             {{ dep.displayName }}
         </option>
@@ -11,9 +12,10 @@
     import { useI18n } from 'vue-i18n'
     import { getDepartment } from '@/services/DepartmentService'
 
-    // Khai báo props và emit
+    // Props
     const props = defineProps({
-        modelValue: [String, Number]
+        modelValue: [String, Number],
+        autoSelectFirst: { type: Boolean, default: true }
     })
     const emit = defineEmits(['update:modelValue'])
 
@@ -25,14 +27,15 @@
         const res = await getDepartment()
         if (res.success) {
             departmentList.value = res.data
-            // Gán giá trị mặc định nếu modelValue chưa có
-            if (!props.modelValue && departmentList.value.length > 0) {
+
+            // Nếu chưa có giá trị và cho phép tự chọn
+            if (props.autoSelectFirst && !props.modelValue && departmentList.value.length > 0) {
                 emit('update:modelValue', departmentList.value[0].id)
             }
         }
     })
 
-    // Tạo computed để hiển thị tên theo locale
+    // Hiển thị tên theo locale
     const displayDepartments = computed(() =>
         departmentList.value.map(dep => ({
             ...dep,
@@ -40,6 +43,5 @@
         }))
     )
 
-    // Nếu muốn đổi locale, computed tự cập nhật
     watch(locale, () => { })
 </script>

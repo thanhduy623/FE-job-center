@@ -20,8 +20,12 @@
                     <input type="file" ref="fileInput" required />
                 </div>
                 <div class="flex flex-col flex-1">
-                    <button type="submit" class="bg-primary text-white px-4 py-2">Upload</button>
+                    <TypeSelect v-model="formData.type" />
                 </div>
+            </div>
+
+            <div class="flex flex-row wrap gap-1 justify-end">
+                <button type="submit" class="bg-primary text-white px-4 py-2">Upload</button>
             </div>
         </form>
 
@@ -34,13 +38,14 @@
     import TableComponent from "@/components/tables/tableComponent.vue"
     import { uploadFile, deleteFile, getPublicUrl } from '@/utils/supabaseFileUtils.js'
     import DocumentService from "@/services/DocumentService.js"
+    import TypeSelect from "@/components/selects/TypeSelect.vue"
 
     const fileList = ref([])
-    const formData = ref({ name_vi: '', name_en: '' })
+    const formData = ref({ name_vi: '', name_en: '', type: '' })
     const fileInput = ref(null)
 
     /**
-     * 🧩 Hàm chuyển publicUrl sang link preview online
+     * Hàm chuyển publicUrl sang link preview online
      */
     function getOnlineFileUrl(fileUrl) {
         if (!fileUrl) return '#'
@@ -90,15 +95,15 @@
                             if (!newFile) return
 
                             try {
-                                // 1️⃣ Xóa file cũ
+                                // Xóa file cũ
                                 const resDeleteOld = await deleteFile('documents', row.path)
                                 if (!resDeleteOld.success) throw new Error(resDeleteOld.message)
 
-                                // 2️⃣ Upload file mới (tạo tên mới)
+                                // Upload file mới (tạo tên mới)
                                 const resUploadNew = await uploadFile(newFile, 'documents')
                                 if (!resUploadNew.success) throw new Error(resUploadNew.message)
 
-                                // 3️⃣ Cập nhật DB với path và publicUrl mới
+                                // Cập nhật DB với path và publicUrl mới
                                 const resUpdate = await DocumentService.updateDocument(
                                     { id: row.id, path: resUploadNew.path },
                                     ['id']
@@ -106,7 +111,7 @@
 
                                 if (!resUpdate.success) throw new Error(resUpdate.message)
 
-                                // 4️⃣ Cập nhật local list
+                                // Cập nhật local list
                                 fileList.value[index].path = resUploadNew.path
                                 fileList.value[index].publicUrl = resUploadNew.publicUrl
 
@@ -124,17 +129,15 @@
                     label: 'Xóa',
                     func: async (row, index) => {
                         try {
+                            const resDeleteDB = await DocumentService.deleteDocument({ id: row.id })
+                            if (!resDeleteDB.success || resDeleteDB.cancelled) return
+
                             const resDeleteFile = await deleteFile('documents', row.path)
                             if (!resDeleteFile.success) throw new Error(resDeleteFile.message)
 
-                            const resDeleteDB = await DocumentService.deleteDocument({ id: row.id })
-                            if (!resDeleteDB.success) throw new Error(resDeleteDB.message)
-
                             fileList.value.splice(index, 1)
-                            alert('Xóa file thành công!')
                         } catch (err) {
                             console.error(err)
-                            alert(`Xóa thất bại: ${err.message}`)
                         }
                     }
                 }

@@ -28,12 +28,17 @@
         { newKey: 'requirements' },
         { newKey: 'benefits' },
         { newKey: 'name' },
+        { newKey: 'department', parentKey: 'Job_departmentId_fkey', viKey: 'name_vi', enKey: 'name_en' },
+        { newKey: 'location', parentKey: 'Job_locationId_fkey', viKey: 'name_vi', enKey: 'name_en' }
     ])
 
     const headers = ref([
         { key: 'name', label: 'name' },
         { key: 'position', label: 'position' },
-        { key: 'salary', label: 'salary' },
+        { key: 'department', label: 'department' },
+        { key: 'jobType', label: 'type' },
+        { key: 'status', label: 'status' },
+        { key: 'location', label: 'location' },
         {
             key: 'action',
             label: 'action',
@@ -56,5 +61,7 @@
     onMounted(async () => {
         const res = await JobService.getJob();
         rawJobList.value = res.success ? res.data : [];
+        console.log(res.data);
+
     });
 </script>

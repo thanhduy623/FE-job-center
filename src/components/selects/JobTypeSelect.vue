@@ -1,5 +1,7 @@
 <template>
     <select :value="modelValue" @change="$emit('update:modelValue', $event.target.value)">
+        <option value="" disabled>-- {{ $t('type') }} --</option>
+
         <option v-for="job in displayJobTypes" :key="job.id" :value="job.id">
             {{ job.displayName }}
         </option>
@@ -13,7 +15,8 @@
 
     // Props & emits
     const props = defineProps({
-        modelValue: [String, Number]
+        modelValue: [String, Number],
+        autoSelectFirst: { type: Boolean, default: true }
     })
     const emit = defineEmits(['update:modelValue'])
 
@@ -21,7 +24,7 @@
     const jobTypeList = ref([...jobTypes])
 
     // Gán giá trị mặc định nếu chưa có
-    if (!props.modelValue && jobTypeList.value.length > 0) {
+    if (props.autoSelectFirst && !props.modelValue && jobTypeList.value.length > 0) {
         emit('update:modelValue', jobTypeList.value[0].id)
     }
 
