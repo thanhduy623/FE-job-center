@@ -9,7 +9,6 @@ import StaffLayout from '@/layouts/StaffLayout.vue'
 import Home from '@/views/public/HomeView.vue'
 import Recruitment from '@/views/public/RecruitmentView.vue'
 import Register from '@/views/public/RecruitmentRegister.vue'
-import Chatbot from '@/views/public/ChatbotView.vue'
 import Login from '@/views/public/LoginView.vue'
 import ResetPassword from '@/views/public/ResetPassword.vue'
 
@@ -42,7 +41,6 @@ const routes = [
             { path: '', name: 'home', component: Home },
             { path: 'recruitment', name: 'recruitment', component: Recruitment },
             { path: 'recruitment/:id', name: 'register', component: Register },
-            { path: 'chatbot', name: 'chatbot', component: Chatbot },
         ]
     },
     {

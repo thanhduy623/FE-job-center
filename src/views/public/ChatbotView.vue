@@ -55,6 +55,7 @@
     .chatbot-container {
         margin: 16px 10%;
         height: 500px;
+        width: 80%;
         display: flex;
         flex-direction: column;
         overflow: hidden;

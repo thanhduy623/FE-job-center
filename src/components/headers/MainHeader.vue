@@ -35,7 +35,6 @@
     const menuItems = [
         { name: "home", to: "/" },
         { name: "recruitment", to: "/recruitment" },
-        { name: "chatbot", to: "/chatbot" },
         { name: "login", to: "/login" },
     ];
 </script>
