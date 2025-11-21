@@ -5,7 +5,15 @@ import path from 'path'
 
 export default defineConfig({
     plugins: [
-        vue(),
+        vue({
+            // Khai báo Custom Element ở đây để loại bỏ cảnh báo 'deprecated'
+            template: {
+                compilerOptions: {
+                    // Chỉ định rằng thẻ bắt đầu bằng 'n8n-' là Custom Element (Web Component)
+                    isCustomElement: (tag) => tag.startsWith('n8n-'),
+                },
+            },
+        }),
         VueI18nPlugin({
             // đường dẫn đến thư mục locales
             include: path.resolve(__dirname, './src/locales/**')

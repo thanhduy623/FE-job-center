@@ -11,6 +11,7 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.58.0",
     "@tanstack/vue-table": "^8.21.3",
+    "axios": "^1.13.2",
     "core-js": "^3.8.3",
     "mitt": "^3.0.1",
     "vue": "^3.2.13",

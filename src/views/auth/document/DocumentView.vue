@@ -2,15 +2,16 @@
     <div class="main-container flex flex-col gap-1">
         <h2 class="text-primary text-title flex-1">Quản lý file</h2>
 
+        <!-- FORM UPLOAD -->
         <form @submit.prevent="onUploadFile" class="flex gap-1 flex-wrap">
             <div class="flex flex-row wrap gap-1">
                 <div class="flex flex-col flex-1">
-                    <label>Tên tài liệu (VI)</label>
-                    <input type="text" v-model="formData.name_vi" placeholder="Tên tiếng Việt" required />
+                    <label>{{ $t('name') }}</label>
+                    <input type="text" v-model="nameInput" placeholder="Tên" required />
                 </div>
                 <div class="flex flex-col flex-1">
-                    <label>Document name (EN)</label>
-                    <input type="text" v-model="formData.name_en" placeholder="Tên tiếng Anh" required />
+                    <label>{{ $t('type') }}</label>
+                    <TypeSelect v-model="typeInput" />
                 </div>
             </div>
 
@@ -19,9 +20,6 @@
                     <label>File</label>
                     <input type="file" ref="fileInput" required />
                 </div>
-                <div class="flex flex-col flex-1">
-                    <TypeSelect v-model="formData.type" />
-                </div>
             </div>
 
             <div class="flex flex-row wrap gap-1 justify-end">
@@ -29,45 +27,30 @@
             </div>
         </form>
 
+        <!-- TABLE FILES -->
         <TableComponent v-model:rows="fileList" :columns="headers" />
     </div>
 </template>
 
 <script setup>
     import { ref, onMounted } from 'vue'
-    import TableComponent from "@/components/tables/tableComponent.vue"
-    import { uploadFile, deleteFile, getPublicUrl } from '@/utils/supabaseFileUtils.js'
     import DocumentService from "@/services/DocumentService.js"
+    import DocumentWorkflow from "@/workflows/DocumentWorkflow.js"
+
+    import TableComponent from "@/components/tables/tableComponent.vue"
     import TypeSelect from "@/components/selects/TypeSelect.vue"
 
     const fileList = ref([])
-    const formData = ref({ name_vi: '', name_en: '', type: '' })
+    const nameInput = ref('')
+    const typeInput = ref('')
     const fileInput = ref(null)
 
-    /**
-     * Hàm chuyển publicUrl sang link preview online
-     */
-    function getOnlineFileUrl(fileUrl) {
-        if (!fileUrl) return '#'
-        const url = Array.isArray(fileUrl) ? fileUrl[0] : fileUrl
-        const lowerUrl = url.toLowerCase()
-
-        if (lowerUrl.endsWith('.pdf'))
-            return `https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`
-
-        if (lowerUrl.endsWith('.docx') || lowerUrl.endsWith('.xlsx') || lowerUrl.endsWith('.pptx'))
-            return `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(url)}`
-
-        // Ảnh, video, text... thì dùng link gốc
-        return url
-    }
-
     // -------------------
-    // BẢNG HIỂN THỊ FILES
+    // COLUMNS TABLE
     // -------------------
     const headers = ref([
-        { key: 'name_vi', label: 'Tên tiếng Việt' },
-        { key: 'name_en', label: 'English name' },
+        { key: 'title', label: 'name' },
+        { key: 'schema', label: 'type' },
         {
             key: 'action',
             label: 'Hành động',
@@ -75,71 +58,12 @@
                 {
                     icon: '👁️',
                     label: 'Xem',
-                    func: (row) => {
-                        if (row.publicUrl) {
-                            const onlineUrl = getOnlineFileUrl(row.publicUrl)
-                            window.open(onlineUrl, '_blank', 'noopener,noreferrer')
-                        } else {
-                            alert('Không tìm thấy đường dẫn xem file.')
-                        }
-                    }
-                },
-                {
-                    icon: '✏️',
-                    label: 'Cập nhật file',
-                    func: async (row, index) => {
-                        const input = document.createElement('input')
-                        input.type = 'file'
-                        input.onchange = async e => {
-                            const newFile = e.target.files[0]
-                            if (!newFile) return
-
-                            try {
-                                // Xóa file cũ
-                                const resDeleteOld = await deleteFile('documents', row.path)
-                                if (!resDeleteOld.success) throw new Error(resDeleteOld.message)
-
-                                // Upload file mới (tạo tên mới)
-                                const resUploadNew = await uploadFile(newFile, 'documents')
-                                if (!resUploadNew.success) throw new Error(resUploadNew.message)
-
-                                // Cập nhật DB với path và publicUrl mới
-                                const resUpdate = await DocumentService.updateDocument(
-                                    { id: row.id, path: resUploadNew.path },
-                                    ['id']
-                                )
-
-                                if (!resUpdate.success) throw new Error(resUpdate.message)
-
-                                // Cập nhật local list
-                                fileList.value[index].path = resUploadNew.path
-                                fileList.value[index].publicUrl = resUploadNew.publicUrl
-
-                                alert('Cập nhật file thành công!')
-                            } catch (err) {
-                                console.error(err)
-                                alert(`Cập nhật file thất bại: ${err.message}`)
-                            }
-                        }
-                        input.click()
-                    }
+                    func: (row) => window.open(row.url, "_blank", "noopener,noreferrer")
                 },
                 {
                     icon: '🗑️',
                     label: 'Xóa',
-                    func: async (row, index) => {
-                        try {
-                            const resDeleteDB = await DocumentService.deleteDocument({ id: row.id })
-                            if (!resDeleteDB.success || resDeleteDB.cancelled) return
-
-                            const resDeleteFile = await deleteFile('documents', row.path)
-                            if (!resDeleteFile.success) throw new Error(resDeleteFile.message)
-
-                            fileList.value.splice(index, 1)
-                        } catch (err) {
-                            console.error(err)
-                        }
-                    }
+                    func: (row, index) => onDeleteFile(row, index)
                 }
             ]
         }
@@ -151,35 +75,45 @@
     const onUploadFile = async () => {
         try {
             const file = fileInput.value.files[0]
-            if (!file) throw new Error('Vui lòng chọn file.')
+            if (!file) throw new Error("Vui lòng chọn file.")
 
-            const { name_vi, name_en } = formData.value
-            if (!name_vi || !name_en) throw new Error('Vui lòng nhập cả tên tiếng Việt và tiếng Anh.')
+            const name = nameInput.value.trim()
+            const type = typeInput.value.trim()
+            if (!name || !type) throw new Error("Vui lòng nhập đầy đủ tên và loại file.")
 
-            // Upload lên Supabase
-            const resUpload = await uploadFile(file, 'documents')
+            // Upload file lên n8n
+            const resUpload = await DocumentWorkflow.uploadDocument({ file, name, type })
             if (!resUpload.success) throw new Error(resUpload.message)
 
-            // Lưu thông tin vào DB
-            const resAdd = await DocumentService.addDocument({
-                path: resUpload.path,
-                name_vi,
-                name_en
-            })
-            if (!resAdd.success) throw new Error(resAdd.message)
+            // Thêm vào local table
+            await fetchFiles();
 
-            fileList.value.push({
-                ...resAdd.data[0],
-                publicUrl: resUpload.publicUrl
-            })
+            // Reset form
+            nameInput.value = ""
+            typeInput.value = ""
+            fileInput.value.value = ""
 
-            formData.value = { name_vi: '', name_en: '' }
-            fileInput.value.value = ''
-
-            alert('Upload file thành công!')
+            alert("Upload file thành công!")
         } catch (err) {
             console.error(err)
             alert(`Upload thất bại: ${err.message}`)
+        }
+    }
+
+    // -------------------
+    // XÓA FILE
+    // -------------------
+    const onDeleteFile = async (row, index) => {
+        try {
+            const resDeleteFile = await DocumentWorkflow.deleteDocument({ id: row.id })
+            if (!resDeleteFile.success) return
+
+            // Xóa khỏi local list
+            fileList.value.splice(index, 1)
+            alert("Xóa file thành công!")
+        } catch (err) {
+            console.error(err)
+            alert(`Xóa file thất bại: ${err.message}`)
         }
     }
 
@@ -190,11 +124,7 @@
         try {
             const res = await DocumentService.getDocuments()
             if (!res.success) throw new Error(res.message)
-
-            fileList.value = res.data.map(f => ({
-                ...f,
-                publicUrl: getPublicUrl('documents', f.path)
-            }))
+            fileList.value = res.data
         } catch (err) {
             console.error(err)
             alert(`Lấy danh sách file thất bại: ${err.message}`)

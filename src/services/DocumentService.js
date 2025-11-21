@@ -1,7 +1,7 @@
 import { EventBus } from "@/utils/eventBus";
 import { getData, addData, updateData, deleteData } from "@/utils/supabaseUtils";
 
-const tableName = "Document";
+const tableName = "document_metadata";
 
 /**
  * Lấy danh sách file từ bảng documents
