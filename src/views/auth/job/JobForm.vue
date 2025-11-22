@@ -104,6 +104,9 @@
 
         <!-- Submit -->
         <div class="flex justify-end gap-1">
+            <router-link v-if="jobId" :to="`/job/field/${jobId}`">
+                <button type="button">Tùy chỉnh trường dữ liệu</button>
+            </router-link>
             <button type="submit" class="bg-primary text-white px-4 py-2">
                 {{ jobId ? 'Cập nhật' : 'Thêm mới' }}
             </button>
@@ -206,15 +209,18 @@
             dataToSave.applicationDeadlineEnd = `${dataToSave.applicationDeadlineEnd} 00:00:00+00`;
 
         try {
-            if (props.jobId) {
-                // Cập nhật
-                const res = await JobService.updateJob(dataToSave);
-                console.log(res)
-                if (res.success) emit('saved');
-            } else {
+            if (!props.jobId) {
                 // Thêm mới
                 const res = await JobService.addJob(dataToSave);
-                if (res.success) emit('saved');
+                if (res.success) {
+                    emit('saved', res.data[0].id); // truyền id mới
+                }
+            } else {
+                // Cập nhật
+                const res = await JobService.updateJob(dataToSave);
+                if (res.success) {
+                    emit('saved', props.jobId); // truyền id hiện tại
+                }
             }
         } catch (error) {
             console.error("Lỗi khi lưu job:", error);

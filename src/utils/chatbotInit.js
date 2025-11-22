@@ -68,7 +68,7 @@ export default function initChatbot() {
                             backgroundColor: "#ffffff",
                             textColor: "#1e1e1f",
                             sendButtonColor: "#f36539",
-                            maxChars: 50,
+                            maxChars: 150,
                             maxCharsWarningMessage:
                                 "You exceeded the characters limit. Please input less than 50 characters.",
                             autoFocus: false,
@@ -84,7 +84,7 @@ export default function initChatbot() {
                     },
                 },
             });
-            console.log("Chat widget initialized!");
+            // console.log("Chat widget initialized!");
         } else {
             console.error("Chatbot module chưa load!");
         }

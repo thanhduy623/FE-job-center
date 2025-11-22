@@ -20,29 +20,36 @@
             <textarea v-model="form.coverLetter" required></textarea>
         </div>
 
-        <br>
-        <hr><br>
+        <hr>
 
         <!-- ⚙️ Thông tin đặc biệt (dynamic fields) -->
         <div id="specialInfo" v-if="mappedFields.length">
-            <div v-for="f in mappedFields" :key="f.id">
+            <div v-for="(f, index) in mappedFields" :key="f.id" style="margin-top: 16px;">
+                <!-- Chèn hr khi order chia hết cho 100, trừ item đầu tiên -->
+                <hr v-if="index > 0 && f.JobCustomFieldAssignment_customFieldId_fkey.order % 100 === 0" />
+
                 <label :for="f.id">
                     {{ f.fieldName }}
-                    <span v-if="f.isRequired">*</span>
                 </label>
 
                 <input v-if="f.JobCustomFieldAssignment_customFieldId_fkey.fieldType === 'TEXT'" v-model="form[f.id]"
-                    type="text" :id="f.id" :required="f.isRequired" />
+                    type="text" :id="f.id" :required="f.isRequired" :placeholder="f.description || f.fieldName" />
+
+                <textarea v-if="f.JobCustomFieldAssignment_customFieldId_fkey.fieldType === 'TEXTAREA'"
+                    v-model="form[f.id]" :id="f.id" :required="f.isRequired" :placeholder="f.description || f.fieldName"
+                    style="min-height: 10rem;"></textarea>
+
+                <input v-if="f.JobCustomFieldAssignment_customFieldId_fkey.fieldType === 'NUMBER'" v-model="form[f.id]"
+                    type="number" :id="f.id" :required="f.isRequired" :placeholder="f.description || f.fieldName" />
 
                 <input v-else-if="f.JobCustomFieldAssignment_customFieldId_fkey.fieldType === 'DATE'"
                     v-model="form[f.id]" type="date" :id="f.id" :required="f.isRequired" />
 
                 <select v-else-if="f.JobCustomFieldAssignment_customFieldId_fkey.fieldType === 'DROPDOWN'"
                     v-model="form[f.id]" :id="f.id" :required="f.isRequired">
-                    <option value="" disabled selected>Chọn...</option>
+                    <option value="" disabled>Chọn...</option>
                     <option v-for="opt in (f.JobCustomFieldAssignment_customFieldId_fkey.options_vi || 
-                                       f.JobCustomFieldAssignment_customFieldId_fkey.options_en)" :key="opt"
-                        :value="opt">
+                            f.JobCustomFieldAssignment_customFieldId_fkey.options_en)" :key="opt" :value="opt">
                         {{ opt }}
                     </option>
                 </select>
@@ -57,16 +64,10 @@
     </form>
 </template>
 
-
 <script setup>
     import { ref, onMounted, defineProps } from "vue"
     import { mapLocaleField } from "@/utils/mapLocaleField.js"
     import { getJobCustomFields } from "@/services/JobCustomFieldAssignmentService.js"
-
-    import { uploadFile, deleteFile } from "@/utils/supabaseFileUtils.js"
-    import ApplicationService from "@/services/ApplicationService.js"
-    import ApplicationCustomFieldValueService from "@/services/ApplicationCustomFieldValueService.js"
-
     import FileUpload from "@/components/others/FileUpload.vue"
 
     const props = defineProps({
@@ -86,10 +87,16 @@
     const rawFields = ref([])
     const mappedFields = mapLocaleField(rawFields, [
         {
-            newKey: "fieldName",          // Tạo key "fieldName" để hiển thị
+            newKey: "fieldName",
             parentKey: "JobCustomFieldAssignment_customFieldId_fkey",
             viKey: "fieldName_vi",
             enKey: "fieldName_en"
+        },
+        {
+            newKey: "description",
+            parentKey: "JobCustomFieldAssignment_customFieldId_fkey",
+            viKey: "description_vi",
+            enKey: "description_en"
         }
     ])
 
@@ -97,102 +104,35 @@
     onMounted(async () => {
         const res = await getJobCustomFields(props.jobId)
         if (res.success) {
+            // Lấy data assignment
             rawFields.value = res.data
+
+            // Khởi tạo form key dynamic
             rawFields.value.forEach(f => {
-                form.value[f.id] = null
+                form.value[f.id] = ""
             })
+
+            // Sắp xếp theo order của JobCustomFieldAssignment_customFieldId_fkey
+            rawFields.value.sort(
+                (a, b) => a.JobCustomFieldAssignment_customFieldId_fkey.order - b.JobCustomFieldAssignment_customFieldId_fkey.order
+            )
         }
     })
 
-    // Gửi form
-    async function handleSubmit() {
-        const uploadedFiles = []
 
-        try {
-            // 1️⃣ Tạo bản ghi Application chính
-            const appData = {
-                jobId: props.jobId,
-                fullName: form.value.fullName,
-                email: form.value.email,
-                phone: form.value.phone,
-                address: form.value.address,
-                coverLetter: form.value.coverLetter
-            }
-
-            const appRes = await ApplicationService.addApplication(appData)
-            if (!appRes.success || !appRes.data?.length) {
-                throw new Error("Không thể tạo hồ sơ ứng tuyển.")
-            }
-
-            const applicationId = appRes.data[0].id
-
-            // Chuẩn bị danh sách field động (CustomFieldValue)
-            const customFields = []
-
-            for (const f of rawFields.value) {
-                const fieldId = f.id
-                const fieldDef = f.JobCustomFieldAssignment_customFieldId_fkey
-                const value = form.value[fieldId]
-
-                if (value === null || value === "") continue
-
-                let finalValue = value
-
-                // Xử lý nếu là file
-                if (fieldDef.fieldType === "FILE" && value instanceof File) {
-                    const uploadRes = await uploadFile(value, "applications", `cv/${applicationId}`)
-                    if (!uploadRes.success) {
-                        throw new Error(`Không thể upload file: ${uploadRes.message}`)
-                    }
-
-                    // Ghi lại để rollback nếu lỗi sau này
-                    uploadedFiles.push({
-                        bucket: "applications",
-                        path: `cv/${applicationId}/${uploadRes.path.split("/").pop()}`
-                    })
-
-                    finalValue = uploadRes.publicUrl // Lưu URL vào DB
-                }
-
-                customFields.push({
-                    applicationId,
-                    jobCustomFieldId: fieldDef.id,
-                    value: finalValue
-                })
-            }
-
-            // Lưu danh sách custom field values
-            if (customFields.length > 0) {
-                const valueRes = await ApplicationCustomFieldValueService.addApplicationCustomFieldValue(customFields)
-                if (!valueRes.success) {
-                    throw new Error("Không thể lưu thông tin custom field.")
-                }
-            }
-
-            // Hoàn tất
-            console.log("Đã lưu:", { applicationId, customFields })
-
-            // (Tuỳ chọn) Reset form
-            Object.keys(form.value).forEach(k => (form.value[k] = ""))
-        } catch (err) {
-            console.error("❌ Lỗi khi nộp hồ sơ:", err)
-
-            // Rollback (nếu đã upload file)
-            if (uploadedFiles.length > 0) {
-                for (const f of uploadedFiles) {
-                    await deleteFile(f.bucket, f.path)
-                }
-            }
-
-            // 🧹 Rollback (nếu đã tạo Application)
-            if (err.message.includes("custom field") || err.message.includes("upload")) {
-                const lastApp = await ApplicationService.getApplication({ email: form.value.email })
-                if (lastApp.success && lastApp.data.length > 0) {
-                    await ApplicationService.deleteApplication({ id: lastApp.data[0].id })
-                }
-            }
-
-            console.error("⚠️ Lỗi khi nộp hồ sơ: " + err.message)
-        }
+    // Xử lý submit thử
+    function handleSubmit() {
+        console.log("Dữ liệu form gửi:", form.value)
+        alert("Submit thử thành công!")
     }
 </script>
+
+<style scoped>
+    hr {
+        margin: 24px 0;
+    }
+
+    label {
+        margin-top: 16px !important;
+    }
+</style>

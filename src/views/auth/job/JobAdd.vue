@@ -11,7 +11,12 @@
 
     const router = useRouter();
 
-    function onSaved() {
-        router.push('/job'); // quay lại trang danh sách
+    // Nhận id mới từ JobForm
+    function onSaved(jobId) {
+        if (jobId) {
+            router.push(`/job/field/${jobId}`);
+        } else {
+            router.push('/job');
+        }
     }
 </script>

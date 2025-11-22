@@ -283,6 +283,12 @@ textarea {
     overflow-x: hidden;
 }
 
+input::placeholder,
+textarea::placeholder {
+    color: #a0a0a0;
+    font-style: italic;
+}
+
 
 /* Remove animations/transitions during reduced-motion preference */
 @media (prefers-reduced-motion: reduce) {

@@ -1,7 +1,6 @@
 const tableName = "JobCustomFieldAssignment";
 const foreignKey = ["JobCustomFieldAssignment_customFieldId_fkey"];
 import { getData, addData, updateData, deleteData } from "@/utils/supabaseUtils";
-import { EventBus } from "@/utils/eventBus";
 
 /**
  * Lấy danh sách field gán cho một Job (kèm thông tin chi tiết từ JobCustomField)
@@ -28,10 +27,9 @@ export async function updateJobCustomFieldAssignment(newData, keys = ["id"]) {
  * Xóa field assignment
  */
 export async function deleteJobCustomFieldAssignment(conditions) {
-    const confirmed = await EventBus.confirm("Xác nhận xóa trường tùy chỉnh khỏi công việc?");
-    if (!confirmed) return {};
     return await deleteData(tableName, conditions);
 }
+
 
 export default {
     getJobCustomFields,
