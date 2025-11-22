@@ -127,22 +127,22 @@
 
     const formData = ref({
         departmentId: '',
-        name_vi: '',
-        name_en: '',
-        position_vi: '',
-        position_en: '',
-        description_vi: '',
-        description_en: '',
-        requirements_vi: '',
-        requirements_en: '',
-        benefits_vi: '',
-        benefits_en: '',
-        applicationDeadlineStart: '',
-        applicationDeadlineEnd: '',
-        jobType: '',
-        salary: '',
-        status: '',
-        locationId: ''
+        name_vi: 'Test',
+        name_en: 'Test',
+        position_vi: 'Test',
+        position_en: 'Test',
+        description_vi: 'Test',
+        description_en: 'Test',
+        requirements_vi: 'Test',
+        requirements_en: 'Test',
+        benefits_vi: 'Test',
+        benefits_en: 'Test',
+        applicationDeadlineStart: new Date(Date.now()).toISOString().split("T")[0],
+        applicationDeadlineEnd: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+        jobType: 'FULL_TIME',
+        salary: 'Test',
+        status: 'PUBLISHED',
+        locationId: 'b69a365c-21ae-449a-8df1-080ddd8d3780'
     });
 
 
@@ -209,6 +209,7 @@
             if (props.jobId) {
                 // Cập nhật
                 const res = await JobService.updateJob(dataToSave);
+                console.log(res)
                 if (res.success) emit('saved');
             } else {
                 // Thêm mới
