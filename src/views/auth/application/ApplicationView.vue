@@ -1,10 +1,10 @@
 <template>
     <div class="main-container">
         <!-- 🔹 Tiêu đề và nút -->
-        <div class="flex flex-row items-center">
+        <div class="flex flex-row items-center gap-1">
             <h2 v-t="'pageApplication.title'" class="text-primary text-title flex-1"></h2>
-            <router-link to="/applications/add">
-                <button class="bg-primary">{{ $t('add') }}</button>
+            <router-link to="/application/interview">
+                <button>{{ $t('interview') }}</button>
             </router-link>
         </div>
 

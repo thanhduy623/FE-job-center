@@ -11,6 +11,11 @@ export async function getApplication(conditions = {}) {
     return await getData(tableName, conditions, ["Application_jobId_fkey"])
 }
 
+export async function getApplicationInterview(conditions = { status: "INTERVIEW" }) {
+    // Liên kết với bảng Job qua khóa ngoại Application_jobId_fkey
+    return await getData(tableName, conditions, ["Application_jobId_fkey"])
+}
+
 /**
  * Lấy chi tiết hồ sơ ứng tuyển theo ID
  */
@@ -59,9 +64,10 @@ export async function deleteApplication(conditions) {
 
 export default {
     getApplication,
+    getApplicationInterview,
     getApplicationById,
     addApplication,
     updateApplication,
     updateApplicationStatus,
-    deleteApplication
+    deleteApplication,
 }

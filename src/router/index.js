@@ -7,10 +7,14 @@ import StaffLayout from '@/layouts/StaffLayout.vue'
 
 // Public
 import Home from '@/views/public/HomeView.vue'
-import Recruitment from '@/views/public/RecruitmentView.vue'
-import Register from '@/views/public/RecruitmentRegister.vue'
 import Login from '@/views/public/LoginView.vue'
 import ResetPassword from '@/views/public/ResetPassword.vue'
+
+import Recruitment from '@/views/public/RecruitmentView.vue'
+import Register from '@/views/public/RecruitmentRegister.vue'
+
+import ConfirmInterview from '@/views/auth/application/ConfirmInterview.vue'
+
 
 
 // Auth
@@ -29,6 +33,7 @@ import JobField from '@/views/auth/job/JobField.vue'
 // Auth/Application
 import ApplicationView from '@/views/auth/application/ApplicationView.vue'
 import ApplicationDetail from '@/views/auth/application/ApplicationDetail.vue'
+import ApplicationInterview from '@/views/auth/application/ApplicationInterview.vue'
 // Auth/Document
 import DocumentView from '@/views/auth/document/DocumentView.vue'
 
@@ -59,6 +64,7 @@ const routes = [
             { path: 'job/field/:id', name: 'jobField', component: JobField },
             { path: 'application', name: 'application', component: ApplicationView },
             { path: 'application/:id', name: 'applicationDetail', component: ApplicationDetail },
+            { path: 'application/interview', name: 'applicationInterview', component: ApplicationInterview },
             { path: 'document', name: 'document', component: DocumentView },
         ]
     },
@@ -67,7 +73,8 @@ const routes = [
         component: AuthLayout,
         children: [
             { path: 'login', name: 'login', component: Login },
-            { path: 'reset-password', name: 'reset-password', component: ResetPassword }
+            { path: 'reset-password', name: 'reset-password', component: ResetPassword },
+            { path: 'cofirm-interview/:id', name: 'cofirm-interview', component: ConfirmInterview }
         ]
     }
 ]

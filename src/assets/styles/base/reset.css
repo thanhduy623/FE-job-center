@@ -174,22 +174,34 @@ h6 {
 }
 
 /* Forms — sensible reset while preserving accessibility */
+/* Forms — sensible reset while preserving accessibility */
 button,
 input,
-select,
 textarea {
+    /* KHÔNG CÓ SELECT ở đây */
     font: inherit;
-    /* inherit font styles */
     color: inherit;
     background: transparent;
     border: none;
     padding: 0;
     margin: 0;
     outline: none;
-    /* DON'T remove focus styling globally — see focus rules below */
     appearance: none;
+    /* Giữ lại cho button/input/textarea */
     -webkit-appearance: none;
     -moz-appearance: none;
+    /* ... các thuộc tính khác ... */
+}
+
+/* KHÔI PHỤC appearance cho SELECT */
+select {
+    font: inherit;
+    color: inherit;
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    outline: none;
     border-radius: 0;
     box-shadow: none;
     vertical-align: middle;

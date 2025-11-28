@@ -1,7 +1,7 @@
 import { EventBus } from './eventBus'
 
 import axios from "axios";
-export const N8N_BASE = "https://n8n.dat3k.tech/webhook";
+export const N8N_BASE = "https://n8n.dat3k.tech/webhook-test";
 
 
 export async function callN8n({ method = "GET", endpoint, body = {}, query = {} }) {

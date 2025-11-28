@@ -114,6 +114,8 @@ export default {
     pageApplication: {
         title: "Application Management",
         detail: "Application Detail",
+        interview: "Interview schedule",
+        confirm: "Confirm interview",
     },
 
     // Chatbot

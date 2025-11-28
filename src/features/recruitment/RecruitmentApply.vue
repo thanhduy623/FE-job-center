@@ -32,31 +32,43 @@
                     {{ f.fieldName }}
                 </label>
 
-                <input v-if="f.JobCustomFieldAssignment_customFieldId_fkey.fieldType === 'TEXT'" v-model="form[f.id]"
-                    type="text" :id="f.id" :required="f.isRequired" :placeholder="f.description || f.fieldName" />
+                <!-- TEXT -->
+                <input v-if="f.JobCustomFieldAssignment_customFieldId_fkey.fieldType === 'TEXT'"
+                    v-model="form.dynamicField[f.JobCustomFieldAssignment_customFieldId_fkey.id]" type="text" :id="f.id"
+                    :required="f.isRequired" :placeholder="f.description || f.fieldName" />
 
-                <textarea v-if="f.JobCustomFieldAssignment_customFieldId_fkey.fieldType === 'TEXTAREA'"
-                    v-model="form[f.id]" :id="f.id" :required="f.isRequired" :placeholder="f.description || f.fieldName"
+                <!-- TEXTAREA -->
+                <textarea v-else-if="f.JobCustomFieldAssignment_customFieldId_fkey.fieldType === 'TEXTAREA'"
+                    v-model="form.dynamicField[f.JobCustomFieldAssignment_customFieldId_fkey.id]" :id="f.id"
+                    :required="f.isRequired" :placeholder="f.description || f.fieldName"
                     style="min-height: 10rem;"></textarea>
 
-                <input v-if="f.JobCustomFieldAssignment_customFieldId_fkey.fieldType === 'NUMBER'" v-model="form[f.id]"
-                    type="number" :id="f.id" :required="f.isRequired" :placeholder="f.description || f.fieldName" />
+                <!-- NUMBER -->
+                <input v-else-if="f.JobCustomFieldAssignment_customFieldId_fkey.fieldType === 'NUMBER'"
+                    v-model="form.dynamicField[f.JobCustomFieldAssignment_customFieldId_fkey.id]" type="number"
+                    :id="f.id" :required="f.isRequired" :placeholder="f.description || f.fieldName" />
 
+                <!-- DATE -->
                 <input v-else-if="f.JobCustomFieldAssignment_customFieldId_fkey.fieldType === 'DATE'"
-                    v-model="form[f.id]" type="date" :id="f.id" :required="f.isRequired" />
+                    v-model="form.dynamicField[f.JobCustomFieldAssignment_customFieldId_fkey.id]" type="date" :id="f.id"
+                    :required="f.isRequired" />
 
+                <!-- DROPDOWN -->
                 <select v-else-if="f.JobCustomFieldAssignment_customFieldId_fkey.fieldType === 'DROPDOWN'"
-                    v-model="form[f.id]" :id="f.id" :required="f.isRequired">
+                    v-model="form.dynamicField[f.JobCustomFieldAssignment_customFieldId_fkey.id]" :id="f.id"
+                    :required="f.isRequired">
                     <option value="" disabled>Chọn...</option>
                     <option v-for="opt in (f.JobCustomFieldAssignment_customFieldId_fkey.options_vi || 
-                            f.JobCustomFieldAssignment_customFieldId_fkey.options_en)" :key="opt" :value="opt">
+                                    f.JobCustomFieldAssignment_customFieldId_fkey.options_en)" :key="opt" :value="opt">
                         {{ opt }}
                     </option>
                 </select>
 
+                <!-- FILE -->
                 <FileUpload v-else-if="f.JobCustomFieldAssignment_customFieldId_fkey.fieldType === 'FILE'"
                     :ref="'file_' + f.id" :is-multiple="false" :allowed-file-types="['.png', '.jpg', '.pdf', '.docx']"
-                    @file-selected="file => form[f.id] = file" @upload-error="err => alert(err)" />
+                    @file-selected="file => form.dynamicField[f.JobCustomFieldAssignment_customFieldId_fkey.id] = file"
+                    @upload-error="err => alert(err)" />
             </div>
         </div>
 
@@ -68,6 +80,7 @@
     import { ref, onMounted, defineProps } from "vue"
     import { mapLocaleField } from "@/utils/mapLocaleField.js"
     import { getJobCustomFields } from "@/services/JobCustomFieldAssignmentService.js"
+    import ApplicationWorkflow from "@/workflows/ApplicationWorkflow.js";
     import FileUpload from "@/components/others/FileUpload.vue"
 
     const props = defineProps({
@@ -103,16 +116,28 @@
     // Lấy trường dữ liệu động
     onMounted(async () => {
         const res = await getJobCustomFields(props.jobId)
+
         if (res.success) {
-            // Lấy data assignment
             rawFields.value = res.data
 
-            // Khởi tạo form key dynamic
+            // Khởi tạo form đúng cấu trúc JSON mẫu
+            form.value = {
+                jobId: props.jobId,
+                fullName: "",
+                email: "",
+                phone: "",
+                address: "",
+                coverLetter: "",
+                dynamicField: {}
+            }
+
+            // Khởi tạo dynamicField keys từ rawFields
             rawFields.value.forEach(f => {
-                form.value[f.id] = ""
+                const id = f.JobCustomFieldAssignment_customFieldId_fkey.id
+                form.value.dynamicField[id] = ""
             })
 
-            // Sắp xếp theo order của JobCustomFieldAssignment_customFieldId_fkey
+            // Sắp xếp theo order
             rawFields.value.sort(
                 (a, b) => a.JobCustomFieldAssignment_customFieldId_fkey.order - b.JobCustomFieldAssignment_customFieldId_fkey.order
             )
@@ -120,11 +145,23 @@
     })
 
 
+
     // Xử lý submit thử
-    function handleSubmit() {
-        console.log("Dữ liệu form gửi:", form.value)
-        alert("Submit thử thành công!")
+    async function handleSubmit() {
+        try {
+            console.log("Dữ liệu form gửi:", form.value);
+
+            // Gọi n8n upload CV
+            const res = await ApplicationWorkflow.uploadCV(form.value);
+
+            console.log("Upload CV thành công:", res);
+            alert("Submit thành công!");
+        } catch (err) {
+            console.error("Upload CV thất bại:", err);
+            alert("Submit thất bại! Kiểm tra console.");
+        }
     }
+
 </script>
 
 <style scoped>

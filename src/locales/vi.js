@@ -115,6 +115,8 @@ export default {
     pageApplication: {
         title: "Quản lí ứng viên",
         detail: "Hồ sơ ứng viên",
+        interview: "Phân lịch phỏng vấn",
+        confirm: "Xác nhận phỏng vấn",
     },
 
     // Chatbot
