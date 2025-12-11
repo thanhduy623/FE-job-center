@@ -72,6 +72,10 @@ export default {
     document: "Document",
     name_vi: "Vietnamese name",
     name_en: "English name",
+    getData: "getData",
+    interview: "Interview",
+    mailInterview: "Mail interview",
+    scheduleInterview: "Mail interview",
 
     // School information
     schoolInfo: {

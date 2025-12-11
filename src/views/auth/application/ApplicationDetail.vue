@@ -37,16 +37,20 @@
                                 <td>{{ application.address }}</td>
                             </tr>
 
+                            <!-- Custom Fields -->
                             <tr v-for="cv in mappedCustomValues" :key="cv?.id">
-                                <th>{{ cv?.fieldName || 'Field' }}</th>
+                                <th>{{ cv?.fieldName }}</th>
                                 <td>
-                                    <span v-if="!isFile(cv?.value)">
+                                    <template v-if="isLink(cv?.value)">
+                                        <a :href="getOnlineFileUrl(getValue(cv.value))" target="_blank"
+                                            rel="noopener noreferrer">
+                                            {{ $t('viewFile') }}
+                                        </a>
+                                    </template>
+
+                                    <template v-else>
                                         {{ Array.isArray(cv?.value) ? cv.value.join(', ') : cv?.value }}
-                                    </span>
-                                    <a v-else :href="getOnlineFileUrl(cv?.value)" target="_blank"
-                                        rel="noopener noreferrer">
-                                        {{ $t('viewFile') }}
-                                    </a>
+                                    </template>
                                 </td>
                             </tr>
                         </tbody>
@@ -61,7 +65,7 @@
 
             <div class="card status-section">
                 <label>{{ $t('status') }}</label>
-                <StatusApplicationSelect v-model="selectedStatus" @update:modelValue="handleStatusChange" />
+                <StatusApplicationSelect v-model="selectedStatus" @attemptChange="handleStatusChange" />
             </div>
         </div>
 
@@ -88,50 +92,41 @@
     const customValues = ref([])
     const selectedStatus = ref(null)
 
-    // --- Hàm tiện ích map locale cho 1 object ---
+    // Lấy text theo ngôn ngữ
     const getLocaleField = (obj, viKey, enKey) => {
         if (!obj) return ''
         return locale.value === 'vi' ? obj[viKey] ?? '' : obj[enKey] ?? ''
     }
 
-    // check file
-    function isFile(value) {
-        const url = Array.isArray(value) ? value[0] : value
-        return (
-            typeof url === 'string' &&
-            (url.startsWith('http') ||
-                url.endsWith('.pdf') ||
-                url.endsWith('.docx') ||
-                url.endsWith('.jpg') ||
-                url.endsWith('.png'))
-        )
+    // Lấy giá trị CV (hỗ trợ array)
+    const getValue = val => Array.isArray(val) ? val[0] : val
+
+    // Nhận diện link rất đơn giản
+    const isLink = value => {
+        const v = getValue(value)
+        return typeof v === 'string' && v.startsWith('http')
     }
 
-    // link file
-    function getOnlineFileUrl(fileUrl) {
-        if (!fileUrl) return '#'
-        const url = Array.isArray(fileUrl) ? fileUrl[0] : fileUrl
-        const lowerUrl = url.toLowerCase()
-        if (lowerUrl.endsWith('.pdf'))
+    // Xử lý link xem file online
+    function getOnlineFileUrl(url) {
+        if (!url) return '#'
+        const lower = url.toLowerCase()
+
+        if (lower.endsWith('.pdf'))
             return `https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`
-        if (
-            lowerUrl.endsWith('.docx') ||
-            lowerUrl.endsWith('.xlsx') ||
-            lowerUrl.endsWith('.pptx')
-        )
-            return `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(
-                url
-            )}`
+
+        if (lower.endsWith('.docx') || lower.endsWith('.xlsx') || lower.endsWith('.pptx'))
+            return `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(url)}`
+
         return url
     }
 
-    // load application + custom values
+    // Load dữ liệu
     onMounted(async () => {
         EventBus.showLoading('Đang tải dữ liệu hồ sơ...')
         try {
             const appRes = await ApplicationService.getApplicationById(route.params.id)
             if (appRes.success && appRes.data?.length) {
-                // Map trực tiếp jobName và departmentName
                 const app = appRes.data[0]
                 const job = app.Application_jobId_fkey || {}
                 const department = job.Job_departmentId_fkey || {}
@@ -144,14 +139,8 @@
                 selectedStatus.value = application.value.status
             }
 
-            const cvRes = await ApplicationCustomFieldValueService.getByApplicationId(
-                route.params.id
-            )
-            if (cvRes.success) {
-                customValues.value = (cvRes.data || []).filter(cv => cv != null)
-            } else {
-                customValues.value = []
-            }
+            const cvRes = await ApplicationCustomFieldValueService.getByApplicationId(route.params.id)
+            customValues.value = cvRes.success ? cvRes.data.filter(v => v != null) : []
         } catch (err) {
             EventBus.showNotify('Lỗi khi tải dữ liệu hồ sơ: ' + err.message, 'error')
         } finally {
@@ -159,7 +148,7 @@
         }
     })
 
-    // SỬA LỖI map: Truyền ref 'customValues' cho mappedCustomValues
+    // Map custom fields
     const mappedCustomValues = mapLocaleField(customValues, [
         {
             newKey: 'fieldName',
@@ -169,42 +158,44 @@
         }
     ])
 
-    // handle status
-    async function handleStatusChange(newStatus) {
-        const currentStatus = selectedStatus.value
-        const order = ['PENDING', 'REVIEWING', 'INTERVIEW', 'HIRED', 'REJECTED']
-        const canProceed = order.indexOf(newStatus) > order.indexOf(currentStatus)
+    async function handleStatusChange({ newValue, oldValue }) {
+        // Nếu parent không có giá trị trước (an toàn)
+        const currentStatus = oldValue ?? selectedStatus.value
 
-        if (!canProceed) {
-            EventBus.showNotify('Không thể cập nhật lùi trạng thái!', 'warning')
-            selectedStatus.value = currentStatus
+        const order = ["PENDING", "REVIEWING", "INTERVIEW", "MAILED", "DECLINED", "CONFIRMED", "HIRED", "REJECTED"]
+        const oldIndex = order.indexOf(currentStatus)
+        const newIndex = order.indexOf(newValue)
+
+        // bảo đảm hợp lệ (phòng trường hợp)
+        if (newIndex === -1 || oldIndex === -1) {
+            EventBus.showNotify("Trạng thái không hợp lệ!", "error")
             return
         }
 
-        const confirmed = await EventBus.confirm(
-            `Xác nhận cập nhật trạng thái từ "${currentStatus}" → "${newStatus}"?`
-        )
-        if (!confirmed) {
-            selectedStatus.value = currentStatus
+        // nếu lùi trạng thái — Select đã chặn nhưng double-check
+        if (newIndex < oldIndex) {
+            EventBus.showNotify("Không thể cập nhật lùi trạng thái!", "warning")
+            // revert: vì v-model chưa bị thay đổi ở parent (Select không emit update), nên không cần set lại
             return
         }
 
+        // nếu không tiến (bằng nhau) thì nothing
+        if (newIndex === oldIndex) return
+
+        // Call API để cập nhật trạng thái
         try {
-            EventBus.showLoading('Đang cập nhật trạng thái...')
-            const res = await ApplicationService.updateApplicationStatus(
-                route.params.id,
-                newStatus
-            )
-            if (res.success) {
-                selectedStatus.value = newStatus
-                EventBus.showNotify('Cập nhật trạng thái thành công!', 'success')
-                if (['INTERVIEW', 'HIRED', 'REJECTED'].includes(newStatus)) {
-                    alert(`Ứng viên đã được cập nhật trạng thái: ${newStatus}`, "success")
-                }
-            } else throw new Error(res.message)
+            EventBus.showLoading("Đang cập nhật trạng thái...")
+            const res = await ApplicationService.updateApplicationStatus(route.params.id, newValue)
+
+            if (!res.success) {
+                throw new Error(res.message || "Cập nhật thất bại")
+            }
+
+            // API thành công -> cập nhật v-model (parent state)
+            selectedStatus.value = newValue
         } catch (err) {
-            EventBus.showNotify('Lỗi khi cập nhật trạng thái: ' + err.message, 'error')
-            selectedStatus.value = currentStatus
+            EventBus.showNotify("Lỗi khi cập nhật trạng thái: " + err.message, "error")
+            // nếu muốn đảm bảo UI là giá trị cũ thì selectedStatus giữ nguyên vì chúng ta chưa set nó
         } finally {
             EventBus.hideLoading()
         }

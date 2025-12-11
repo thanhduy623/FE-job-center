@@ -34,6 +34,7 @@ import JobField from '@/views/auth/job/JobField.vue'
 import ApplicationView from '@/views/auth/application/ApplicationView.vue'
 import ApplicationDetail from '@/views/auth/application/ApplicationDetail.vue'
 import ApplicationInterview from '@/views/auth/application/ApplicationInterview.vue'
+import ApplicationMailer from '@/views/auth/application/ApplicationMailer.vue'
 // Auth/Document
 import DocumentView from '@/views/auth/document/DocumentView.vue'
 
@@ -65,6 +66,7 @@ const routes = [
             { path: 'application', name: 'application', component: ApplicationView },
             { path: 'application/:id', name: 'applicationDetail', component: ApplicationDetail },
             { path: 'application/interview', name: 'applicationInterview', component: ApplicationInterview },
+            { path: 'application/mailer', name: 'applicationMailer', component: ApplicationMailer },
             { path: 'document', name: 'document', component: DocumentView },
         ]
     },

@@ -72,6 +72,10 @@ export default {
     document: "Tài liệu",
     name_vi: "Tên tiếng Việt",
     name_en: "Tên tiếng Anh",
+    getData: "Lấy dữ liệu",
+    interview: "Phỏng vấn",
+    mailInterview: "Thư phỏng vấn",
+    scheduleInterview: "Lịch phỏng vấn",
 
     // Thông tin trường
     schoolInfo: {

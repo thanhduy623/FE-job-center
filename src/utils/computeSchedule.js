@@ -102,7 +102,12 @@ export function computeSchedule(
     rawApplications
 ) {
     // 1. KIỂM TRA INPUT KHÔNG RỖNG
-    if (!locationId || !selectedDates?.length || !duration || !breakTime || !morningStart || !morningEnd || !afternoonStart || !afternoonEnd || !rawApplications?.length) {
+    if (!rawApplications?.length) {
+        EventBus.showNotify('Không có hồ sơ ứng viên tại cơ sở', 'warning')
+        return null;
+    }
+
+    if (!locationId || !selectedDates?.length || !duration || !breakTime || !morningStart || !morningEnd || !afternoonStart || !afternoonEnd) {
         EventBus.showNotify('Dữ liệu chưa đầy đủ để xếp lịch', 'warning')
         return null;
     }

@@ -4,12 +4,15 @@
         <div class="flex flex-row items-center gap-1">
             <h2 v-t="'pageApplication.title'" class="text-primary text-title flex-1"></h2>
             <router-link to="/application/interview">
-                <button>{{ $t('interview') }}</button>
+                <button>{{ $t('scheduleInterview') }}</button>
+            </router-link>
+            <router-link to="/application/mailer">
+                <button>{{ $t('mailInterview') }}</button>
             </router-link>
         </div>
 
         <!-- 📋 Bảng danh sách hồ sơ -->
-        <TableComponent v-model:rows="applicationList" :columns="headers" />
+        <TableComponent v-model:rows="applicationList" :columns="headers" class="mt-1" />
     </div>
 </template>
 

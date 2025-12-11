@@ -9,7 +9,7 @@ const foreignKey = ["Token_applicationId_fkey"]
  */
 export async function getSchedule(conditions = {}) {
     // Liên kết với bảng Application qua khóa ngoại applicationId
-    return await getData(tableName, conditions, ["applicationId"])
+    return await getData(tableName, conditions, ["applicationId", "jobId"])
 }
 
 /**
