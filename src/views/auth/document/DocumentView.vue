@@ -1,6 +1,6 @@
 <template>
     <div class="main-container flex flex-col gap-1">
-        <h2 class="text-primary text-title flex-1">Quản lý file</h2>
+        <h2 class="text-primary text-title flex-1" v-t="'pageFile.title'"></h2>
 
         <!-- FORM UPLOAD -->
         <form @submit.prevent="onUploadFile" class="flex gap-1 flex-wrap">
@@ -23,7 +23,7 @@
             </div>
 
             <div class="flex flex-row wrap gap-1 justify-end">
-                <button type="submit" class="bg-primary text-white px-4 py-2">Upload</button>
+                <button type="submit" class="bg-primary text-white px-4 py-2" v-t="'update'"></button>
             </div>
         </form>
 
@@ -34,6 +34,8 @@
 
 <script setup>
     import { ref, onMounted } from 'vue'
+    import { EventBus } from '@/utils/eventBus'
+
     import DocumentService from "@/services/DocumentService.js"
     import DocumentWorkflow from "@/workflows/DocumentWorkflow.js"
 
@@ -93,10 +95,10 @@
             typeInput.value = ""
             fileInput.value.value = ""
 
-            alert("Upload file thành công!")
+            EventBus.showNotify("Tải file lên thành công", 'success');
         } catch (err) {
             console.error(err)
-            alert(`Upload thất bại: ${err.message}`)
+            EventBus.showNotify("Tải file lên thất bại", 'error');
         }
     }
 
@@ -110,10 +112,10 @@
 
             // Xóa khỏi local list
             fileList.value.splice(index, 1)
-            alert("Xóa file thành công!")
+            EventBus.showNotify("Xóa file thành công", 'success');
         } catch (err) {
             console.error(err)
-            alert(`Xóa file thất bại: ${err.message}`)
+            EventBus.showNotify("Xóa file lên thất bại", 'error');
         }
     }
 
@@ -127,7 +129,7 @@
             fileList.value = res.data
         } catch (err) {
             console.error(err)
-            alert(`Lấy danh sách file thất bại: ${err.message}`)
+            EventBus.showNotify("Lấy danh sách thất bại", 'error');
         }
     }
 

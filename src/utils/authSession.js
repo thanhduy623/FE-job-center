@@ -1,3 +1,5 @@
+import { EventBus } from '@/utils/eventBus'
+
 const PREFIX = "auth_";
 
 /**
@@ -27,7 +29,7 @@ export function getSession(key) {
 
         const record = JSON.parse(jsonData);
         if (record.expiresAt && Date.now() > record.expiresAt) {
-            alert("Phiên làm việc đã hết hạn. Vui lòng đăng nhập lại.");
+            EventBus.showNotify("Phiên làm việc đã hết hạn...", 'error');
             clearAllSessions();
             window.location.href = "/login";
             return null;

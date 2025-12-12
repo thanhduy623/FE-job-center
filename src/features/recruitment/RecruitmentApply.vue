@@ -68,7 +68,7 @@
                 <FileUpload v-else-if="f.JobCustomFieldAssignment_customFieldId_fkey.fieldType === 'FILE'"
                     :ref="'file_' + f.id" :is-multiple="false" :allowed-file-types="['.png', '.jpg', '.pdf', '.docx']"
                     @file-selected="file => form.dynamicField[f.JobCustomFieldAssignment_customFieldId_fkey.id] = file"
-                    @upload-error="err => alert(err)" />
+                    @upload-error="err => EventBus.showNotify(err, 'error')" />
             </div>
         </div>
 
@@ -80,6 +80,8 @@
     import { ref, onMounted, defineProps } from "vue"
     import { mapLocaleField } from "@/utils/mapLocaleField.js"
     import { getJobCustomFields } from "@/services/JobCustomFieldAssignmentService.js"
+    import { EventBus } from '@/utils/eventBus'
+
     import ApplicationWorkflow from "@/workflows/ApplicationWorkflow.js";
     import FileUpload from "@/components/others/FileUpload.vue"
 
@@ -155,10 +157,10 @@
             const res = await ApplicationWorkflow.uploadCV(form.value);
 
             console.log("Upload CV thành công:", res);
-            alert("Submit thành công!");
+            EventBus.showNotify("Gửi hồ sơ ứng tuyển thành công.", 'success');
         } catch (err) {
             console.error("Upload CV thất bại:", err);
-            alert("Submit thất bại! Kiểm tra console.");
+            EventBus.showNotify("Gửi hồ sơ ứng tuyển thất bại.", 'error');
         }
     }
 

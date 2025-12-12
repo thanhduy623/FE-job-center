@@ -4,10 +4,10 @@
         <div class="flex flex-row items-center gap-1">
             <h2 v-t="'pageApplication.title'" class="text-primary text-title flex-1"></h2>
             <router-link to="/application/interview">
-                <button>{{ $t('scheduleInterview') }}</button>
+                <button class="bg-primary">{{ $t('scheduleInterview') }}</button>
             </router-link>
             <router-link to="/application/mailer">
-                <button>{{ $t('mailInterview') }}</button>
+                <button class="bg-primary">{{ $t('mailInterview') }}</button>
             </router-link>
         </div>
 

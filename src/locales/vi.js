@@ -123,6 +123,10 @@ export default {
         confirm: "Xác nhận phỏng vấn",
     },
 
+    pageFile: {
+        title: "Quản lý tài liệu"
+    },
+
     // Chatbot
     pageChatbot: {
         title: "Chatbot",

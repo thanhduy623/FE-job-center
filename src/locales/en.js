@@ -122,6 +122,10 @@ export default {
         confirm: "Confirm interview",
     },
 
+    pageFile: {
+        title: "Manage File"
+    },
+
     // Chatbot
     pageChatbot: {
         title: "Chatbot",
