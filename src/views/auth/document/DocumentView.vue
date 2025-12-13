@@ -18,7 +18,7 @@
             <div class="flex flex-row wrap gap-1 items-end">
                 <div class="flex flex-col flex-1">
                     <label>File</label>
-                    <input type="file" ref="fileInput" required />
+                    <input type="file" ref="fileInput" accept="application/pdf" required />
                 </div>
             </div>
 
@@ -35,7 +35,6 @@
 <script setup>
     import { ref, onMounted } from 'vue'
     import { EventBus } from '@/utils/eventBus'
-    import { callSupabaseEdge } from '@/utils/supabaseEdge'
 
     import DocumentService from "@/services/DocumentService.js"
 
@@ -88,7 +87,7 @@
             formData.append("name", name)
             formData.append("is_active", type)
 
-            const resUpload = await callSupabaseEdge(formData, "upload-document-metadata")
+            const resUpload = await DocumentService.addDocument(formData)
 
             if (!resUpload?.success) {
                 throw new Error(resUpload?.message || "Upload thất bại")
@@ -116,9 +115,7 @@
             const formData = new FormData()
             formData.append("id", row.id)
 
-            const resDeleteFile = await callSupabaseEdge(
-                formData,
-                "delete-document-metadata", "DELETE")
+            const resDeleteFile = await await DocumentService.deleteDocument(formData)
 
             if (!resDeleteFile?.success) return
 

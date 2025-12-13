@@ -1,7 +1,6 @@
 const tableName = "Application"
 const foreignKey = ["Application_jobId_fkey"]
-import { EventBus } from "@/utils/eventBus"
-import { getData, addData, updateData, deleteData } from "@/utils/supabaseUtils"
+import { getData, updateData } from "@/utils/supabaseUtils"
 
 /**
  * Lấy danh sách hồ sơ ứng tuyển
@@ -32,20 +31,6 @@ export async function getApplicationById(id) {
 }
 
 /**
- * Thêm hồ sơ ứng tuyển
- */
-export async function addApplication(data) {
-    return await addData(tableName, data, false)
-}
-
-/**
- * Cập nhật thông tin hồ sơ ứng tuyển
- */
-export async function updateApplication(newData, keys = ["id"]) {
-    return await updateData(tableName, newData, keys)
-}
-
-/**
  * Cập nhật trạng thái hồ sơ ứng tuyển
  */
 export async function updateApplicationStatus(id, status) {
@@ -53,21 +38,9 @@ export async function updateApplicationStatus(id, status) {
     return await updateData(tableName, { id, status }, ["id"])
 }
 
-/**
- * Xóa hồ sơ ứng tuyển
- */
-export async function deleteApplication(conditions) {
-    const isConfirmed = await EventBus.confirm("Xác nhận xóa hồ sơ ứng tuyển?")
-    if (!isConfirmed) return {}
-    return await deleteData(tableName, conditions)
-}
-
 export default {
     getApplication,
     getApplicationInterview,
     getApplicationById,
-    addApplication,
-    updateApplication,
     updateApplicationStatus,
-    deleteApplication,
 }

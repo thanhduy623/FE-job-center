@@ -2,47 +2,59 @@ import axios from "axios"
 import { EventBus } from './eventBus'
 import { getSession } from "@/utils/authSession.js"
 
-const SUPABASE_FUNC_URL = process.env.VUE_APP_SUPABASE_URL_FUNC
-console.log(SUPABASE_FUNC_URL);
 
+/**
+ * Hàm gọi Supabase Edge Function, xử lý FormData, xác thực và lỗi logic từ n8n.
+ * * @param {string} [method="POST"] Phương thức HTTP để Edge Function gọi đến n8n.
+ * @param {string} urlFunc URL của Edge Function (thường là biến môi trường).
+ * @param {FormData | object} formData Dữ liệu gửi lên (có thể là FormData hoặc object).
+ * @param {string} type Tham số 'type' cho URL params.
+ * @param {boolean} [auth=true] Quyết định có gắn Authorization token vào header hay không.
+ * @returns {Promise<any>} Dữ liệu trả về từ Edge Function/n8n.
+ */
+export async function callSupabaseEdge(method = "POST", urlFunc, formData, type, auth = true) {
 
-export async function callSupabaseEdge(formData, type, method = "POST") {
-    if (!SUPABASE_FUNC_URL) {
-        EventBus.showNotify(`Lỗi hệ thống`, 'error')
-        throw new Error("Chưa cấu hình VUE_APP_SUPABASE_URL_FUNC trong .env")
+    if (!urlFunc) {
+        EventBus.showNotify(`Lỗi hệ thống`, 'error');
+        throw new Error("Chưa cấu hình URL Edge Function.");
     }
 
-    const session = getSession("session")
-
-    const headers = {}
-
-    if (session?.access_token) {
-        headers.Authorization = `Bearer ${session.access_token}`
+    const headers = {};
+    if (auth) {
+        const session = getSession("session");
+        if (session?.access_token) {
+            headers.Authorization = `Bearer ${session.access_token}`;
+        }
     }
 
     try {
-        EventBus.showLoading()
-        console.log("BEFORE CALL")
+        EventBus.showLoading();
+        console.log("BEFORE CALL");
+
         const response = await axios.post(
-            SUPABASE_FUNC_URL,
+            urlFunc,
             formData,
             {
                 headers,
                 params: { type, method }
             }
-        )
+        );
 
-        console.log(response);
+        // Nếu vào được đây thì HTTP = 2xx
+        return response.data;
 
-
-        return response.data
     } catch (error) {
-        console.error(
-            "Lỗi gọi Supabase Edge Function:",
-            error.response?.data || error.message
-        )
-        throw error
+
+        const errorData = error.response?.data;
+        const errorMessage =
+            errorData?.message ||
+            error.message ||
+            "Lỗi không xác định từ hệ thống.";
+
+        console.error("Lỗi gọi Supabase Edge:", errorMessage);
+        throw new Error(errorMessage);
+
     } finally {
-        EventBus.hideLoading()
+        EventBus.hideLoading();
     }
 }
