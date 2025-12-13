@@ -35,9 +35,9 @@
 <script setup>
     import { ref, onMounted } from 'vue'
     import { EventBus } from '@/utils/eventBus'
+    import { callSupabaseEdge } from '@/utils/supabaseEdge'
 
     import DocumentService from "@/services/DocumentService.js"
-    import DocumentWorkflow from "@/workflows/DocumentWorkflow.js"
 
     import TableComponent from "@/components/tables/tableComponent.vue"
     import TypeSelect from "@/components/selects/TypeSelect.vue"
@@ -83,41 +83,53 @@
             const type = typeInput.value.trim()
             if (!name || !type) throw new Error("Vui lòng nhập đầy đủ tên và loại file.")
 
-            // Upload file lên n8n
-            const resUpload = await DocumentWorkflow.uploadDocument({ file, name, type })
-            if (!resUpload.success) throw new Error(resUpload.message)
+            const formData = new FormData()
+            formData.append("file", file)
+            formData.append("name", name)
+            formData.append("is_active", type)
 
-            // Thêm vào local table
-            await fetchFiles();
+            const resUpload = await callSupabaseEdge(formData, "upload-document-metadata")
 
-            // Reset form
+            if (!resUpload?.success) {
+                throw new Error(resUpload?.message || "Upload thất bại")
+            }
+
+            await fetchFiles()
+
             nameInput.value = ""
             typeInput.value = ""
             fileInput.value.value = ""
 
-            EventBus.showNotify("Tải file lên thành công", 'success');
+            EventBus.showNotify("Tải file lên thành công", "success")
         } catch (err) {
             console.error(err)
-            EventBus.showNotify("Tải file lên thất bại", 'error');
+            EventBus.showNotify("Tải file lên thất bại", "error")
         }
     }
+
 
     // -------------------
     // XÓA FILE
     // -------------------
     const onDeleteFile = async (row, index) => {
         try {
-            const resDeleteFile = await DocumentWorkflow.deleteDocument({ id: row.id })
-            if (!resDeleteFile.success) return
+            const formData = new FormData()
+            formData.append("id", row.id)
 
-            // Xóa khỏi local list
+            const resDeleteFile = await callSupabaseEdge(
+                formData,
+                "delete-document-metadata", "DELETE")
+
+            if (!resDeleteFile?.success) return
+
             fileList.value.splice(index, 1)
-            EventBus.showNotify("Xóa file thành công", 'success');
+            EventBus.showNotify("Xóa file thành công", "success")
         } catch (err) {
             console.error(err)
-            EventBus.showNotify("Xóa file lên thất bại", 'error');
+            EventBus.showNotify("Xóa file thất bại", "error")
         }
     }
+
 
     // -------------------
     // LẤY DANH SÁCH FILE
