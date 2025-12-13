@@ -168,6 +168,7 @@
 
         // bảo đảm hợp lệ (phòng trường hợp)
         if (newIndex === -1 || oldIndex === -1) {
+            selectedStatus.value = oldValue;
             EventBus.showNotify("Trạng thái không hợp lệ!", "error")
             return
         }
@@ -175,7 +176,7 @@
         // nếu lùi trạng thái — Select đã chặn nhưng double-check
         if (newIndex < oldIndex) {
             EventBus.showNotify("Không thể cập nhật lùi trạng thái!", "warning")
-            // revert: vì v-model chưa bị thay đổi ở parent (Select không emit update), nên không cần set lại
+            selectedStatus.value = oldValue;
             return
         }
 
@@ -186,6 +187,13 @@
         try {
             EventBus.showLoading("Đang cập nhật trạng thái...")
             const res = await ApplicationService.updateApplicationStatus(route.params.id, newValue)
+
+            if (newValue == "HIRED" || newValue == "REJECTED") {
+                const fd = new FormData();
+                fd.append("idApplication", route.params.id)
+                fd.append("status", newValue)
+                await ApplicationService.sendMailer(fd)
+            }
 
             if (!res.success) {
                 throw new Error(res.message || "Cập nhật thất bại")

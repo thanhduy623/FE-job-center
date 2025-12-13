@@ -41,7 +41,7 @@
     import { ref, onMounted } from 'vue'
     import { useRoute } from 'vue-router'
     import { getScheduleByToken } from '@/services/ScheduleInterviewService.js'
-    import { confirm } from '@/workflows/ApplicationWorkflow.js'
+    import ApplicationService from "@/services/ApplicationService.js"
 
     const route = useRoute()
     const id = route.params.id
@@ -80,8 +80,13 @@
     async function handleSubmit() {
         submitted.value = true
 
+        const fd = new FormData();
+        fd.append("token", id)
+        fd.append("canAttend", canAttend.value)
+        fd.append("reason", reason.value)
+
         try {
-            const res = await confirm(id, canAttend.value, reason.value)
+            const res = await ApplicationService.confirmMailer(fd)
 
             if (res.length > 0) {
                 submitSuccess.value = true

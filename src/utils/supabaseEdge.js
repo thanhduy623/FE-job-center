@@ -52,6 +52,7 @@ export async function callSupabaseEdge(method = "POST", urlFunc, formData, type,
             "Lỗi không xác định từ hệ thống.";
 
         console.error("Lỗi gọi Supabase Edge:", errorMessage);
+        EventBus.showNotify("Lỗi khi gọi server!", "error");
         throw new Error(errorMessage);
 
     } finally {

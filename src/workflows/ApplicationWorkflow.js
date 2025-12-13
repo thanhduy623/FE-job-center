@@ -47,50 +47,6 @@ export async function uploadCV(form) {
 }
 
 
-
-/**
- * Gửi mail thông qua n8n webhook /mailer
- */
-export async function sendMailer(form) {
-    try {
-        const fd = new FormData();
-
-        const authSessionRaw = localStorage.getItem("auth_session");
-        const authSession = authSessionRaw ? JSON.parse(authSessionRaw) : null;
-        const token = authSession?.value?.access_token || null;
-
-        // append các field thông thường
-        fd.append("idApplication", form.idApplication)
-        fd.append("status", form.status || null)
-
-        fd.append("scheduleStartTime", form.scheduleStartTime || null)
-        fd.append("scheduleEndTime", form.scheduleEndTime || null)
-        fd.append("scheduleDate", form.scheduleDate || null)
-        fd.append("token", token);
-
-        // gọi API n8n webhook
-        const res = await callN8n({
-            method: "POST",
-            endpoint: "/mailer",
-            body: fd
-        });
-
-        console.log(res);
-
-
-        // Nếu n8n trả lỗi (ví dụ 404, 500)
-        if (!res || res.success === false) {
-            throw new Error(res?.message || "API trả về lỗi");
-        }
-
-        return res;
-    } catch (err) {
-        EventBus.showNotify("Lỗi khi gửi mail!", "error");
-        return false;
-    }
-}
-
-
 /**
  * Xác nhận phỏng vấn
  */
@@ -123,4 +79,4 @@ export async function confirm(token, canAttend, reason) {
 }
 
 
-export default { uploadCV, sendMailer, confirm };
+export default { uploadCV, confirm };

@@ -1,6 +1,11 @@
+import { callSupabaseEdge } from '@/utils/supabaseEdge'
+import { getData, updateData } from "@/utils/supabaseUtils"
+
+
 const tableName = "Application"
 const foreignKey = ["Application_jobId_fkey"]
-import { getData, updateData } from "@/utils/supabaseUtils"
+const urlFunc = process.env.VUE_APP_SUPABASE_FUNC_MAILER;
+
 
 /**
  * Lấy danh sách hồ sơ ứng tuyển
@@ -38,9 +43,19 @@ export async function updateApplicationStatus(id, status) {
     return await updateData(tableName, { id, status }, ["id"])
 }
 
+export async function sendMailer(data) {
+    return await callSupabaseEdge("POST", urlFunc, data, "mailer")
+}
+
+export async function confirmMailer(data) {
+    return await callSupabaseEdge("POST", urlFunc, data, "confirm")
+}
+
 export default {
     getApplication,
     getApplicationInterview,
     getApplicationById,
     updateApplicationStatus,
+    sendMailer,
+    confirmMailer,
 }

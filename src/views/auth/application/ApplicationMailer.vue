@@ -116,7 +116,6 @@
     import MultiDatePicker from "@/components/selects/MultiDatePicker.vue"
     import ApplicationService from "@/services/ApplicationService.js"
     import DepartmentService from "@/services/DepartmentService.js"
-    import ApplicationWorkflow from "@/workflows/ApplicationWorkflow.js"
 
     // state
     const selectedLocation = ref(null)
@@ -191,16 +190,15 @@
     async function handleSendMail(app) {
         app.loading = true;
 
-        const form = {
-            idApplication: app.id,
-            status: "INTERVIEW",
-            scheduleStartTime: app.scheduleStartTime,
-            scheduleEndTime: app.scheduleEndTime,
-            scheduleDate: app.scheduleDate
-        };
+        const fd = new FormData();
+        fd.append("idApplication", app.id)
+        fd.append("status", "INTERVIEW")
+        fd.append("scheduleStartTime", app.scheduleStartTime)
+        fd.append("scheduleEndTime", app.scheduleEndTime)
+        fd.append("scheduleDate", app.scheduleDate)
 
         try {
-            await ApplicationWorkflow.sendMailer(form);
+            await ApplicationService.sendMailer(fd);
             app.sentMail = true;
         } finally {
             app.loading = false;
