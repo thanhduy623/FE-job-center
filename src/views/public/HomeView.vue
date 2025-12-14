@@ -4,7 +4,7 @@
 
         <div class="recruitment-container flex flex-row gap-4 p-1">
             <Filter :departments="departmentList" :jobs="jobList" :selectedDepartments="selectedDepartments"
-                :selectedJobs="selectedJobs" @apply-filter="onApplyFilter" />
+                @apply-filter="onApplyFilter" />
             <List :selectedJobs="selectedJobs" :selectedDepartments="selectedDepartments" :recruitments="jobList" />
         </div>
     </div>
@@ -24,7 +24,6 @@
     const rawJobList = ref([])
     const rawDepartmentList = ref([])
 
-    const selectedJobs = ref([])
     const selectedDepartments = ref([])
 
     const images = ref([
@@ -62,7 +61,6 @@
 
     function onApplyFilter(data) {
         selectedDepartments.value = data.selectedDepartments
-        selectedJobs.value = data.selectedJobs
     }
 </script>
 

@@ -7,14 +7,6 @@
             <input type="checkbox" :id="dept.id" :value="dept.id" v-model="internalSelectedDepartments" />
             <label :for="dept.id">{{ dept.departmentName }}</label>
         </div>
-
-        <hr />
-
-        <h4 v-t="'job'"></h4>
-        <div v-for="job in jobs" :key="job.id">
-            <input type="checkbox" :id="job.id" :value="job.id" v-model="internalSelectedJobs" />
-            <label :for="job.jobId">{{ job.name }}</label>
-        </div>
     </div>
 </template>
 
@@ -23,7 +15,6 @@
 
     const props = defineProps({
         departments: { type: Array, default: () => [] },
-        jobs: { type: Array, default: () => [] },
         selectedDepartments: { type: Array, default: () => [] },
         selectedJobs: { type: Array, default: () => [] }
     })
@@ -31,23 +22,17 @@
     const emit = defineEmits(["apply-filter"])
 
     const internalSelectedDepartments = ref([...props.selectedDepartments])
-    const internalSelectedJobs = ref([...props.selectedJobs])
 
     // Cha -> Con
     watch(
         () => props.selectedDepartments,
         (val) => { internalSelectedDepartments.value = [...val] }
     )
-    watch(
-        () => props.selectedJobs,
-        (val) => { internalSelectedJobs.value = [...val] }
-    )
 
     // Khi bấm nút mới emit ngược lên cha
     function applyFilter() {
         emit("apply-filter", {
             selectedDepartments: internalSelectedDepartments.value,
-            selectedJobs: internalSelectedJobs.value
         })
     }
 </script>
