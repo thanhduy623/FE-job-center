@@ -4,7 +4,8 @@ import { getData, updateData } from "@/utils/supabaseUtils"
 
 const tableName = "Application"
 const foreignKey = ["Application_jobId_fkey"]
-const urlFunc = process.env.VUE_APP_SUPABASE_FUNC_MAILER;
+const urlFuncMailer = process.env.VUE_APP_SUPABASE_FUNC_MAILER;
+const urlFuncUploadCV = process.env.VUE_APP_SUPABASE_FUNC_UPLOADCV;
 
 
 /**
@@ -44,11 +45,15 @@ export async function updateApplicationStatus(id, status) {
 }
 
 export async function sendMailer(data) {
-    return await callSupabaseEdge("POST", urlFunc, data, "mailer")
+    return await callSupabaseEdge(urlFuncMailer, data)
 }
 
 export async function confirmMailer(data) {
-    return await callSupabaseEdge("POST", urlFunc, data, "confirm")
+    return await callSupabaseEdge(urlFuncMailer, data)
+}
+
+export async function uploadCV(data) {
+    return await callSupabaseEdge(urlFuncUploadCV, data)
 }
 
 export default {
@@ -58,4 +63,5 @@ export default {
     updateApplicationStatus,
     sendMailer,
     confirmMailer,
+    uploadCV,
 }

@@ -2,7 +2,8 @@ import { callSupabaseEdge } from '@/utils/supabaseEdge'
 import { getData } from "@/utils/supabaseUtils";
 
 const tableName = "document_metadata";
-const urlFunc = process.env.VUE_APP_SUPABASE_FUNC_DOCUMENT;
+const urlFuncUploadDocs = process.env.VUE_APP_SUPABASE_FUNC_UPLOADDOCUMENT;
+const urlFuncDeleteDocs = process.env.VUE_APP_SUPABASE_FUNC_DELETEDOCUMENT;
 
 /**
  * Lấy danh sách file từ bảng documents
@@ -17,7 +18,7 @@ export async function getDocuments(conditions = {}) {
  * @param {Object} data - { path, name_vi, name_en }
  */
 export async function addDocument(data) {
-    return await callSupabaseEdge("POST", urlFunc, data, "upload-document-metadata");
+    return await callSupabaseEdge(urlFuncUploadDocs, data);
 }
 
 
@@ -26,7 +27,7 @@ export async function addDocument(data) {
  * @param {Object} conditions - điều kiện xác định record cần xóa (ví dụ { id })
  */
 export async function deleteDocument(data) {
-    return await callSupabaseEdge("DELETE", urlFunc, data, "delete-document-metadata");
+    return await callSupabaseEdge(urlFuncDeleteDocs, data);
 }
 
 export default {

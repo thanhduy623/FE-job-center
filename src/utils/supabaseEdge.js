@@ -12,7 +12,7 @@ import { getSession } from "@/utils/authSession.js"
  * @param {boolean} [auth=true] Quyết định có gắn Authorization token vào header hay không.
  * @returns {Promise<any>} Dữ liệu trả về từ Edge Function/n8n.
  */
-export async function callSupabaseEdge(method = "POST", urlFunc, formData, type, auth = true) {
+export async function callSupabaseEdge(urlFunc, formData, auth = true) {
 
     if (!urlFunc) {
         EventBus.showNotify(`Lỗi hệ thống`, 'error');
@@ -36,7 +36,6 @@ export async function callSupabaseEdge(method = "POST", urlFunc, formData, type,
             formData,
             {
                 headers,
-                params: { type, method }
             }
         );
 

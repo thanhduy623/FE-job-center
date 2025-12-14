@@ -47,36 +47,5 @@ export async function uploadCV(form) {
 }
 
 
-/**
- * Xác nhận phỏng vấn
- */
-export async function confirm(token, canAttend, reason) {
-    try {
-        const fd = new FormData();
 
-        // append các field thông thường
-        fd.append("token", token)
-        fd.append("canAttend", canAttend)
-        fd.append("reason", reason)
-
-        // gọi API n8n webhook
-        const res = await callN8n({
-            method: "POST",
-            endpoint: "/confirm",
-            body: fd
-        });
-
-        // Nếu n8n trả lỗi (ví dụ 404, 500)
-        if (!res || res.success === false) {
-            throw new Error(res?.message || "API trả về lỗi");
-        }
-
-        return res;
-    } catch (err) {
-        EventBus.showNotify("Lỗi khi gửi mail!", "error");
-        return false;
-    }
-}
-
-
-export default { uploadCV, confirm };
+export default { uploadCV };

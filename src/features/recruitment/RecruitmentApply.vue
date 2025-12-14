@@ -8,10 +8,11 @@
             <input type="text" v-model="form.fullName" required>
 
             <label v-t="'email'"></label>
-            <input type="text" v-model="form.email" required>
+            <input type="email" v-model="form.email" required>
 
             <label v-t="'phone'"></label>
-            <input type="text" v-model="form.phone" required>
+            <input type="text" v-model="form.phone" required pattern="^0[0-9]{9}$" inputmode="numeric"
+                placeholder="0XXXXXXXXX" />
 
             <label v-t="'address'"></label>
             <input type="text" v-model="form.address" required>
@@ -82,7 +83,7 @@
     import { getJobCustomFields } from "@/services/JobCustomFieldAssignmentService.js"
     import { EventBus } from '@/utils/eventBus'
 
-    import ApplicationWorkflow from "@/workflows/ApplicationWorkflow.js";
+    import ApplicationService from "@/services/ApplicationService.js";
     import FileUpload from "@/components/others/FileUpload.vue"
 
     const props = defineProps({
@@ -151,16 +152,33 @@
     // Xử lý submit thử
     async function handleSubmit() {
         try {
-            console.log("Dữ liệu form gửi:", form.value);
+            const fd = new FormData()
 
-            // Gọi n8n upload CV
-            const res = await ApplicationWorkflow.uploadCV(form.value);
+            // field cố định
+            fd.append("jobId", form.value.jobId)
+            fd.append("fullName", form.value.fullName)
+            fd.append("email", form.value.email)
+            fd.append("phone", form.value.phone)
+            fd.append("address", form.value.address)
+            fd.append("coverLetter", form.value.coverLetter)
 
-            console.log("Upload CV thành công:", res);
-            EventBus.showNotify("Gửi hồ sơ ứng tuyển thành công.", 'success');
+            // dynamicField
+            Object.entries(form.value.dynamicField).forEach(([id, value]) => {
+                if (value instanceof File) {
+                    fd.append(`dynamicField[${id}]`, value, value.name)
+                } else {
+                    fd.append(`dynamicField[${id}]`, value ?? "")
+                }
+            })
+
+            // gọi workflow, truyền FormData trực tiếp
+            const res = await ApplicationService.uploadCV(fd)
+
+            console.log("Upload CV thành công:", res)
+            EventBus.showNotify("Gửi hồ sơ ứng tuyển thành công.", "success")
         } catch (err) {
-            console.error("Upload CV thất bại:", err);
-            EventBus.showNotify("Gửi hồ sơ ứng tuyển thất bại.", 'error');
+            console.error("Upload CV thất bại:", err)
+            EventBus.showNotify("Gửi hồ sơ ứng tuyển thất bại.", "error")
         }
     }
 
