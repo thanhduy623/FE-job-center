@@ -13,6 +13,7 @@ import ResetPassword from '@/views/public/ResetPassword.vue'
 import Recruitment from '@/views/public/RecruitmentView.vue'
 import Register from '@/views/public/RecruitmentRegister.vue'
 
+import ChatbotView from '@/components/chatbots/ChatbotView.vue'
 import ConfirmInterview from '@/views/auth/application/ConfirmInterview.vue'
 
 
@@ -48,6 +49,7 @@ const routes = [
             { path: '', name: 'home', component: Home },
             { path: 'recruitment', name: 'recruitment', component: Recruitment },
             { path: 'recruitment/:id', name: 'register', component: Register },
+            { path: 'chatbot', name: 'chatbot', component: ChatbotView },
         ]
     },
     {

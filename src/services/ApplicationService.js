@@ -6,6 +6,8 @@ const tableName = "Application"
 const foreignKey = ["Application_jobId_fkey"]
 const urlFuncMailer = process.env.VUE_APP_SUPABASE_FUNC_MAILER;
 const urlFuncUploadCV = process.env.VUE_APP_SUPABASE_FUNC_UPLOADCV;
+const urlFuncCallChatbot = process.env.VUE_APP_SUPABASE_FUNC_CHATBOT;
+
 
 
 /**
@@ -53,7 +55,12 @@ export async function confirmMailer(data) {
 }
 
 export async function uploadCV(data) {
-    return await callSupabaseEdge(urlFuncUploadCV, data)
+    return await callSupabaseEdge(urlFuncUploadCV, data, false)
+}
+
+export async function callChatbot(data) {
+    const payload = { ...data, sessionId: "1" }
+    return await callSupabaseEdge(urlFuncCallChatbot, payload, false)
 }
 
 export default {
@@ -64,4 +71,5 @@ export default {
     sendMailer,
     confirmMailer,
     uploadCV,
+    callChatbot,
 }

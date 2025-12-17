@@ -12,7 +12,7 @@ import { getSession } from "@/utils/authSession.js"
  * @param {boolean} [auth=true] Quyết định có gắn Authorization token vào header hay không.
  * @returns {Promise<any>} Dữ liệu trả về từ Edge Function/n8n.
  */
-export async function callSupabaseEdge(urlFunc, formData, auth = true) {
+export async function callSupabaseEdge(urlFunc, data, auth = true) {
 
     if (!urlFunc) {
         EventBus.showNotify(`Lỗi hệ thống`, 'error');
@@ -27,23 +27,27 @@ export async function callSupabaseEdge(urlFunc, formData, auth = true) {
         }
     }
 
+    // PHÂN BIỆT FORM DATA HAY JSON
+    const isFormData = data instanceof FormData;
+
+    if (!isFormData) {
+        headers['Content-Type'] = 'application/json';
+    }
+    // FormData thì KHÔNG set Content-Type
+    // axios sẽ tự set multipart/form-data + boundary
+
     try {
         EventBus.showLoading();
-        console.log("BEFORE CALL");
 
         const response = await axios.post(
             urlFunc,
-            formData,
-            {
-                headers,
-            }
+            isFormData ? data : JSON.stringify(data),
+            { headers }
         );
 
-        // Nếu vào được đây thì HTTP = 2xx
         return response.data;
 
     } catch (error) {
-
         const errorData = error.response?.data;
         const errorMessage =
             errorData?.message ||

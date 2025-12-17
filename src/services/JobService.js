@@ -9,6 +9,7 @@ import { EventBus } from "@/utils/eventBus";
  */
 export async function getJob(conditions = {}) {
     const res = await getData(tableName, conditions, foreignKey, false);
+
     if (!res.success) { EventBus.showNotify(res.message, "error") }
     return res;
 }
