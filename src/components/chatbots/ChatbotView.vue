@@ -18,6 +18,11 @@
                     <img v-if="!item.me" class="icon" src="@/assets/images/ic-chatbot.png" />
                     <span class="chat-message-text" :class="item.me ? 'bg-gray-400' : 'bg-primary text-white'">
                         {{ item.text }}
+                        <template v-if="item.fileName">
+                            <br />
+                            <hr />
+                            <p class="italic text-xs"> File: {{ item.fileName }} </p>
+                        </template>
                     </span>
                 </div>
 
@@ -62,6 +67,7 @@
 <script setup>
     import { ref, nextTick } from 'vue'
     import { EventBus } from '@/utils/eventBus'
+    import { uploadFile } from '@/utils/supabaseFileUtils.js'
     import ApplicationService from '@/services/ApplicationService'
 
     const isShow = ref(false)
@@ -73,7 +79,16 @@
 
     const conservationHistory = ref([
         { me: false, text: 'Welcome to Viet Anh School chatbot!' },
+        { me: true, text: 'Welcome to Viet Anh School chatbot!', fileName: 'a' },
     ])
+
+    function addMessage(type, text, file) {
+        conservationHistory.value.push({
+            me: type,
+            text: text,
+            fileName: file || null
+        });
+    }
 
     const scrollToBottom = async () => {
         await nextTick()
@@ -91,40 +106,61 @@
         document.getElementById('file-input').value = null
     }
 
+
+    // ChatbotView.vue (trích đoạn handleSubmit)
     const handleSubmit = async (message) => {
-        if (!message) return
+        if (!message && !fileRaw.value) return;
 
         try {
             sendBtn.value.disabled = true
 
-            conservationHistory.value.push({
-                me: true,
-                text: message
-            })
+            let filePayload = null
 
-            messageText.value = ''
+            if (fileRaw.value) {
+                const promiseFile = uploadFile(fileRaw.value, 'chat-attachments')
+                EventBus.hideLoading()
+                const resFile = await promiseFile
+                if (resFile.success) {
+                    filePayload = {
+                        fileKey: resFile.path,
+                        bucketName: 'chat-attachments'
+                    }
+                } else {
+                    EventBus.showNotify('Tải file thất bại, không gửi message', 'error')
+                    return
+                }
+            }
 
-            const promise = ApplicationService.callChatbot({ message })
-            EventBus.hideLoading()
+            // Hiển thị tạm thời message của người dùng
+            addMessage(true, message, fileRaw.value.name)
             isLoading.value = true
+            messageText.value = ''
+            clearfileRaw()
             await scrollToBottom()
 
-
-            const res = await promise
-
-            conservationHistory.value.push({
-                me: false,
-                text: res.output
+            // Gọi chatbot kèm message + file nếu có
+            const promiseRes = ApplicationService.callChatbot({
+                message,
+                file: filePayload
             })
+            console.log({
+                message,
+                file: filePayload
+            });
 
+            EventBus.hideLoading()
+            const res = await promiseRes
+            addMessage(false, res.output)
             await scrollToBottom()
         } catch (err) {
             EventBus.showNotify('Gửi tin nhắn thất bại', 'error')
+            console.error(err)
         } finally {
             isLoading.value = false
             sendBtn.value.disabled = false
         }
     }
+
 </script>
 
 <style scoped>

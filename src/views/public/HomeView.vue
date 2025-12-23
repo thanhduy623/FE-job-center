@@ -5,7 +5,7 @@
         <div class="recruitment-container flex flex-row gap-4 p-1">
             <Filter :departments="departmentList" :jobs="jobList" :selectedDepartments="selectedDepartments"
                 @apply-filter="onApplyFilter" />
-            <List :selectedJobs="selectedJobs" :selectedDepartments="selectedDepartments" :recruitments="jobList" />
+            <List :selectedDepartments="selectedDepartments" :recruitments="jobList" />
         </div>
     </div>
 </template>

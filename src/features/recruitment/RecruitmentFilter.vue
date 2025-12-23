@@ -16,7 +16,6 @@
     const props = defineProps({
         departments: { type: Array, default: () => [] },
         selectedDepartments: { type: Array, default: () => [] },
-        selectedJobs: { type: Array, default: () => [] }
     })
 
     const emit = defineEmits(["apply-filter"])

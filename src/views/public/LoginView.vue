@@ -19,12 +19,13 @@
     import { ref } from 'vue';
     import router from '@/router/index.js';
     import { login } from '@/services/AuthService.js'
-    import { setSession } from '@/utils/authSession.js'
+    import { setSession, clearAllSessions } from '@/utils/authSession.js'
     import { EventBus } from '@/utils/eventBus.js'
 
     const us = ref('nguyenduy.6203@gmail.com')
     const ps = ref('123456789')
     const errorMessage = ref('')
+    clearAllSessions();
 
     async function handleLogin() {
         errorMessage.value = ''

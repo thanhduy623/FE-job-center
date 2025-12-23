@@ -46,7 +46,6 @@
     const props = defineProps({
         recruitments: { type: Array, default: () => [] },
         selectedDepartments: { type: Array, default: () => [] },
-        selectedJobs: { type: Array, default: () => [] },
     })
 
     const router = useRouter()
@@ -59,10 +58,8 @@
     const filteredRecruitments = computed(() => {
         return props.recruitments.filter(
             (item) =>
-                (props.selectedDepartments.length === 0 ||
-                    props.selectedDepartments.includes(item.departmentId)) &&
-                (props.selectedJobs.length === 0 ||
-                    props.selectedJobs.includes(item.jobId))
+            (props.selectedDepartments.length === 0 ||
+                props.selectedDepartments.includes(item.departmentId))
         )
     })
 

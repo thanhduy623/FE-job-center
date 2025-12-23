@@ -58,9 +58,8 @@ export function removeSession(key) {
  */
 export function clearAllSessions() {
     try {
-        Object.keys(localStorage)
-            .filter(k => k.startsWith(PREFIX))
-            .forEach(k => localStorage.removeItem(k));
+        // xóa mọi key trong localStorage
+        localStorage.clear()
     } catch (e) {
         console.error("Xóa tất cả session thất bại:", e);
     }
