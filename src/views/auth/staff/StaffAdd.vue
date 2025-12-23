@@ -47,7 +47,11 @@
                 </div>
                 <div class="flex-1">
                     <label v-t="'role'"></label>
-                    <RoleSelect v-model="form.role" />
+                    <LocationSelect v-model="form.locationId" />
+                </div>
+                <div class="flex-1">
+                    <label v-t="'location'"></label>
+                    <RoleSelect v-model="form.roleId" />
                 </div>
             </div>
 
@@ -67,6 +71,7 @@
 
     import GenderSelect from '@/components/selects/GenderSelect.vue'
     import DepartmentSelect from '@/components/selects/DepartmentSelect.vue'
+    import LocationSelect from '@/components/selects/LocationSelect.vue'
     import RoleSelect from '@/components/selects/RoleSelect.vue'
 
     const form = ref({
@@ -77,19 +82,17 @@
         phone: '',
         email: '',
         departmentId: '',
-        role: ''
+        locationId: '',
+        roleId: ''
     })
 
     function formReset() {
         form.value = {
             firstname: '',
             lastname: '',
-            gender: '1',
             birthday: '',
             phone: '',
             email: '',
-            departmentId: '',
-            role: ''
         }
     }
 
@@ -108,9 +111,11 @@
             gender: data.gender,
             birthday: data.birthday,
             phone: data.phone,
-            departmentId: data.departmentId,
-            roleId: data.role
+            departmentId: data.departmentId || null,
+            roleId: data.roleId || null,
+            locationId: data.locationId || null
         })
+
 
         if (!userRes.success) return console.error(userRes.message)
 

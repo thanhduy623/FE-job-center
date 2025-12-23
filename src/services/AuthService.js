@@ -37,6 +37,7 @@ export async function signIn(email, password) {
         })
 
         if (authError) {
+            EventBus.showNotify(authError.message, 'error');
             return { success: false, status: "error", message: authError.message, data: null }
         }
 
@@ -47,6 +48,7 @@ export async function signIn(email, password) {
             data: authData.user,
         }
     } catch (err) {
+        EventBus.showNotify(err.message, 'error');
         return { success: false, status: "error", message: err.message, data: null }
     }
 }

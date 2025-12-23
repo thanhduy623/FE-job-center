@@ -1,5 +1,5 @@
 <template>
-    <div class="recruitment-filter-container p-1">
+    <div class="flex flex-col recruitment-filter-container p-1">
         <button class="filter-btn bg-primary" @click="applyFilter" v-t="'applyFilter'"></button>
 
         <h4 v-t="'department'"></h4>
