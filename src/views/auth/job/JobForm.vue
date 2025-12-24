@@ -30,6 +30,22 @@
             </div>
         </div>
 
+        <!-- Job type, Salary, Status -->
+        <div class="flex flex-row wrap gap-1">
+            <div class="flex-1">
+                <label>{{ $t('type') }}</label>
+                <JobTypeSelect v-model="formData.jobType" />
+            </div>
+            <div class="flex-1">
+                <label>{{ $t('salary') }}</label>
+                <input v-model="formData.salary" type="text" />
+            </div>
+            <div class="flex-1">
+                <label>{{ $t('status') }}</label>
+                <StatusSelect v-model="formData.status" />
+            </div>
+        </div>
+
         <!-- Description -->
         <div class="flex flex-row wrap gap-1">
             <div class="flex-1">
@@ -66,6 +82,26 @@
             </div>
         </div>
 
+        <!-- Application deadline -->
+        <div class="flex flex-row wrap gap-1">
+            <div class="flex-1">
+                <label>{{ $t('fromDate') }}</label>
+                <input type="date" v-model="formData.applicationDeadlineStart" />
+            </div>
+            <div class="flex-1">
+                <label>{{ $t('toDate') }}</label>
+                <input type="date" v-model="formData.applicationDeadlineEnd" />
+            </div>
+        </div>
+
+        <!-- Location -->
+        <div class="flex flex-row wrap gap-1">
+            <div class="flex-1">
+                <label>{{ $t('location') }}</label>
+                <LocationSelect v-model="formData.locationId" />
+            </div>
+        </div>
+
         <div class="flex justify-end gap-1">
             <button type="submit" class="bg-primary text-white px-4 py-2">
                 {{ jobId ? 'Cập nhật' : 'Thêm mới' }}
@@ -78,6 +114,9 @@
     import { ref, watch, defineProps, defineEmits } from 'vue'
     import { translateText } from '@/utils/translateText'
     import DepartmentSelect from '@/components/selects/DepartmentSelect.vue'
+    import JobTypeSelect from '@/components/selects/JobTypeSelect.vue'
+    import StatusSelect from '@/components/selects/StatusSelect.vue'
+    import LocationSelect from '@/components/selects/LocationSelect.vue'
     import JobService from '@/services/JobService'
 
     const props = defineProps({ jobId: { type: [String, Number], default: null } })
@@ -94,7 +133,13 @@
         requirements_vi: '',
         requirements_en: '',
         benefits_vi: '',
-        benefits_en: ''
+        benefits_en: '',
+        jobType: 'FULL_TIME',
+        salary: '',
+        status: 'PUBLISHED',
+        applicationDeadlineStart: '',
+        applicationDeadlineEnd: '',
+        locationId: ''
     })
 
     const loading = ref({
@@ -112,11 +157,7 @@
 
     const timers = {}
 
-    /**
-     * Chỉ dịch khi người dùng ngừng nhập (debounce),
-     * không disable và không ghi đè trong lúc đang gõ
-     */
-    function debounceTranslate(sourceKey, targetKey, sourceLang, label) {
+    function debounceTranslate(sourceKey, targetKey, sourceLang) {
         clearTimeout(timers[sourceKey])
 
         timers[sourceKey] = setTimeout(async () => {
@@ -127,7 +168,7 @@
             if (targetValue) return
 
             loading.value[targetKey] = true
-            formData.value[targetKey] = `Translating (${label})...`
+            formData.value[targetKey] = sourceLang === 'en' ? 'Translating' : 'Đang dịch'
 
             try {
                 const result = await translateText(sourceValue, sourceLang)
@@ -140,44 +181,36 @@
         }, 800)
     }
 
-    /* Name */
+    /* watchers giữ nguyên */
     watch(() => formData.value.name_vi, () =>
-        debounceTranslate('name_vi', 'name_en', 'vi', 'TA')
+        debounceTranslate('name_vi', 'name_en', 'vi')
     )
     watch(() => formData.value.name_en, () =>
-        debounceTranslate('name_en', 'name_vi', 'en', 'TV')
+        debounceTranslate('name_en', 'name_vi', 'en')
     )
-
-    /* Position */
     watch(() => formData.value.position_vi, () =>
-        debounceTranslate('position_vi', 'position_en', 'vi', 'TA')
+        debounceTranslate('position_vi', 'position_en', 'vi')
     )
     watch(() => formData.value.position_en, () =>
-        debounceTranslate('position_en', 'position_vi', 'en', 'TV')
+        debounceTranslate('position_en', 'position_vi', 'en')
     )
-
-    /* Description */
     watch(() => formData.value.description_vi, () =>
-        debounceTranslate('description_vi', 'description_en', 'vi', 'TA')
+        debounceTranslate('description_vi', 'description_en', 'vi')
     )
     watch(() => formData.value.description_en, () =>
-        debounceTranslate('description_en', 'description_vi', 'en', 'TV')
+        debounceTranslate('description_en', 'description_vi', 'en')
     )
-
-    /* Requirements */
     watch(() => formData.value.requirements_vi, () =>
-        debounceTranslate('requirements_vi', 'requirements_en', 'vi', 'TA')
+        debounceTranslate('requirements_vi', 'requirements_en', 'vi')
     )
     watch(() => formData.value.requirements_en, () =>
-        debounceTranslate('requirements_en', 'requirements_vi', 'en', 'TV')
+        debounceTranslate('requirements_en', 'requirements_vi', 'en')
     )
-
-    /* Benefits */
     watch(() => formData.value.benefits_vi, () =>
-        debounceTranslate('benefits_vi', 'benefits_en', 'vi', 'TA')
+        debounceTranslate('benefits_vi', 'benefits_en', 'vi')
     )
     watch(() => formData.value.benefits_en, () =>
-        debounceTranslate('benefits_en', 'benefits_vi', 'en', 'TV')
+        debounceTranslate('benefits_en', 'benefits_vi', 'en')
     )
 
     async function submitForm() {
