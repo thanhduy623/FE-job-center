@@ -106,6 +106,7 @@ export default {
     // Công việc
     pageJob: {
         title: "Quản lý công việc",
+        addTitle: "Thêm công việc",
         editTitle: "Thông tin công việc",
         updateTitle: "Cập nhật công việc",
     },

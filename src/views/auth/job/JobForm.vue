@@ -1,112 +1,72 @@
 <template>
     <form @submit.prevent="submitForm" class="flex flex-col gap-1">
-        <!-- Department -->
+
         <div class="flex flex-col">
-            <label for="departmentId">{{ $t('department') }}</label>
+            <label>{{ $t('department') }}</label>
             <DepartmentSelect v-model="formData.departmentId" required />
         </div>
 
         <!-- Name -->
         <div class="flex flex-row wrap gap-1">
             <div class="flex-1">
-                <label for="name_vi">{{ $t('name') }} (VI)</label>
-                <input id="name_vi" v-model="formData.name_vi" type="text" required />
+                <label>{{ $t('name') }} (VI)</label>
+                <input v-model="formData.name_vi" type="text" :disabled="loading.name_vi" />
             </div>
             <div class="flex-1">
-                <label for="name_en">{{ $t('name') }} (EN)</label>
-                <input id="name_en" v-model="formData.name_en" type="text" required />
+                <label>{{ $t('name') }} (EN)</label>
+                <input v-model="formData.name_en" type="text" :disabled="loading.name_en" />
             </div>
         </div>
 
         <!-- Position -->
         <div class="flex flex-row wrap gap-1">
             <div class="flex-1">
-                <label for="position_vi">{{ $t('position') }} (VI)</label>
-                <input id="position_vi" v-model="formData.position_vi" type="text" required />
+                <label>{{ $t('position') }} (VI)</label>
+                <input v-model="formData.position_vi" type="text" :disabled="loading.position_vi" />
             </div>
             <div class="flex-1">
-                <label for="position_en">{{ $t('position') }} (EN)</label>
-                <input id="position_en" v-model="formData.position_en" type="text" required />
-            </div>
-        </div>
-
-        <!-- Job type & Salary & Status -->
-        <div class="flex flex-row wrap gap-1">
-            <div class="flex-1">
-                <label for="jobType">{{ $t('type') }}</label>
-                <JobTypeSelect v-model="formData.jobType" required />
-            </div>
-            <div class="flex-1">
-                <label for="salary">{{ $t('salary') }}</label>
-                <input id="salary" v-model="formData.salary" type="text" required />
-            </div>
-            <div class="flex-1">
-                <label for="status">{{ $t('status') }}</label>
-                <StatusSelect v-model="formData.status" required />
+                <label>{{ $t('position') }} (EN)</label>
+                <input v-model="formData.position_en" type="text" :disabled="loading.position_en" />
             </div>
         </div>
 
         <!-- Description -->
         <div class="flex flex-row wrap gap-1">
             <div class="flex-1">
-                <label for="description_vi">{{ $t('description') }} (VI)</label>
-                <textarea id="description_vi" v-model="formData.description_vi" rows="3"></textarea>
+                <label>{{ $t('description') }} (VI)</label>
+                <textarea v-model="formData.description_vi" :disabled="loading.description_vi" />
             </div>
             <div class="flex-1">
-                <label for="description_en">{{ $t('description') }} (EN)</label>
-                <textarea id="description_en" v-model="formData.description_en" rows="3"></textarea>
+                <label>{{ $t('description') }} (EN)</label>
+                <textarea v-model="formData.description_en" :disabled="loading.description_en" />
             </div>
         </div>
 
         <!-- Requirements -->
         <div class="flex flex-row wrap gap-1">
             <div class="flex-1">
-                <label for="requirements_vi">{{ $t('request') }} (VI)</label>
-                <textarea id="requirements_vi" v-model="formData.requirements_vi" rows="3"></textarea>
+                <label>{{ $t('request') }} (VI)</label>
+                <textarea v-model="formData.requirements_vi" :disabled="loading.requirements_vi" />
             </div>
             <div class="flex-1">
-                <label for="requirements_en">{{ $t('request') }} (EN)</label>
-                <textarea id="requirements_en" v-model="formData.requirements_en" rows="3"></textarea>
+                <label>{{ $t('request') }} (EN)</label>
+                <textarea v-model="formData.requirements_en" :disabled="loading.requirements_en" />
             </div>
         </div>
 
         <!-- Benefits -->
         <div class="flex flex-row wrap gap-1">
             <div class="flex-1">
-                <label for="benefits_vi">{{ $t('benifit') }} (VI)</label>
-                <textarea id="benefits_vi" v-model="formData.benefits_vi" rows="3"></textarea>
+                <label>{{ $t('benifit') }} (VI)</label>
+                <textarea v-model="formData.benefits_vi" :disabled="loading.benefits_vi" />
             </div>
             <div class="flex-1">
-                <label for="benefits_en">{{ $t('benifit') }} (EN)</label>
-                <textarea id="benefits_en" v-model="formData.benefits_en" rows="3"></textarea>
+                <label>{{ $t('benifit') }} (EN)</label>
+                <textarea v-model="formData.benefits_en" :disabled="loading.benefits_en" />
             </div>
         </div>
 
-        <!-- Application Deadline -->
-        <div class="flex flex-row wrap gap-1">
-            <div class="flex-1">
-                <label for="applicationDeadlineStart">{{ $t('fromDate') }}</label>
-                <input id="applicationDeadlineStart" v-model="formData.applicationDeadlineStart" type="date" />
-            </div>
-            <div class="flex-1">
-                <label for="applicationDeadlineEnd">{{ $t('toDate') }}</label>
-                <input id="applicationDeadlineEnd" v-model="formData.applicationDeadlineEnd" type="date" />
-            </div>
-        </div>
-
-        <!-- Location -->
-        <div class="flex flex-row wrap gap-1">
-            <div class="flex-1">
-                <label for="location">{{ $t('location') }}</label>
-                <LocationSelect v-model="formData.locationId" />
-            </div>
-        </div>
-
-        <!-- Submit -->
         <div class="flex justify-end gap-1">
-            <router-link v-if="jobId" :to="`/job/field/${jobId}`">
-                <button type="button">Tùy chỉnh trường dữ liệu</button>
-            </router-link>
             <button type="submit" class="bg-primary text-white px-4 py-2">
                 {{ jobId ? 'Cập nhật' : 'Thêm mới' }}
             </button>
@@ -115,122 +75,126 @@
 </template>
 
 <script setup>
-    import { ref, onMounted } from 'vue';
-    import { defineProps, defineEmits } from 'vue';
-
+    import { ref, watch, defineProps, defineEmits } from 'vue'
+    import { translateText } from '@/utils/translateText'
     import DepartmentSelect from '@/components/selects/DepartmentSelect.vue'
-    import JobTypeSelect from '@/components/selects/JobTypeSelect.vue'
-    import StatusSelect from '@/components/selects/StatusSelect.vue'
-    import LocationSelect from '@/components/selects/LocationSelect.vue'
+    import JobService from '@/services/JobService'
 
-    import JobService from '@/services/JobService.js';
-
-    const props = defineProps({ jobId: { type: [String, Number], default: null } });
-    const emit = defineEmits(['saved']);
+    const props = defineProps({ jobId: { type: [String, Number], default: null } })
+    const emit = defineEmits(['saved'])
 
     const formData = ref({
         departmentId: '',
-        name_vi: 'Test',
-        name_en: 'Test',
-        position_vi: 'Test',
-        position_en: 'Test',
-        description_vi: 'Test',
-        description_en: 'Test',
-        requirements_vi: 'Test',
-        requirements_en: 'Test',
-        benefits_vi: 'Test',
-        benefits_en: 'Test',
-        applicationDeadlineStart: new Date(Date.now()).toISOString().split("T")[0],
-        applicationDeadlineEnd: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
-        jobType: 'FULL_TIME',
-        salary: 'Test',
-        status: 'PUBLISHED',
-        locationId: 'b69a365c-21ae-449a-8df1-080ddd8d3780'
-    });
-
-
-    onMounted(async () => {
-        if (props.jobId) {
-            const res = await JobService.getJob({ id: props.jobId })
-            if (res.success && res.data.length > 0) {
-                const job = res.data[0]
-
-                // Chuyển định dạng datetime sang date (YYYY-MM-DD)
-                job.applicationDeadlineStart = job.applicationDeadlineStart
-                    ? job.applicationDeadlineStart.split('T')[0] || job.applicationDeadlineStart.split(' ')[0]
-                    : ''
-                job.applicationDeadlineEnd = job.applicationDeadlineEnd
-                    ? job.applicationDeadlineEnd.split('T')[0] || job.applicationDeadlineEnd.split(' ')[0]
-                    : ''
-
-                formData.value = { ...job }
-
-                console.log(res.data[0]);
-
-            }
-        }
+        name_vi: '',
+        name_en: '',
+        position_vi: '',
+        position_en: '',
+        description_vi: '',
+        description_en: '',
+        requirements_vi: '',
+        requirements_en: '',
+        benefits_vi: '',
+        benefits_en: ''
     })
 
-    async function submitForm() {
-        // Chỉ lấy các cột thực sự có trong bảng Job
-        const allowedFields = [
-            "id",
-            "departmentId",
-            "name_vi",
-            "name_en",
-            "position_vi",
-            "position_en",
-            "description_vi",
-            "description_en",
-            "requirements_vi",
-            "requirements_en",
-            "benefits_vi",
-            "benefits_en",
-            "applicationDeadlineStart",
-            "applicationDeadlineEnd",
-            "jobType",
-            "salary",
-            "status",
-            "locationId"
-        ];
+    const loading = ref({
+        name_vi: false,
+        name_en: false,
+        position_vi: false,
+        position_en: false,
+        description_vi: false,
+        description_en: false,
+        requirements_vi: false,
+        requirements_en: false,
+        benefits_vi: false,
+        benefits_en: false
+    })
 
-        // Lọc formData
-        const dataToSave = {};
-        allowedFields.forEach(key => {
-            if (formData.value[key] !== undefined) {
-                dataToSave[key] = formData.value[key];
+    const timers = {}
+
+    /**
+     * Chỉ dịch khi người dùng ngừng nhập (debounce),
+     * không disable và không ghi đè trong lúc đang gõ
+     */
+    function debounceTranslate(sourceKey, targetKey, sourceLang, label) {
+        clearTimeout(timers[sourceKey])
+
+        timers[sourceKey] = setTimeout(async () => {
+            const sourceValue = formData.value[sourceKey]
+            const targetValue = formData.value[targetKey]
+
+            if (!sourceValue) return
+            if (targetValue) return
+
+            loading.value[targetKey] = true
+            formData.value[targetKey] = `Translating (${label})...`
+
+            try {
+                const result = await translateText(sourceValue, sourceLang)
+                formData.value[targetKey] = result
+            } catch {
+                formData.value[targetKey] = 'Lỗi dịch thuật'
+            } finally {
+                loading.value[targetKey] = false
             }
-        });
-
-        // Chuyển định dạng datetime sang timestamptz
-        if (dataToSave.applicationDeadlineStart)
-            dataToSave.applicationDeadlineStart = `${dataToSave.applicationDeadlineStart} 00:00:00+00`;
-        if (dataToSave.applicationDeadlineEnd)
-            dataToSave.applicationDeadlineEnd = `${dataToSave.applicationDeadlineEnd} 00:00:00+00`;
-
-        try {
-            if (!props.jobId) {
-                // Thêm mới
-                const res = await JobService.addJob(dataToSave);
-                if (res.success) {
-                    emit('saved', res.data[0].id); // truyền id mới
-                }
-            } else {
-                // Cập nhật
-                const res = await JobService.updateJob(dataToSave);
-                if (res.success) {
-                    emit('saved', props.jobId); // truyền id hiện tại
-                }
-            }
-        } catch (error) {
-            console.error("Lỗi khi lưu job:", error);
-        }
+        }, 800)
     }
 
+    /* Name */
+    watch(() => formData.value.name_vi, () =>
+        debounceTranslate('name_vi', 'name_en', 'vi', 'TA')
+    )
+    watch(() => formData.value.name_en, () =>
+        debounceTranslate('name_en', 'name_vi', 'en', 'TV')
+    )
+
+    /* Position */
+    watch(() => formData.value.position_vi, () =>
+        debounceTranslate('position_vi', 'position_en', 'vi', 'TA')
+    )
+    watch(() => formData.value.position_en, () =>
+        debounceTranslate('position_en', 'position_vi', 'en', 'TV')
+    )
+
+    /* Description */
+    watch(() => formData.value.description_vi, () =>
+        debounceTranslate('description_vi', 'description_en', 'vi', 'TA')
+    )
+    watch(() => formData.value.description_en, () =>
+        debounceTranslate('description_en', 'description_vi', 'en', 'TV')
+    )
+
+    /* Requirements */
+    watch(() => formData.value.requirements_vi, () =>
+        debounceTranslate('requirements_vi', 'requirements_en', 'vi', 'TA')
+    )
+    watch(() => formData.value.requirements_en, () =>
+        debounceTranslate('requirements_en', 'requirements_vi', 'en', 'TV')
+    )
+
+    /* Benefits */
+    watch(() => formData.value.benefits_vi, () =>
+        debounceTranslate('benefits_vi', 'benefits_en', 'vi', 'TA')
+    )
+    watch(() => formData.value.benefits_en, () =>
+        debounceTranslate('benefits_en', 'benefits_vi', 'en', 'TV')
+    )
+
+    async function submitForm() {
+        try {
+            const res = props.jobId
+                ? await JobService.updateJob(formData.value)
+                : await JobService.addJob(formData.value)
+
+            if (res.success) emit('saved', res.data[0].id)
+        } catch (e) {
+            console.error(e)
+        }
+    }
 </script>
 
 <style scoped>
     textarea {
-        min-height: calc(1.4em * 6 + 1rem);
+        min-height: 8em;
     }
 </style>

@@ -105,6 +105,7 @@ export default {
     // Job
     pageJob: {
         title: "Job Management",
+        addTitle: "Add Job",
         editTitle: "Edit Job",
         updateTitle: "Update Job",
     },
