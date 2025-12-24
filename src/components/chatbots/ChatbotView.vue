@@ -79,7 +79,7 @@
 
     const conservationHistory = ref([
         { me: false, text: 'Welcome to Viet Anh School chatbot!' },
-        { me: true, text: 'Welcome to Viet Anh School chatbot!', fileName: 'a' },
+        // { me: true, text: 'Welcome to Viet Anh School chatbot!', fileName: 'a' },
     ])
 
     function addMessage(type, text, file) {
@@ -132,7 +132,7 @@
             }
 
             // Hiển thị tạm thời message của người dùng
-            addMessage(true, message, fileRaw.value.name)
+            addMessage(true, message, fileRaw.value?.name || null)
             isLoading.value = true
             messageText.value = ''
             clearfileRaw()
