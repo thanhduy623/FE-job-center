@@ -35,7 +35,6 @@
 
             if (result.success) {
                 const session = result.data;
-                console.log(result);
 
                 setSession('session', session, session.expires_in)
                 EventBus.hideLoading()

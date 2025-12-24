@@ -129,7 +129,6 @@ export function computeSchedule(
     const afternoonSlots = Math.floor(afternoonTotalMinutes / slotDuration);
     const maxSlotsPerDay = morningSlots + afternoonSlots;
 
-    // console.log(`B4. Tổng Lượt/Ngày: ${maxSlotsPerDay} (Sáng: ${morningSlots}, Chiều: ${afternoonSlots})`);
 
     // 6. LỌC ỨNG VIÊN THEO locationId
     let filteredApplicants = rawApplications.filter(app => {

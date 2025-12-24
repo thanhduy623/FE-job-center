@@ -143,10 +143,6 @@
                 message,
                 file: filePayload
             })
-            console.log({
-                message,
-                file: filePayload
-            });
 
             EventBus.hideLoading()
             const res = await promiseRes

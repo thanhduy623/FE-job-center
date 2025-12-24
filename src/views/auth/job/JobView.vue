@@ -61,7 +61,5 @@
     onMounted(async () => {
         const res = await JobService.getJob();
         rawJobList.value = res.success ? res.data : [];
-        console.log(res.data);
-
     });
 </script>

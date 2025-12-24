@@ -172,9 +172,8 @@
             })
 
             // gọi workflow, truyền FormData trực tiếp
-            const res = await ApplicationService.uploadCV(fd)
+            await ApplicationService.uploadCV(fd)
 
-            console.log("Upload CV thành công:", res)
             EventBus.showNotify("Gửi hồ sơ ứng tuyển thành công.", "success")
         } catch (err) {
             console.error("Upload CV thất bại:", err)
