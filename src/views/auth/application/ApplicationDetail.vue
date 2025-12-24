@@ -202,7 +202,7 @@
             // API thành công -> cập nhật v-model (parent state)
             selectedStatus.value = newValue
         } catch (err) {
-            EventBus.showNotify("Lỗi khi cập nhật trạng thái: " + err.message, "error")
+            // EventBus.showNotify("Lỗi khi cập nhật trạng thái: " + err.message, "error")
             // nếu muốn đảm bảo UI là giá trị cũ thì selectedStatus giữ nguyên vì chúng ta chưa set nó
         } finally {
             EventBus.hideLoading()

@@ -73,6 +73,12 @@ export async function updateData(tableName, newData, keys = [], useAuth = true) 
         if (error) throw error
 
         res = { success: true, status: 'success', message: `Cập nhật dữ liệu ${tableName} thành công`, data }
+
+        if (!data || data.length === 0) {
+            EventBus.showNotify('Không thể cập nhật dữ liệu', 'warning')
+            return
+        }
+
         EventBus.showNotify('Cập nhật dữ liệu thành công', 'success')
     } catch (error) {
         res = { success: false, status: 'error', message: `Cập nhật dữ liệu ${tableName} thất bại: ${error.message}`, data: null }

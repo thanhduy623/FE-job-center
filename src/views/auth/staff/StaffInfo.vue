@@ -47,6 +47,10 @@
                 </div>
                 <div class="flex-1">
                     <label v-t="'role'"></label>
+                    <LocationSelect v-model="form.locationId" />
+                </div>
+                <div class="flex-1">
+                    <label v-t="'role'"></label>
                     <RoleSelect v-model="form.roleId" />
                 </div>
             </div>
@@ -67,6 +71,7 @@
 
     import GenderSelect from '@/components/selects/GenderSelect.vue'
     import DepartmentSelect from '@/components/selects/DepartmentSelect.vue'
+    import LocationSelect from '@/components/selects/LocationSelect.vue'
     import RoleSelect from '@/components/selects/RoleSelect.vue'
 
     const route = useRoute()
@@ -81,6 +86,7 @@
         phone: '',
         email: '',
         departmentId: '',
+        locationId: '',
         roleId: ''
     })
 
@@ -106,6 +112,7 @@
             phone: user.phone || '',
             email: user.email || '',
             departmentId: user.departmentId || '',
+            locationId: user.locationId || '',
             roleId: user.roleId || ''
         }
         // lưu bản gốc để reset

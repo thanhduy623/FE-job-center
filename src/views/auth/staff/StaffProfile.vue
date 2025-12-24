@@ -46,6 +46,10 @@
                         <input id="department" v-model="user.departmentName" type="text" readonly />
                     </div>
                     <div class="flex-1">
+                        <label v-t="'role'"></label>
+                        <LocationSelect v-model="form.locationId" />
+                    </div>
+                    <div class="flex-1">
                         <label for="role">{{ $t('role') }}</label>
                         <input id="role" v-model="user.roleName" type="text" readonly />
                     </div>
@@ -66,20 +70,26 @@
     import { ref, onMounted, computed } from 'vue'
     import { supabase } from '@/supabase.js'
     import UserService from '@/services/UserService.js'
+    import LocationSelect from '@/components/selects/LocationSelect.vue'
     import { sendPasswordResetEmail } from '@/services/AuthService.js'
     import { EventBus } from '@/utils/eventBus'
     import { useI18n } from 'vue-i18n'
 
     import GenderSelect from '@/components/selects/GenderSelect.vue'
 
-
     const { locale } = useI18n()
     const userRaw = ref(null)
+
+    // Define form object to hold locationId
+    const form = ref({
+        locationId: null // Initialize locationId
+    })
 
     const user = computed(() => {
         if (!userRaw.value) return {}
         const u = userRaw.value
         const dep = u.User_departmentId_fkey || {}
+        const loca = u.User_locationId_fkey || {}
         const role = u.User_roleId_fkey || {}
 
         return {
@@ -90,6 +100,7 @@
             birthday: u.birthday ? u.birthday.split('T')[0] : '',
             phone: u.phone,
             departmentName: locale.value === 'vi' ? dep.name_vi || '' : dep.name_en || '',
+            locationName: locale.value === 'vi' ? loca.name_vi || '' : loca.name_en || '',
             roleName: locale.value === 'vi' ? role.name_vi || '' : role.name_en || ''
         }
     })
