@@ -118,7 +118,5 @@
 
 
         if (!userRes.success) return console.error(userRes.message)
-
-        console.log('Tạo nhân viên thành công!')
     }
 </script>

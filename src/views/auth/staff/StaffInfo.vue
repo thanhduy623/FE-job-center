@@ -126,6 +126,5 @@
     async function formSubmit() {
         const res = await updateUser(form.value, ['id'])
         if (!res.success) return console.error(res.message)
-        console.log('Cập nhật thông tin nhân viên thành công!')
     }
 </script>

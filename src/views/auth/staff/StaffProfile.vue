@@ -114,7 +114,6 @@
 
         const email = data.user.email
         const res = await UserService.getUser({ email })
-        console.log(res)
 
         if (res.success && res.data.length > 0) {
             userRaw.value = res.data[0]
