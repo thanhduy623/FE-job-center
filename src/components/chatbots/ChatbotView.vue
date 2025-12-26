@@ -47,7 +47,7 @@
                 </div>
 
                 <form class="chat-input flex flex-row">
-                    <input class="chatbot-textbox" type="text" v-model="messageText" required />
+                    <input class="chatbot-textbox text-xs" type="text" v-model="messageText" required />
 
                     <input id="file-input" type="file" hidden @change="handleFileRawChange" />
 
@@ -147,6 +147,8 @@
             EventBus.hideLoading()
             const res = await promiseRes
             addMessage(false, res.output)
+            console.log(res);
+
             await scrollToBottom()
         } catch (err) {
             EventBus.showNotify('Gửi tin nhắn thất bại', 'error')

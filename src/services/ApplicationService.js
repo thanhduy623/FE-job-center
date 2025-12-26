@@ -59,9 +59,25 @@ export async function uploadCV(data) {
 }
 
 export async function callChatbot(data) {
-    const payload = { ...data, sessionId: "1" }
+    const sessionId = getSessionId()
+    const payload = { ...data, sessionId }
     return await callSupabaseEdge(urlFuncCallChatbot, payload, false)
 }
+
+
+function getSessionId() {
+    const KEY = 'chatbot_session_id'
+
+    let sessionId = sessionStorage.getItem(KEY)
+
+    if (!sessionId) {
+        sessionId = crypto.randomUUID()
+        sessionStorage.setItem(KEY, sessionId)
+    }
+
+    return sessionId
+}
+
 
 export default {
     getApplication,
