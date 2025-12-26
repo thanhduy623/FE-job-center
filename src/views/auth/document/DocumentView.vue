@@ -51,7 +51,7 @@
     // -------------------
     const headers = ref([
         { key: 'title', label: 'name' },
-        { key: 'schema', label: 'type' },
+        // { key: 'schema', label: 'type' },
         {
             key: 'action',
             label: 'Hành động',

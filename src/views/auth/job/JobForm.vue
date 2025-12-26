@@ -86,11 +86,11 @@
         <div class="flex flex-row wrap gap-1">
             <div class="flex-1">
                 <label>{{ $t('fromDate') }}</label>
-                <input type="date" v-model="formData.applicationDeadlineStart" />
+                <input type="date" v-model="applicationDeadlineStartDate" />
             </div>
             <div class="flex-1">
                 <label>{{ $t('toDate') }}</label>
-                <input type="date" v-model="formData.applicationDeadlineEnd" />
+                <input type="date" v-model="applicationDeadlineEndDate" />
             </div>
         </div>
 
@@ -103,6 +103,9 @@
         </div>
 
         <div class="flex justify-end gap-1">
+            <button v-if="jobId" type="button" class="bg-gray-500 text-white px-4 py-2" @click="goToJobField">
+                Trường công việc
+            </button>
             <button type="submit" class="bg-primary text-white px-4 py-2">
                 {{ jobId ? 'Cập nhật' : 'Thêm mới' }}
             </button>
@@ -111,14 +114,18 @@
 </template>
 
 <script setup>
-    import { ref, watch, defineProps, defineEmits } from 'vue'
+    import { ref, watch, computed, onMounted, defineProps, defineEmits } from 'vue'
     import { translateText } from '@/utils/translateText'
+    import { EventBus } from '@/utils/eventBus'
+    import { useRouter } from 'vue-router'
+
     import DepartmentSelect from '@/components/selects/DepartmentSelect.vue'
     import JobTypeSelect from '@/components/selects/JobTypeSelect.vue'
     import StatusSelect from '@/components/selects/StatusSelect.vue'
     import LocationSelect from '@/components/selects/LocationSelect.vue'
     import JobService from '@/services/JobService'
 
+    const router = useRouter()
     const props = defineProps({ jobId: { type: [String, Number], default: null } })
     const emit = defineEmits(['saved'])
 
@@ -155,7 +162,73 @@
         benefits_en: false
     })
 
+    function goToJobField() {
+        router.push(`/job/field/${props.jobId}`)
+    }
+
+    const applicationDeadlineStartDate = computed({
+        get() {
+            const v = formData.value.applicationDeadlineStart
+            return v ? v.split('T')[0] : ''
+        },
+        set(val) {
+            formData.value.applicationDeadlineStart = val
+                ? new Date(val + 'T00:00:00Z').toISOString()
+                : null
+        }
+    })
+
+    const applicationDeadlineEndDate = computed({
+        get() {
+            const v = formData.value.applicationDeadlineEnd
+            return v ? v.split('T')[0] : ''
+        },
+        set(val) {
+            formData.value.applicationDeadlineEnd = val
+                ? new Date(val + 'T23:59:59Z').toISOString()
+                : null
+        }
+    })
+
     const timers = {}
+
+    async function loadJob() {
+        if (!props.jobId) return
+
+        try {
+            const res = await JobService.getJob({ id: props.jobId })
+
+            if (res.success && res.data && res.data[0]) {
+                const dataJob = res.data[0];
+
+                formData.value = {
+                    id: props.jobId,
+                    departmentId: dataJob.Job_departmentId_fkey.id ?? '',
+                    name_vi: dataJob.name_vi ?? '',
+                    name_en: dataJob.name_en ?? '',
+                    position_vi: dataJob.position_vi ?? '',
+                    position_en: dataJob.position_en ?? '',
+                    description_vi: dataJob.description_vi ?? '',
+                    description_en: dataJob.description_en ?? '',
+                    requirements_vi: dataJob.requirements_vi ?? '',
+                    requirements_en: dataJob.requirements_en ?? '',
+                    benefits_vi: dataJob.benefits_vi ?? '',
+                    benefits_en: dataJob.benefits_en ?? '',
+                    jobType: dataJob.jobType ?? 'FULL_TIME',
+                    salary: dataJob.salary ?? '',
+                    status: dataJob.status ?? 'PUBLISHED',
+                    applicationDeadlineStart: dataJob.applicationDeadlineStart ?? '',
+                    applicationDeadlineEnd: dataJob.applicationDeadlineEnd ?? '',
+                    locationId: dataJob.Job_locationId_fkey.id ?? ''
+                }
+            } else {
+                EventBus.showNotify("Không tồn tại dữ liệu", "warning");
+            }
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
 
     function debounceTranslate(sourceKey, targetKey, sourceLang) {
         clearTimeout(timers[sourceKey])
@@ -224,6 +297,8 @@
             console.error(e)
         }
     }
+
+    onMounted(loadJob)
 </script>
 
 <style scoped>

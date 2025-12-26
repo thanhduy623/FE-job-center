@@ -94,7 +94,8 @@ export default {
 
     // Staff
     pageStaff: {
-        title: "Staff Management"
+        title: "Staff Management",
+        editTitle: "Edit infomation"
     },
 
     // Department

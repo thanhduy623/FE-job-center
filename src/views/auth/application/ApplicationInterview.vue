@@ -10,21 +10,11 @@
                     <label>Chọn ngày:</label>
                     <input type="date" v-model="selectedDate" @change="onFilterChange" />
                 </div>
-
-                <div class="flex flex-col">
-                    <label>Chọn cơ sở:</label>
-                    <LocationSelect v-model="selectedLocation" @change="onFilterChange" />
-                </div>
             </div>
         </div>
 
-        <!-- EMPTY CHECK -->
-        <div v-if="!selectedDate || !selectedLocation" class="text-primary">
-            Vui lòng chọn ngày và cơ sở để xem lịch.
-        </div>
-
-        <div v-else-if="scheduledApplicants.length === 0" class="text-primary">
-            Không có lịch phỏng vấn cho ngày và cơ sở này.
+        <div v-if="scheduledApplicants.length === 0" class="text-primary">
+            Không có lịch phỏng vấn.
         </div>
 
         <div v-else>
@@ -63,45 +53,49 @@
 </template>
 
 <script setup>
-    import { ref, computed } from "vue";
+    import { ref, computed, onMounted } from "vue";
     import { useRouter } from "vue-router";
 
-    import LocationSelect from "@/components/selects/LocationSelect.vue";
     import TableComponent from "@/components/tables/tableComponent.vue";
     import { getSchedule, updateSchedule } from "@/services/ScheduleInterviewService";
 
     const router = useRouter();
+
     const selectedDate = ref("");
-    const selectedLocation = ref("");
     const scheduledApplicants = ref([]);
 
     /* ==========================
             LOAD SCHEDULE
-    =========================== */
-    const onFilterChange = async () => {
-        if (!selectedDate.value || !selectedLocation.value) {
-            scheduledApplicants.value = [];
-            return;
-        }
-
+    ========================== */
+    const loadAllSchedule = async () => {
         try {
-            const res = await getSchedule({ scheduleDate: selectedDate.value });
-
-            if (res.success) {
-                scheduledApplicants.value = res.data.filter(
-                    (app) => app.locationId === selectedLocation.value
-                );
-            } else {
-                scheduledApplicants.value = [];
-            }
+            const res = await getSchedule({});
+            scheduledApplicants.value = res.success ? res.data : [];
         } catch {
             scheduledApplicants.value = [];
         }
     };
 
+    const onFilterChange = async () => {
+        try {
+            const params = selectedDate.value
+                ? { scheduleDate: selectedDate.value }
+                : {};
+
+            const res = await getSchedule(params);
+            scheduledApplicants.value = res.success ? res.data : [];
+        } catch {
+            scheduledApplicants.value = [];
+        }
+    };
+
+    onMounted(() => {
+        loadAllSchedule();
+    });
+
     /* ==========================
             SORT TIME
-    =========================== */
+    ========================== */
     const sortedByTime = (apps) =>
         [...apps].sort((a, b) =>
             a.scheduleStartTime.localeCompare(b.scheduleStartTime)
@@ -109,7 +103,7 @@
 
     /* ==========================
             TABLE DATA
-    =========================== */
+    ========================== */
     const tableRows = computed(() =>
         sortedByTime(scheduledApplicants.value).map((app) => ({
             id: app.id,
@@ -126,7 +120,7 @@
 
     /* ==========================
             UPDATE FORM STATE
-    =========================== */
+    ========================== */
     const showUpdateForm = ref(false);
 
     const formData = ref({
@@ -139,10 +133,11 @@
 
     /* ==========================
             TABLE ACTIONS
-    =========================== */
+    ========================== */
     const tableHeaders = [
         { key: "fullName", label: "Họ tên" },
         { key: "jobName", label: "Công việc" },
+        { key: "scheduleDate", label: "Ngày phỏng vấn" },
         { key: "startTime", label: "Bắt đầu" },
         { key: "endTime", label: "Kết thúc" },
         { key: "status", label: "Trạng thái" },
@@ -163,7 +158,7 @@
                         formData.value = {
                             id: row.id,
                             fullName: row.fullName,
-                            scheduleDate: row.scheduleDate || selectedDate.value,
+                            scheduleDate: row.scheduleDate,
                             scheduleStartTime: row.startTime,
                             scheduleEndTime: row.endTime,
                         };
@@ -176,7 +171,7 @@
 
     /* ==========================
             CONFIRM UPDATE
-    =========================== */
+    ========================== */
     const confirmUpdate = async () => {
         const res = await updateSchedule({
             id: formData.value.id,
@@ -193,7 +188,7 @@
 
     /* ==========================
             CANCEL UPDATE
-    =========================== */
+    ========================== */
     const cancelUpdate = () => {
         showUpdateForm.value = false;
         formData.value = {
@@ -211,30 +206,16 @@
         background-color: white;
     }
 
-    .overlay {
-        z-index: 9999;
-    }
-
-    /* Overay phủ toàn màn hình */
     .overlay-update-form {
         position: fixed;
-        /* fixed */
         top: 0;
-        /* top-0 */
         left: 0;
-        /* left-0 */
         width: 100%;
-        /* w-full */
         height: 100%;
-        /* h-full */
         background-color: rgba(0, 0, 0, 0.4);
-        /* bg-black bg-opacity-40 */
         display: flex;
-        /* flex */
         justify-content: center;
-        /* justify-center */
         align-items: center;
-        /* items-center */
         z-index: 9999;
     }
 </style>

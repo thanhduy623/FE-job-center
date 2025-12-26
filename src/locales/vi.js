@@ -95,7 +95,8 @@ export default {
 
     // Nhân sự
     pageStaff: {
-        title: "Quản lý nhân sự"
+        title: "Quản lý nhân sự",
+        editTitle: "Cập nhật thông tin"
     },
 
     // Phòng ban

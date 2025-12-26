@@ -14,6 +14,6 @@
     const id = route.params.id;
 
     function onSaved() {
-        router.push('/job'); // quay lại trang danh sách
+        router.push('/job');
     }
 </script>
