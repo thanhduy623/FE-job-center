@@ -1,264 +1,369 @@
 <template>
     <div class="main-container flex flex-col gap-1">
+        <!-- HEADER -->
         <div class="flex flex-row items-center justify-between">
             <h2 v-t="'pageApplication.interview'" class="text-primary text-title"></h2>
         </div>
 
-        <!-- INPUTS -->
-        <div class="flex flex-col wrap gap-1">
-            <div class="flex flex-row gap-1 wrap">
-                <div class="flex flex-col flex-1">
-                    <label class="w-40">Chọn cơ sở:</label>
-                    <LocationSelect v-model="selectedLocation" />
+        <!-- TABLES -->
+        <div v-if="groupedData.length">
+            <div v-for="group in groupedData" :key="group.key" class="mb-3">
+                <!-- SUBTITLE -->
+                <div class="flex flex-row items-center mb-1">
+                    <div class="flex-1 text-primary font-bold">
+                        {{ group.locationName }} - {{ group.departmentName }}
+                    </div>
+
+                    <button class="bg-primary" :disabled="!hasChecked(group)" @click="openSchedulePopup(group)">
+                        Xếp lịch phỏng vấn
+                    </button>
                 </div>
 
-                <div class="flex flex-col flex-1">
-                    <label>Chọn ngày (có thể không liên tiếp):</label>
-                    <MultiDatePicker v-model="selectedDates" />
-                </div>
+                <table class="table table-bordered table-striped w-full">
+                    <thead>
+                        <tr>
+                            <th>
+                                <input type="checkbox" :checked="isAllChecked(group)"
+                                    @change="toggleCheckAll(group, $event)" />
+                            </th>
+                            <th>Họ tên</th>
+                            <th>Công việc</th>
+                            <th>Ngày</th>
+                            <th>Bắt đầu</th>
+                            <th>Kết thúc</th>
+                            <th>Gửi mail</th>
+                        </tr>
+                    </thead>
 
-                <div class="flex flex-col flex-1">
-                    <label>Thời gian phỏng vấn mỗi lượt (phút)</label>
-                    <select v-model.number="duration">
-                        <option v-for="t in [15,20,25,30,35,40,45]" :key="t" :value="t">{{ t }} phút</option>
-                    </select>
-                </div>
+                    <tbody>
+                        <tr v-for="app in group.applicants" :key="app.id">
+                            <td>
+                                <input type="checkbox" v-model="checkedMap[app.id]" />
+                            </td>
 
-                <div class="flex flex-col flex-1">
-                    <label>Thời gian nghỉ giữa các lượt (phút)</label>
-                    <select v-model.number="breakTime">
-                        <option v-for="b in [2,3,5,10]" :key="b" :value="b">{{ b }} phút</option>
-                    </select>
-                </div>
-            </div>
+                            <td class="text-uppercase">{{ app.email }}</td>
 
-            <div class="flex flex-row gap-1 wrap">
-                <div class="flex flex-col flex-1">
-                    <label>Bắt đầu ca sáng</label>
-                    <input type="time" v-model="morningStart" />
-                </div>
-                <div class="flex flex-col flex-1">
-                    <label>Kết thúc ca sáng</label>
-                    <input type="time" v-model="morningEnd" />
-                </div>
+                            <td>
+                                {{ app.Application_jobId_fkey?.name_vi || app.Application_jobId_fkey?.name_en }}
+                            </td>
 
-                <div class="flex flex-col flex-1">
-                    <label>Bắt đầu ca chiều</label>
-                    <input type="time" v-model="afternoonStart" />
-                </div>
-                <div class="flex flex-col flex-1">
-                    <label>Kết thúc ca chiều</label>
-                    <input type="time" v-model="afternoonEnd" />
-                </div>
-            </div>
+                            <td>{{ app.scheduleDate || '' }}</td>
+                            <td>{{ app.scheduleStartTime || '' }}</td>
+                            <td>{{ app.scheduleEndTime || '' }}</td>
 
-            <div class="flex flex-row gap-1 justify-end">
-                <button class="bg-secondary" @click="handleComputeSchedule" v-t="'getData'"></button>
-                <button type="reset" @click="handleReset" v-t="'reset'"></button>
+                            <!-- SEND MAIL COLUMN -->
+                            <td>
+                                <!-- ĐÃ GỬI -->
+                                <span v-if="app.sentMail" class="text-success">
+                                    Đã gửi
+                                </span>
+
+                                <!-- LOADING -->
+                                <span v-else-if="app.loading">
+                                    Đang gửi...
+                                </span>
+
+                                <!-- BUTTON -->
+                                <button v-else-if="canSendMail(app)" class="bg-primary" @click="handleSendMail(app)">
+                                    Gửi mail
+                                </button>
+
+                                <!-- ERROR -->
+                                <span v-else-if="app.mailError" class="text-danger">
+                                    {{ app.mailError }}
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
-        <!-- OUTPUT SCHEDULE -->
-        <div id="schedule-container" v-if="groupedSchedule.length">
-            <h3 class="text-primary">LỊCH PHỎNG VẤN DỰ KIẾN</h3>
+        <div v-else>Không có dữ liệu để hiển thị.</div>
 
-            <div v-for="day in groupedSchedule" :key="day.date">
-                <div v-for="dept in day.departments" :key="dept.id">
-                    <h4 class="text-primary"> {{ dept.name }} </h4>
+        <!-- POPUP -->
+        <div v-if="showPopup" class="popup-overlay">
+            <div class="popup">
+                <h3 class="text-primary mb-1">Xếp lịch phỏng vấn</h3>
 
-                    <div class="schedule-grid gap-1">
-                        <div class="card" v-for="app in dept.applicants" :key="app.id">
-                            <h5 class="text-uppercase">{{ app.fullName }}</h5>
+                <div class="flex flex-col gap-1">
+                    <div class="flex flex-col">
+                        <label>Ngày phỏng vấn</label>
+                        <input type="date" v-model="popupDate" />
+                    </div>
 
-                            <p><strong>Công việc: </strong>{{ app.Application_jobId_fkey?.name_vi }}</p>
+                    <div class="flex flex-row wrap gap-1">
+                        <div class="flex flex-col">
+                            <label>Thời lượng phỏng vấn (phút)</label>
+                            <select v-model.number="popupDuration">
+                                <option v-for="t in [15,20,25,30,35,40,45]" :key="t" :value="t">
+                                    {{ t }}
+                                </option>
+                            </select>
+                        </div>
 
-                            <p>
-                                <strong>Thời gian: </strong>
-                                {{ app.scheduleStartTime }} - {{ app.scheduleEndTime }},
-                                ngày {{ app.scheduleDate }}
-                            </p>
+                        <div class="flex flex-col">
+                            <label>Thời lượng nghỉ giữa ca (phút)</label>
+                            <select v-model.number="popupBreak">
+                                <option v-for="b in [2,3,5,10]" :key="b" :value="b">
+                                    {{ b }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
 
-                            <p><strong>Trạng thái: </strong>{{ app.status }}</p>
+                    <div class="flex flex-row wrap gap-1">
+                        <div class="flex flex-col">
+                            <label>Bắt đầu ca sáng</label>
+                            <input type="time" v-model="popupMorningStart" />
+                        </div>
 
-                            <p><strong>SĐT: </strong>{{ app.phone }}</p>
+                        <div class="flex flex-col">
+                            <label>Kết thúc ca sáng</label>
+                            <input type="time" v-model="popupMorningEnd" />
+                        </div>
+                    </div>
 
-                            <!-- SEND MAIL PER ITEM -->
-                            <button v-if="!app.sentMail && !app.loading" class="bg-primary"
-                                @click="handleSendMail(app)"> 📧 Gửi mail </button>
+                    <div class="flex flex-row wrap gap-1">
+                        <div class="flex flex-col">
+                            <label>Bắt đầu ca chiều</label>
+                            <input type="time" v-model="popupAfternoonStart" />
+                        </div>
 
-                            <button v-if="app.loading" disabled class="bg-secondary">
-                                ⏳ Đang gửi...
-                            </button>
-
-                            <span v-if="app.sentMail" class="text-success">
-                                ✔ Đã gửi mail phỏng vấn
-                            </span>
+                        <div class="flex flex-col">
+                            <label>Kết thúc ca chiều</label>
+                            <input type="time" v-model="popupAfternoonEnd" />
                         </div>
                     </div>
                 </div>
+
+                <div class="flex justify-end gap-1 mt-2">
+                    <button @click="closePopup">Hủy</button>
+                    <button class="bg-primary" @click="confirmSchedule">Xác nhận</button>
+                </div>
             </div>
         </div>
-
-        <div v-else>
-            Không có lịch phỏng vấn để hiển thị.
-        </div>
-
     </div>
 </template>
 
-
-
 <script setup>
-    import { ref, onMounted, computed } from "vue"
-    import { computeSchedule } from '@/utils/computeSchedule';
-
-    import LocationSelect from "@/components/selects/LocationSelect.vue"
-    import MultiDatePicker from "@/components/selects/MultiDatePicker.vue"
-    import ApplicationService from "@/services/ApplicationService.js"
-    import DepartmentService from "@/services/DepartmentService.js"
-
-    // state
-    const selectedLocation = ref(null)
-    const selectedDates = ref([])
-    const duration = ref(25)
-    const breakTime = ref(5)
-
-    const morningStart = ref('08:00')
-    const morningEnd = ref('11:30')
-    const afternoonStart = ref('13:30')
-    const afternoonEnd = ref('17:00')
+    import { ref, onMounted, computed } from 'vue'
+    import ApplicationService from '@/services/ApplicationService'
+    import DepartmentService from '@/services/DepartmentService'
+    import LocationService from '@/services/LocationService'
+    import { computeSchedule } from '@/utils/computeSchedule'
 
     const rawApplications = ref([])
     const rawDepartments = ref([])
-    const scheduledApplicants = ref([])
+    const rawLocations = ref([])
+    const checkedMap = ref({})
 
-    // --- MAP DEPARTMENT ---
+    const showPopup = ref(false)
+    const activeGroup = ref(null)
+    const popupDate = ref(null)
+    const popupDuration = ref(25)
+    const popupBreak = ref(5)
+    const popupMorningStart = ref('08:00')
+    const popupMorningEnd = ref('11:30')
+    const popupAfternoonStart = ref('13:30')
+    const popupAfternoonEnd = ref('17:00')
+
     const departmentMap = computed(() => {
-        const map = {};
-        rawDepartments.value.forEach(dept => {
-            map[dept.id] = dept.name_vi || dept.name_en || 'Không rõ khoa';
-        });
-        return map;
-    });
+        const map = {}
+        rawDepartments.value.forEach(d => {
+            map[d.id] = d.name_vi || d.name_en
+        })
+        return map
+    })
 
-    // --- GROUP ---
-    const groupedSchedule = computed(() => {
-        const list = scheduledApplicants.value;
-        if (!list || list.length === 0) return [];
+    const locationMap = computed(() => {
+        const map = {}
+        rawLocations.value.forEach(l => {
+            map[l.id] = l.name_vi || l.name_en
+        })
+        return map
+    })
 
-        const grouped = {};
+    const groupedData = computed(() => {
+        const grouped = {}
 
-        list.forEach(app => {
-            const date = app.scheduleDate;
-            const deptId = app.Application_jobId_fkey?.departmentId || 'UNKNOWN';
+        rawApplications.value.forEach(app => {
+            const l = app.Application_jobId_fkey?.locationId
+            const d = app.Application_jobId_fkey?.departmentId
+            const key = `${l}-${d}`
 
-            if (!grouped[date]) grouped[date] = {};
-            if (!grouped[date][deptId]) grouped[date][deptId] = [];
+            if (!grouped[key]) {
+                grouped[key] = {
+                    key,
+                    locationName: locationMap.value[l],
+                    departmentName: departmentMap.value[d],
+                    applicants: []
+                }
+            }
 
-            grouped[date][deptId].push(app);
-        });
+            if (checkedMap.value[app.id] === undefined) {
+                checkedMap.value[app.id] = false
+            }
 
-        return Object.keys(grouped).map(date => ({
-            date,
-            departments: Object.keys(grouped[date]).map(deptId => ({
-                id: deptId,
-                name: departmentMap.value[deptId] || 'Không rõ khoa',
-                applicants: grouped[date][deptId].sort((a, b) =>
-                    a.scheduleStartTime.localeCompare(b.scheduleStartTime)
-                )
-            }))
-                .filter(dept => dept.applicants.length > 0)
-        }))
-            .filter(day => day.departments.length > 0);
-    });
+            grouped[key].applicants.push(app)
+        })
 
-    // RESET
-    function handleReset() {
-        selectedDates.value = []
-        duration.value = 25
-        breakTime.value = 5
-        morningStart.value = '08:00'
-        morningEnd.value = '11:30'
-        afternoonStart.value = '13:30'
-        afternoonEnd.value = '17:00'
-        rawApplications.value = []
-        rawDepartments.value = []
-        scheduledApplicants.value = []
+        return Object.values(grouped)
+    })
+
+    function hasChecked(group) {
+        return group.applicants.some(a => checkedMap.value[a.id])
     }
 
-    // SEND MAIL ONE PERSON
-    async function handleSendMail(app) {
-        app.loading = true;
+    function isAllChecked(group) {
+        return group.applicants.every(a => checkedMap.value[a.id])
+    }
 
-        const fd = new FormData();
-        fd.append("idApplication", app.id)
-        fd.append("status", "INTERVIEW")
-        fd.append("scheduleStartTime", app.scheduleStartTime)
-        fd.append("scheduleEndTime", app.scheduleEndTime)
-        fd.append("scheduleDate", app.scheduleDate)
+    function toggleCheckAll(group, e) {
+        group.applicants.forEach(a => {
+            checkedMap.value[a.id] = e.target.checked
+        })
+    }
+
+    function canSendMail(app) {
+        return (
+            app.scheduleDate &&
+            app.scheduleStartTime &&
+            app.scheduleEndTime &&
+            !app.sentMail &&
+            !app.loading
+        )
+    }
+
+    /* SEND MAIL */
+    async function handleSendMail(app) {
+        app.loading = true
+        app.mailError = null
+
+        const fd = new FormData()
+        fd.append('idApplication', app.id)
+        fd.append('status', 'INTERVIEW')
+        fd.append('scheduleStartTime', app.scheduleStartTime)
+        fd.append('scheduleEndTime', app.scheduleEndTime)
+        fd.append('scheduleDate', app.scheduleDate)
 
         try {
-            await ApplicationService.sendMailer(fd);
-            app.sentMail = true;
+            await ApplicationService.sendMailer(fd)
+            app.sentMail = true
+        } catch (e) {
+            app.mailError = 'Gửi thất bại'
         } finally {
-            app.loading = false;
+            app.loading = false
         }
     }
 
-    // COMPUTE SCHEDULE
-    const handleComputeSchedule = () => {
-        getRawData()
+    /* POPUP */
+    function openSchedulePopup(group) {
+        if (!hasChecked(group)) return
+        activeGroup.value = group
+        showPopup.value = true
+    }
+
+    function closePopup() {
+        showPopup.value = false
+        activeGroup.value = null
+    }
+
+    function confirmSchedule() {
+        if (!activeGroup.value || !popupDate.value) return
+
+        const selectedApplicants = activeGroup.value.applicants.filter(
+            app => checkedMap.value[app.id]
+        )
 
         const result = computeSchedule(
-            selectedLocation.value,
-            selectedDates.value,
-            duration.value,
-            breakTime.value,
-            morningStart.value,
-            morningEnd.value,
-            afternoonStart.value,
-            afternoonEnd.value,
-            rawApplications.value
-        );
+            [new Date(popupDate.value)],
+            popupDuration.value,
+            popupBreak.value,
+            popupMorningStart.value,
+            popupMorningEnd.value,
+            popupAfternoonStart.value,
+            popupAfternoonEnd.value,
+            selectedApplicants
+        )
 
-        // add sentMail & loading state
-        scheduledApplicants.value = (result || []).map(a => ({
-            ...a,
-            sentMail: false,
-            loading: false
-        }));
+        if (result?.length) {
+            const map = {}
+            result.forEach(r => (map[r.id] = r))
+
+            activeGroup.value.applicants.forEach(app => {
+                if (map[app.id]) {
+                    app.scheduleDate = map[app.id].scheduleDate
+                    app.scheduleStartTime = map[app.id].scheduleStartTime
+                    app.scheduleEndTime = map[app.id].scheduleEndTime
+                }
+            })
+        }
+
+        closePopup()
     }
 
-    // LOAD RAW
-    async function getRawData() {
-        const resApplication = await ApplicationService.getApplicationInterview()
-        if (resApplication.success) rawApplications.value = resApplication.data;
+    async function loadData() {
+        const resApp = await ApplicationService.getApplicationInterview()
+        if (resApp.success) rawApplications.value = resApp.data
 
-        const resDepartment = await DepartmentService.getDepartment()
-        if (resDepartment.success) rawDepartments.value = resDepartment.data;
+        const resDept = await DepartmentService.getDepartment()
+        if (resDept.success) rawDepartments.value = resDept.data
+
+        const resLoc = await LocationService.getLocation()
+        if (resLoc.success) rawLocations.value = resLoc.data
     }
 
-    onMounted(async () => { getRawData() })
+    onMounted(loadData)
 </script>
 
 
-
 <style scoped>
-    .schedule-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-        gap: 1rem;
+    .popup-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
-    .card {
-        padding: 1rem;
-        border-radius: 8px;
+    .popup {
         background: #fff;
-        border: 1px solid #dcdcdc;
+        padding: 1rem;
+        max-width: 650px;
+        border-radius: 8px;
     }
 
-    .text-success {
-        color: green;
-        font-weight: bold;
+    .mb-3 {
+        margin-bottom: 16px;
+    }
+
+    th input[type="checkbox"] {
+        background-color: white;
+    }
+
+    table th:nth-child(1) {
+        width: 40px;
+    }
+
+    table th:nth-child(2) {
+        width: 320px;
+    }
+
+    table th:nth-child(3) {
+        width: 350px;
+    }
+
+    table th:nth-child(4) {
+        width: 120px;
+    }
+
+    table th:nth-child(5) {
+        width: 100px;
+    }
+
+    table th:nth-child(6) {
+        width: 100px;
     }
 </style>
