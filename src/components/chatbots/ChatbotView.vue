@@ -120,7 +120,9 @@
                 const promiseFile = uploadFile(fileRaw.value, 'chat-attachments')
                 EventBus.hideLoading()
                 const resFile = await promiseFile
+
                 if (resFile.success) {
+
                     filePayload = {
                         fileKey: resFile.path,
                         bucketName: 'chat-attachments'
@@ -146,6 +148,8 @@
 
             EventBus.hideLoading()
             const res = await promiseRes
+            console.log(res);
+
             addMessage(false, res.output)
             console.log(res);
 

@@ -59,7 +59,7 @@
 
                 <div class="card flex-1 ai-card">
                     <h3>{{ $t('aiEvaluate') }}</h3>
-                    <p>Chấm điểm AI hoặc đánh giá tự động ở đây...</p>
+                    <p>{{ application.evaluation || "NULL" }}</p>
                 </div>
             </div>
 
