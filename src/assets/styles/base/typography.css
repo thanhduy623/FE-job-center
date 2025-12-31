@@ -1,50 +1,77 @@
 :root {
-    /* Font families */
+    /* === Font families === */
     --font-sans: "Inter", "Roboto", "Helvetica Neue", Arial, sans-serif;
     --font-serif: "Merriweather", Georgia, serif;
     --font-mono: "Fira Code", Menlo, monospace;
 
-    /* Font sizes */
+    /* === Font sizes === */
     --text-xs: 0.75rem;
+    /* 12px */
     --text-sm: 0.875rem;
+    /* 14px */
     --text-base: 1rem;
+    /* 16px */
     --text-lg: 1.125rem;
+    /* 18px */
     --text-xl: 1.25rem;
+    /* 20px */
     --text-2xl: 1.5rem;
+    /* 24px */
     --text-3xl: 1.875rem;
+    /* 30px */
     --text-4xl: 2.25rem;
+    /* 36px */
 
-    /* Font weights */
+    /* === Font weights === */
     --weight-light: 300;
     --weight-normal: 400;
     --weight-medium: 500;
     --weight-bold: 700;
 
-    /* Line height */
+    /* === Line heights === */
     --leading-tight: 1.2;
     --leading-normal: 1.5;
     --leading-relaxed: 1.75;
+
+    /* === Letter spacing (optional, modern look) === */
+    --tracking-tight: -0.02em;
+    --tracking-normal: 0;
+    --tracking-wide: 0.02em;
+
+    /* === Colors === */
+    --color-black: #212529;
+    --color-white: #ffffff;
+    --color-gray-700: #495057;
+    --color-primary: #99212d;
+    --color-secondary: #262265;
+    --color-tertiary: #cd8a26;
+    --color-link-hover: #99212d;
 }
 
-/* Base body text */
+/* === Base typography === */
 body {
     font-family: var(--font-sans);
     font-size: var(--text-base);
     font-weight: var(--weight-normal);
-    line-height: var(--leading-normal);
+    line-height: var(--leading-relaxed);
     color: var(--color-black);
+    background-color: var(--color-white);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-/* Headings */
+/* === Headings === */
 h1,
 h2,
 h3,
 h4,
 h5 {
+    font-family: var(--font-sans);
     font-weight: var(--weight-bold);
     line-height: var(--leading-tight);
-    margin-bottom: 10px;
+    margin: 0 0 0.5em 0;
     color: var(--color-black);
+    letter-spacing: var(--tracking-tight);
 }
 
 h1 {
@@ -67,30 +94,61 @@ h5 {
     font-size: var(--text-lg);
 }
 
-/* Paragraphs */
+/* === Paragraphs === */
 p {
     font-size: var(--text-base);
     line-height: var(--leading-relaxed);
+    margin-bottom: 1em;
     text-align: justify;
+    color: var(--color-gray-700);
 }
 
-/* Links */
-a {
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-/* Small text */
+/* === Small text === */
 .text-sm {
     font-size: var(--text-sm);
     line-height: var(--leading-normal);
-    /* hoặc leading-relaxed nếu muốn dễ đọc hơn */
 }
 
 .text-xs {
     font-size: var(--text-xs);
     line-height: var(--leading-normal);
+}
+
+/* === Links === */
+a {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: var(--weight-medium);
+    position: relative;
+    transition: color 0.25s ease, transform 0.2s ease;
+}
+
+a:hover {
+    color: var(--color-link-hover);
+    text-decoration: underline;
+    transform: translateY(-1px);
+}
+
+/* === Utility for headings spacing === */
+h1,
+h2,
+h3,
+h4,
+h5 {
+    scroll-margin-top: 1rem;
+}
+
+/* === Optional: responsive text scaling === */
+@media (max-width: 1023px) {
+    h1 {
+        font-size: 2rem;
+    }
+
+    h2 {
+        font-size: 1.75rem;
+    }
+
+    h3 {
+        font-size: 1.5rem;
+    }
 }

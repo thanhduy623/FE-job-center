@@ -1,46 +1,41 @@
 <template>
-    <div>
+    <div class="table-wrapper">
         <!-- Tìm kiếm toàn bảng -->
-        <div class="flex flex-row wrap gap-1 mb-2">
-            <input v-model="searchText" type="text" placeholder="Tìm kiếm..." class="flex-1" />
-            <button @click="resetAll">{{ $t('reset') }}</button>
+        <div class="search-reset flex flex-col sm:flex-row sm:items-center gap-2 mb-3">
+            <input v-model="searchText" type="text" placeholder="Tìm kiếm..." class="search-input flex-1 mb-2" />
+            <!-- <button @click="resetAll" class="reset-btn">{{ $t('reset') }}</button> -->
         </div>
 
-        <!-- Container cuộn ngang -->
+        <!-- Container cuộn ngang cho mobile -->
         <div class="table-container">
             <table class="custom-table">
                 <thead>
                     <tr>
                         <th>#</th>
                         <th v-for="col in nonActionColumns" :key="col.key" @click="toggleSort(col.key)"
-                            class="cursor-pointer select-none">
+                            class="cursor-pointer select-none sortable">
                             <span v-if="sortBy === col.key">
                                 {{ sortOrder === 'asc' ? '▲' : '▼' }}
                             </span>
                             {{ $t(col.label) }}
                         </th>
-                        <th v-if="actionColumns.length" v-t="'action'"></th>
+                        <th v-if="actionColumns.length">{{ $t('action') }}</th>
                     </tr>
-
-                    <!-- Bộ lọc theo từng cột -->
-                    <tr>
+                    <tr class="filter-row">
                         <th></th>
                         <th v-for="col in nonActionColumns" :key="col.key">
-                            <input v-model="columnFilters[col.key]" type="text" placeholder="Lọc..." class="w-full" />
+                            <input v-model="columnFilters[col.key]" type="text" placeholder="Lọc..."
+                                class="filter-input" />
                         </th>
                         <th v-if="actionColumns.length"></th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    <tr v-for="(row, rowIndex) in filteredRows" :key="rowIndex" class="hover:bg-gray-50">
+                    <tr v-for="(row, rowIndex) in filteredRows" :key="rowIndex" class="hover-row">
                         <td>{{ rowIndex + 1 }}</td>
-
-                        <td v-for="col in nonActionColumns" :key="col.key">
-                            {{ row[col.key] }}
-                        </td>
-
-                        <td v-if="actionColumns.length" class="flex flex-row gap-1">
+                        <td v-for="col in nonActionColumns" :key="col.key">{{ row[col.key] }}</td>
+                        <td v-if="actionColumns.length" class="action-buttons">
                             <button v-for="(act, ai) in actionColumns" :key="ai" class="table-btn" :title="act.label"
                                 @click="handleAction(act, row, rowIndex)">
                                 <span v-if="act.icon">{{ act.icon }}</span>
@@ -80,7 +75,6 @@
             filteredRows() {
                 let result = [...this.localRows];
 
-                // Tìm kiếm toàn bảng
                 if (this.searchText.trim()) {
                     const keyword = this.searchText.toLowerCase();
                     result = result.filter((row) =>
@@ -90,7 +84,6 @@
                     );
                 }
 
-                // Lọc theo cột
                 for (const [key, value] of Object.entries(this.columnFilters)) {
                     if (value && value.trim()) {
                         const keyword = value.toLowerCase();
@@ -100,7 +93,6 @@
                     }
                 }
 
-                // Sắp xếp
                 if (this.sortBy) {
                     result.sort((a, b) => {
                         const valA = a[this.sortBy];
@@ -149,42 +141,99 @@
 </script>
 
 <style scoped>
-    .custom-table button {
-        height: 32px;
-        width: 32px;
-        font-size: 16px;
-        padding: 3px;
+    .table-wrapper {
+        width: 100%;
+        padding: 0.5rem;
+        box-sizing: border-box;
+    }
+
+    .search-input {
+        padding: 0.5rem;
         border-radius: 6px;
+        border: 1px solid #ccc;
+        flex: 1;
+        margin-bottom: 0;
     }
 
-    .cursor-pointer {
-        cursor: pointer;
+    .table-container {
+        overflow-x: auto;
+        border-radius: 8px;
     }
 
-    .select-none {
+    .custom-table thead tr:first-child {
+        color: #fff;
+    }
+
+    /* Filter row */
+    .filter-row {
+        background-color: #f9fafb;
+    }
+
+    .filter-input {
+        width: 100%;
+        padding: 0.35rem;
+        border: 1px solid #d1d5db;
+        border-radius: 4px;
+        font-size: 0.85rem;
+    }
+
+    /* Sortable columns */
+    .sortable {
         user-select: none;
     }
 
-    .custom-table thead>tr:nth-child(1) {
+    .custom-table thead th:last-child {
         text-align: center;
+        vertical-align: middle;
+        min-width: 120px;
+        width: auto;
     }
 
-    .custom-table thead>tr:nth-child(2) {
-        background-color: #e5e5e5;
+    /* Action buttons */
+    .action-buttons {
+        display: flex;
+        gap: 0.25rem;
+        justify-content: center;
     }
 
-    .custom-table input {
-        padding: 0;
-        height: 24px;
-        border-style: none;
-        border-radius: 0;
-        color: black;
-        min-width: 0;
+    .table-btn {
+        padding: 0.3rem 0.5rem;
+        border-radius: 6px;
+        border: none;
+        color: white;
+        cursor: pointer;
+        font-size: 0.9rem;
+        background-color: var(--color-secondary);
+        /* background-color: var(--color-gray-300); */
     }
 
-    /* Container cuộn ngang nếu bảng rộng hơn cha */
-    .table-container {
-        width: 100%;
-        overflow-x: auto;
+    .table-btn:hover {
+        background-color: var(--color-primary);
+    }
+
+    /* Responsive overrides */
+    @media (max-width: 768px) {
+        .table-btn {
+            padding: 0.25rem 0.35rem;
+            font-size: 0.75rem;
+        }
+
+        .custom-table th,
+        .custom-table td {
+            padding: 0.5rem 0.75rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+
+        .custom-table th,
+        .custom-table td {
+            padding: 0.4rem 0.5rem;
+            font-size: 0.75rem;
+        }
+
+        .filter-input {
+            font-size: 0.7rem;
+        }
     }
 </style>
