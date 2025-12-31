@@ -3,7 +3,7 @@ form,
 .card {
     display: flex;
     flex-direction: column;
-    gap: 1.2rem;
+    gap: 0.5rem;
     width: 100%;
     padding: 2.5rem;
     border-radius: 1.25rem;
@@ -57,8 +57,8 @@ textarea:focus {
 /* === Checkbox nâng cấp === */
 input[type="checkbox"] {
     appearance: none;
-    width: 22px;
-    height: 22px;
+    width: 22px !important;
+    height: 22px !important;
     border: 2px solid var(--color-primary);
     border-radius: 5px;
     cursor: pointer;
@@ -67,6 +67,8 @@ input[type="checkbox"] {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    min-width: 22px;
+    max-width: none;
 }
 
 input[type="checkbox"]:checked {
@@ -80,8 +82,11 @@ input[type="checkbox"]:checked::after {
     color: white;
     font-size: 14px;
     position: absolute;
-    top: 1px;
-    left: 3px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    /* tránh cản click */
 }
 
 /* === Radio nâng cấp === */

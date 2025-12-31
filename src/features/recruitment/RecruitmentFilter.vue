@@ -3,7 +3,7 @@
         <button class="filter-btn bg-primary" @click="applyFilter" v-t="'applyFilter'"></button>
 
         <h4 v-t="'department'"></h4>
-        <div v-for="dept in departments" :key="dept.id">
+        <div v-for="dept in departments" :key="dept.id" class="checkbox-wrapper">
             <input type="checkbox" :id="dept.id" :value="dept.id" v-model="internalSelectedDepartments" />
             <label :for="dept.id">{{ dept.departmentName }}</label>
         </div>
@@ -48,5 +48,20 @@
         width: 100%;
         border-radius: 0;
         margin-bottom: 10px;
+    }
+
+    /* === Checkbox + Label === */
+    .checkbox-wrapper {
+        display: flex;
+        align-items: center;
+        /* căn giữa theo chiều cao */
+        gap: 0.5rem;
+        /* khoảng cách giữa checkbox và label */
+        margin-bottom: 0.5rem;
+    }
+
+    .checkbox-wrapper input[type="checkbox"] {
+        width: 22px !important;
+        height: 22px !important;
     }
 </style>
