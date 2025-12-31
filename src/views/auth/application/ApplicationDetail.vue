@@ -59,8 +59,9 @@
 
                 <div class="card flex-1 ai-card">
                     <h3>{{ $t('aiEvaluate') }}</h3>
-                    <p>{{ application.evaluation || "NULL" }}</p>
+                    <p v-html="formattedEvaluation"></p>
                 </div>
+
             </div>
 
             <div class="card status-section">
@@ -76,7 +77,7 @@
 </template>
 
 <script setup>
-    import { ref, onMounted } from 'vue'
+    import { ref, onMounted, computed } from 'vue'
     import { useRoute } from 'vue-router'
     import { useI18n } from 'vue-i18n'
     import { EventBus } from '@/utils/eventBus.js'
@@ -106,6 +107,12 @@
         const v = getValue(value)
         return typeof v === 'string' && v.startsWith('http')
     }
+
+    // Xử lý định dạng đánh giá
+    const formattedEvaluation = computed(() => {
+        if (!application.value?.evaluation) return 'NULL'
+        return application.value.evaluation.replace(/\\n/g, '<br>')
+    })
 
     // Xử lý link xem file online
     function getOnlineFileUrl(url) {
@@ -221,5 +228,9 @@
         max-width: 150px;
         white-space: nowrap;
         text-align: start;
+    }
+
+    .evaluation-text {
+        white-space: pre-wrap;
     }
 </style>

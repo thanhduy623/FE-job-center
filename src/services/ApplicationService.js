@@ -61,6 +61,8 @@ export async function uploadCV(data) {
 export async function callChatbot(data) {
     const sessionId = getSessionId()
     const payload = { ...data, sessionId }
+    console.log(payload);
+
     return await callSupabaseEdge(urlFuncCallChatbot, payload, false)
 }
 
