@@ -1,12 +1,11 @@
 <template>
     <div class="table-wrapper">
-        <!-- Tìm kiếm toàn bảng -->
+        <!-- Tìm kiếm -->
         <div class="search-reset flex flex-col sm:flex-row sm:items-center gap-2 mb-3">
             <input v-model="searchText" type="text" placeholder="Tìm kiếm..." class="search-input flex-1 mb-2" />
-            <!-- <button @click="resetAll" class="reset-btn">{{ $t('reset') }}</button> -->
         </div>
 
-        <!-- Container cuộn ngang cho mobile -->
+        <!-- Table container -->
         <div class="table-container">
             <table class="custom-table">
                 <thead>
@@ -30,10 +29,9 @@
                         <th v-if="actionColumns.length"></th>
                     </tr>
                 </thead>
-
                 <tbody>
-                    <tr v-for="(row, rowIndex) in filteredRows" :key="rowIndex" class="hover-row">
-                        <td>{{ rowIndex + 1 }}</td>
+                    <tr v-for="(row, rowIndex) in paginatedRows" :key="rowIndex" class="hover-row">
+                        <td>{{ (currentPage - 1) * rowsPerPage + rowIndex + 1 }}</td>
                         <td v-for="col in nonActionColumns" :key="col.key">{{ row[col.key] }}</td>
                         <td v-if="actionColumns.length" class="action-buttons">
                             <button v-for="(act, ai) in actionColumns" :key="ai" class="table-btn" :title="act.label"
@@ -44,6 +42,20 @@
                     </tr>
                 </tbody>
             </table>
+        </div>
+
+        <!-- Phần phân trang + select -->
+        <div class="pagination-container flex justify-between items-center mt-3">
+            <div class="pagination flex justify-center items-center gap-2">
+                <button @click="prevPage" :disabled="currentPage === 1" class="page-btn">‹</button>
+                <span>Trang {{ currentPage }} / {{ totalPages }}</span>
+                <button @click="nextPage" :disabled="currentPage === totalPages" class="page-btn">›</button>
+            </div>
+            <div class="rows-per-page-wrapper">
+                <select v-model.number="rowsPerPage" class="rows-per-page-select">
+                    <option v-for="n in [5, 10, 20, 50]" :key="n" :value="n">{{ n }} / trang</option>
+                </select>
+            </div>
         </div>
     </div>
 </template>
@@ -63,6 +75,8 @@
                 columnFilters: {},
                 sortBy: null,
                 sortOrder: "asc",
+                currentPage: 1,
+                rowsPerPage: 10,
             };
         },
         computed: {
@@ -105,6 +119,13 @@
 
                 return result;
             },
+            totalPages() {
+                return Math.ceil(this.filteredRows.length / this.rowsPerPage) || 1;
+            },
+            paginatedRows() {
+                const start = (this.currentPage - 1) * this.rowsPerPage;
+                return this.filteredRows.slice(start, start + this.rowsPerPage);
+            },
         },
         watch: {
             rows: {
@@ -113,6 +134,14 @@
                 },
                 deep: true,
                 immediate: true,
+            },
+            filteredRows() {
+                if (this.currentPage > this.totalPages) {
+                    this.currentPage = this.totalPages || 1;
+                }
+            },
+            rowsPerPage() {
+                this.currentPage = 1;
             },
         },
         methods: {
@@ -135,6 +164,13 @@
                 this.columnFilters = {};
                 this.sortBy = null;
                 this.sortOrder = "asc";
+                this.currentPage = 1;
+            },
+            prevPage() {
+                if (this.currentPage > 1) this.currentPage--;
+            },
+            nextPage() {
+                if (this.currentPage < this.totalPages) this.currentPage++;
             },
         },
     };
@@ -164,7 +200,6 @@
         color: #fff;
     }
 
-    /* Filter row */
     .filter-row {
         background-color: #f9fafb;
     }
@@ -177,7 +212,6 @@
         font-size: 0.85rem;
     }
 
-    /* Sortable columns */
     .sortable {
         user-select: none;
     }
@@ -189,7 +223,6 @@
         width: auto;
     }
 
-    /* Action buttons */
     .action-buttons {
         display: flex;
         gap: 0.25rem;
@@ -204,14 +237,90 @@
         cursor: pointer;
         font-size: 0.9rem;
         background-color: var(--color-secondary);
-        /* background-color: var(--color-gray-300); */
     }
 
     .table-btn:hover {
         background-color: var(--color-primary);
     }
 
-    /* Responsive overrides */
+    /* Pagination */
+    .pagination-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1rem;
+        flex-wrap: wrap;
+        /* Cho phép wrap nếu container nhỏ */
+        gap: 0.5rem;
+        /* Khoảng cách giữa phân trang và select */
+    }
+
+    .rows-per-page-wrapper {
+        flex: 0 0 auto;
+        /* Không giãn ra */
+        min-width: 80px;
+        max-width: 100px;
+    }
+
+    .rows-per-page-select {
+        min-width: 50px;
+        width: 100px !important;
+        padding: 0.35rem;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        background: white;
+        font-size: 0.85rem;
+        box-sizing: border-box;
+        /* Đảm bảo padding không làm tràn */
+    }
+
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .page-btn {
+        padding: 0.3rem 0.6rem;
+        border-radius: 6px;
+        border: 1px solid var(--color-primary);
+        background-color: var(--color-white);
+        color: var(--color-primary);
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .page-btn:hover:not(:disabled) {
+        background-color: var(--color-primary);
+        color: var(--color-white);
+    }
+
+    .page-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .rows-per-page-wrapper {
+        flex: 0 0 auto;
+        /* Không giãn ra */
+        min-width: 80px;
+        max-width: 100px;
+    }
+
+    .rows-per-page-select {
+        width: 100%;
+        padding: 0.35rem;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        background: white;
+        font-size: 0.85rem;
+        box-sizing: border-box;
+        /* Đảm bảo padding không làm tràn */
+    }
+
+    /* Responsive */
     @media (max-width: 768px) {
         .table-btn {
             padding: 0.25rem 0.35rem;
@@ -234,6 +343,20 @@
 
         .filter-input {
             font-size: 0.7rem;
+        }
+
+        .pagination-container {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .rows-per-page-wrapper {
+            width: 100%;
+            max-width: none;
+        }
+
+        .rows-per-page-select {
+            width: 100%;
         }
     }
 </style>
