@@ -34,9 +34,7 @@
 
     const headers = ref([
         { key: 'name', label: 'name' },
-        { key: 'position', label: 'position' },
         { key: 'department', label: 'department' },
-        { key: 'jobType', label: 'type' },
         { key: 'status', label: 'status' },
         { key: 'location', label: 'location' },
         {

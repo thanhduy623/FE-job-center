@@ -37,10 +37,9 @@
     // 🔹 Cấu hình các cột bảng
     const headers = [
         { key: "fullName", label: "fullname" },
-        { key: "email", label: "email" },
-        { key: "phone", label: "phone" },
         { key: "jobName", label: "job" },
         { key: "status", label: "status" },
+        { key: "phone", label: "phone" },
         {
             key: "action",
             label: "action",
