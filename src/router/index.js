@@ -13,7 +13,6 @@ import ResetPassword from '@/views/public/ResetPassword.vue'
 import Recruitment from '@/views/public/RecruitmentView.vue'
 import Register from '@/views/public/RecruitmentRegister.vue'
 
-import ChatbotView from '@/components/chatbots/ChatbotView.vue'
 import ConfirmInterview from '@/views/auth/application/ConfirmInterview.vue'
 
 
@@ -38,6 +37,10 @@ import ApplicationInterview from '@/views/auth/application/ApplicationInterview.
 import ApplicationMailer from '@/views/auth/application/ApplicationMailer.vue'
 // Auth/Document
 import DocumentView from '@/views/auth/document/DocumentView.vue'
+// Auth/Chabot
+import ChatbotView from '@/views/auth/chatbot/ChatbotView.vue'
+// Auth/Mail
+import MailEdit from '@/views/auth/mail/MailEdit.vue'
 
 
 
@@ -70,6 +73,8 @@ const routes = [
             { path: 'application/interview', name: 'applicationInterview', component: ApplicationInterview },
             { path: 'application/mailer', name: 'applicationMailer', component: ApplicationMailer },
             { path: 'document', name: 'document', component: DocumentView },
+            { path: 'chatbot-admin', name: 'chatbot', component: ChatbotView },
+            { path: 'mail/edit', name: 'mailEdit', component: MailEdit },
         ]
     },
     {

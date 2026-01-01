@@ -15,7 +15,8 @@
             </select>
 
             <label v-if="showReason">Lý do và đề xuất ngày:</label>
-            <textarea v-if="showReason" v-model="reason" placeholder="Vui lòng nhập lý do và đề xuất ngày khác"
+            <textarea v-if="showReason" v-model="reason"
+                placeholder="Vui lòng nhập lý do và đề xuất ngày khác bộ phận tuyển dụng sẽ liên hệ lại bạn!"
                 required></textarea>
 
             <button type="submit" class="bg-primary">
@@ -53,7 +54,7 @@
     const showReason = ref(false)
     const submitted = ref(false)
     const submitSuccess = ref(false)
-    const textError = ref("Xác nhận lỗi, vui lòng thử lại hoặc liên hệ trung tâm tuyển dụng: xxx")
+    const textError = ref("Xác nhận lỗi, vui lòng thử lại hoặc liên hệ trung tâm tuyển dụng")
 
     // xử lý ẩn/hiện textarea lý do
     function handleSelectChange() {
