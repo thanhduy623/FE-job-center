@@ -1,9 +1,16 @@
 <template>
     <form @submit.prevent="submitForm" class="flex flex-col gap-1">
 
-        <div class="flex flex-col">
-            <label>{{ $t('department') }}</label>
-            <DepartmentSelect v-model="formData.departmentId" required />
+        <div class="flex flex-row wrap gap-1">
+            <div class="flex-1">
+                <label>{{ $t('location') }}</label>
+                <LocationSelect v-model="formData.locationId" />
+            </div>
+
+            <div class="flex-1">
+                <label>{{ $t('department') }}</label>
+                <DepartmentSelect v-model="formData.departmentId" required />
+            </div>
         </div>
 
         <!-- Name -->
@@ -46,6 +53,18 @@
             </div>
         </div>
 
+        <!-- Application deadline -->
+        <div class="flex flex-row wrap gap-1">
+            <div class="flex-1">
+                <label>{{ $t('fromDate') }}</label>
+                <input type="date" v-model="applicationDeadlineStartDate" />
+            </div>
+            <div class="flex-1">
+                <label>{{ $t('toDate') }}</label>
+                <input type="date" v-model="applicationDeadlineEndDate" />
+            </div>
+        </div>
+
         <!-- Description -->
         <div class="flex flex-row wrap gap-1">
             <div class="flex-1">
@@ -79,26 +98,6 @@
             <div class="flex-1">
                 <label>{{ $t('benifit') }} (EN)</label>
                 <textarea v-model="formData.benefits_en" :disabled="loading.benefits_en" />
-            </div>
-        </div>
-
-        <!-- Application deadline -->
-        <div class="flex flex-row wrap gap-1">
-            <div class="flex-1">
-                <label>{{ $t('fromDate') }}</label>
-                <input type="date" v-model="applicationDeadlineStartDate" />
-            </div>
-            <div class="flex-1">
-                <label>{{ $t('toDate') }}</label>
-                <input type="date" v-model="applicationDeadlineEndDate" />
-            </div>
-        </div>
-
-        <!-- Location -->
-        <div class="flex flex-row wrap gap-1">
-            <div class="flex-1">
-                <label>{{ $t('location') }}</label>
-                <LocationSelect v-model="formData.locationId" />
             </div>
         </div>
 
