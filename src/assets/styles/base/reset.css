@@ -45,7 +45,6 @@ s,
 samp,
 small,
 strike,
-strong,
 sub,
 sup,
 tt,
@@ -57,9 +56,6 @@ center,
 dl,
 dt,
 dd,
-ol,
-ul,
-li,
 fieldset,
 form,
 label,
@@ -152,7 +148,8 @@ a {
 /* Lists */
 ol,
 ul {
-    list-style: none;
+    list-style-type: disc;
+    padding-left: 16px;
 }
 
 /* Tables */

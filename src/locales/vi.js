@@ -132,6 +132,9 @@ export default {
     // Chatbot
     pageChatbot: {
         title: "Chatbot",
-        suggetInput: "Nhập tin nhắn ..."
+        suggetInput: "Nhập tin nhắn ...",
+        introduction: "Xin chào, tôi là chatbot của **Hệ thống Giáo dục Việt Anh**, hỗ trợ công tác tuyển dụng.\n\nTôi có thể giúp bạn:\n- Hỏi đáp thông tin\n- Đánh giá hồ sơ\n- Hỗ trợ nộp hồ sơ\n\nHãy đặt câu hỏi hoặc gửi hồ sơ để tôi hỗ trợ bạn ngay.",
+        fileError: "**Hệ thống hiện không thể xử lý tài liệu đính kèm.**\n\nVui lòng kiểm tra lại file hoặc thử gửi lại sau.",
+        systemBusy: "**Hệ thống đang quá tải.**\n\nXin vui lòng thử lại sau."
     }
 }

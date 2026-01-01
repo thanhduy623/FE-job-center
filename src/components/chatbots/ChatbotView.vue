@@ -7,7 +7,7 @@
         <div v-if="isShow" class="wrapper">
             <!-- HEADER -->
             <div class="chatbot-header flex flex-row items-center">
-                <p class="flex flex-1 text-white">VAS CHATBOT</p>
+                <p class="flex flex-1 text-white" style="margin-bottom: 0 !important;">VAS CHATBOT</p>
                 <img class="icon" src="@/assets/images/ic-scale.png" @click="isShow = false" />
             </div>
 
@@ -16,15 +16,19 @@
                 <div v-for="(item, index) in conservationHistory" :key="index" class="chat-message"
                     :class="{ me: item.me }">
                     <img v-if="!item.me" class="icon" src="@/assets/images/ic-chatbot.png" />
-                    <span class="chat-message-text" :class="item.me ? 'bg-gray-400' : 'bg-primary text-white'">
-                        {{ item.text }}
+
+                    <div class="chatbot-chat-frame" :class="item.me ? 'bg-gray-400' : 'bg-primary text-white'">
+                        <div class="chat-message-text" v-html="renderMarkdown(item.text)"></div>
+
                         <template v-if="item.fileName">
-                            <br />
                             <hr />
-                            <p class="italic text-xs"> File: {{ item.fileName }} </p>
+                            <p class="italic text-xs"
+                                style="padding: 6px; margin: 0; white-space: nowrap; overflow: hidden;  text-overflow: ellipsis;">
+                                File: {{ item.fileName }}</p>
                         </template>
-                    </span>
+                    </div>
                 </div>
+
 
                 <!-- LOADING -->
                 <div v-if="isLoading" class="chat-message">
@@ -65,21 +69,36 @@
 </template>
 
 <script setup>
-    import { ref, nextTick } from 'vue'
+    import { ref, watch, nextTick } from 'vue'
+    import { marked } from 'marked'
     import { EventBus } from '@/utils/eventBus'
     import { uploadFile } from '@/utils/supabaseFileUtils.js'
+    import { useI18n } from 'vue-i18n'
     import ApplicationService from '@/services/ApplicationService'
 
-    const isShow = ref(false)
+    const { t, locale } = useI18n()
+
+    watch(locale, () => {
+        // chỉ update message chào đầu tiên
+        if (conservationHistory.value.length > 0) {
+            conservationHistory.value[0].text = t('pageChatbot.introduction')
+        }
+    })
+
+    const isShow = ref(true)
     const isLoading = ref(false)
     const fileRaw = ref(null)
     const messageText = ref('')
     const chatBody = ref(null)
     const sendBtn = ref(null)
 
+
+    const renderMarkdown = (text) => {
+        return marked.parse(text || '')
+    }
+
     const conservationHistory = ref([
-        { me: false, text: 'Welcome to Viet Anh School chatbot!' },
-        // { me: true, text: 'Welcome to Viet Anh School chatbot!', fileName: 'a' },
+        { me: false, text: t('pageChatbot.introduction') },
     ])
 
     function addMessage(type, text, file) {
@@ -116,6 +135,13 @@
 
             let filePayload = null
 
+            // Hiển thị tạm thời message của người dùng
+            addMessage(true, message, fileRaw.value?.name || null)
+            isLoading.value = true
+            messageText.value = ''
+            clearfileRaw()
+            await scrollToBottom()
+
             if (fileRaw.value) {
                 const promiseFile = uploadFile(fileRaw.value, 'chat-attachments')
                 EventBus.hideLoading()
@@ -128,17 +154,10 @@
                         bucketName: 'chat-attachments'
                     }
                 } else {
-                    EventBus.showNotify('Tải file thất bại, không gửi message', 'error')
+                    addMessage(false, t('pageChatbot.fileError'))
                     return
                 }
             }
-
-            // Hiển thị tạm thời message của người dùng
-            addMessage(true, message, fileRaw.value?.name || null)
-            isLoading.value = true
-            messageText.value = ''
-            clearfileRaw()
-            await scrollToBottom()
 
             // Gọi chatbot kèm message + file nếu có
             const promiseRes = ApplicationService.callChatbot({
@@ -148,6 +167,9 @@
 
             EventBus.hideLoading()
             const res = await promiseRes
+            if (!res) {
+                addMessage(false, t('pageChatbot.systemBusy'))
+            }
             console.log(res);
 
             addMessage(false, res.output)
@@ -184,8 +206,8 @@
     }
 
     .chatbot-container.open {
-        width: 300px;
-        height: 400px;
+        width: 400px;
+        height: 500px;
         background: white;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         overflow: hidden;
@@ -229,11 +251,22 @@
         flex-direction: row-reverse;
     }
 
+    .chatbot-chat-frame {
+        border-radius: 6px;
+    }
+
     .chat-message-text {
-        max-width: 200px;
+        max-width: 320px;
         padding: 6px;
         border-radius: 6px;
         font-size: 12px;
+        font-size: 12px;
+        line-height: 1.4;
+    }
+
+    .chat-message-text :deep(*) {
+        font-size: 12px;
+        line-height: 1.4;
     }
 
     .chatbot-footer {
@@ -290,5 +323,30 @@
         display: flex;
         align-items: center;
         width: 24px;
+    }
+
+    .fileRaw-attachment-preview {
+        padding: 6px;
+    }
+
+    .chat-message-text {
+        font-size: 12px;
+        line-height: 1.4;
+        max-width: 320px;
+    }
+
+    .chat-message-text :deep(p) {
+        margin: 0 0 6px 0;
+    }
+
+    .chat-message-text :deep(p:last-child) {
+        margin-bottom: 0;
+    }
+
+    .chat-message:not(.me) .chat-message-text :deep(p),
+    .chat-message:not(.me) .chat-message-text :deep(li),
+    .chat-message:not(.me) .chat-message-text :deep(strong),
+    .chat-message:not(.me) .chat-message-text :deep(em) {
+        color: white;
     }
 </style>

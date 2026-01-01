@@ -131,6 +131,9 @@ export default {
     // Chatbot
     pageChatbot: {
         title: "Chatbot",
-        suggetInput: "Type message ..."
+        suggetInput: "Type message ...",
+        introduction: "Hello, I am the chatbot of the **Viet Anh Education System**, supporting recruitment activities.\n\nI can help you with:\n- Recruitment information Q&A\n- Candidate profile evaluation\n- Application submission support\n\nFeel free to ask a question or submit your profile for assistance.",
+        fileError: "**The system is currently unable to process the attached file.**\n\nPlease check the file and try again.",
+        systemBusy: "**The system is currently overloaded.**\n\nPlease try again later."
     }
 }
