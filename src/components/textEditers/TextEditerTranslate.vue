@@ -23,7 +23,7 @@
 </template>
 
 <script setup>
-    import { ref, onMounted, defineProps, defineEmits } from 'vue'
+    import { ref, onMounted, watch, defineProps, defineEmits } from 'vue'
     import Quill from 'quill'
     import 'quill/dist/quill.snow.css'
 
@@ -35,47 +35,78 @@
         loading: { type: Object, required: true }
     })
 
-    const emit = defineEmits(['update'])
+    const emit = defineEmits(['update', 'translate'])
 
     const editorVi = ref(null)
     const editorEn = ref(null)
-    let quillEditors = {}
+    const quillEditors = {}
 
     function initEditor(refEl, fieldKey) {
         if (!refEl.value) return null
+
         const quill = new Quill(refEl.value, {
             theme: 'snow',
-            modules: { toolbar: [['bold', 'italic', 'underline'], [{ list: 'ordered' }, { list: 'bullet' }], ['link']] }
+            modules: {
+                toolbar: [
+                    ['bold', 'italic', 'underline'],
+                    [{ list: 'ordered' }, { list: 'bullet' }],
+                    ['link']
+                ]
+            }
         })
-        quill.clipboard.dangerouslyPasteHTML(props.formData[fieldKey] || '')
+
         quill.on('text-change', () => {
             emit('update', { key: fieldKey, value: quill.root.innerHTML })
             autoResizeEditor(quill, refEl)
         })
+
         autoResizeEditor(quill, refEl)
         return quill
     }
 
     function autoResizeEditor(editor, containerRef) {
         if (!editor || !containerRef.value) return
-        const contentHeight = editor.root.scrollHeight
-        containerRef.value.style.height = contentHeight + 12 + 'px'
+        containerRef.value.style.height = editor.root.scrollHeight + 12 + 'px'
     }
 
     function translate(sourceLang) {
         const sourceKey = sourceLang === 'vi' ? props.fieldVi : props.fieldEn
         const targetKey = sourceLang === 'vi' ? props.fieldEn : props.fieldVi
-        emit('translate', { sourceKey, targetKey, sourceLang, editorInstance: quillEditors[targetKey] })
+        emit('translate', {
+            sourceKey,
+            targetKey,
+            sourceLang,
+            editorInstance: quillEditors[targetKey]
+        })
     }
 
     onMounted(() => {
-        quillEditors = {
-            [props.fieldVi]: initEditor(editorVi, props.fieldVi),
-            [props.fieldEn]: initEditor(editorEn, props.fieldEn)
-        }
+        quillEditors[props.fieldVi] = initEditor(editorVi, props.fieldVi)
+        quillEditors[props.fieldEn] = initEditor(editorEn, props.fieldEn)
     })
-</script>
 
+    watch(
+        () => props.formData[props.fieldVi],
+        (newVal) => {
+            const editor = quillEditors[props.fieldVi]
+            if (editor && editor.root.innerHTML !== newVal) {
+                editor.clipboard.dangerouslyPasteHTML(newVal || '')
+                autoResizeEditor(editor, editorVi)
+            }
+        }
+    )
+
+    watch(
+        () => props.formData[props.fieldEn],
+        (newVal) => {
+            const editor = quillEditors[props.fieldEn]
+            if (editor && editor.root.innerHTML !== newVal) {
+                editor.clipboard.dangerouslyPasteHTML(newVal || '')
+                autoResizeEditor(editor, editorEn)
+            }
+        }
+    )
+</script>
 
 <style scoped>
     .editor-container {

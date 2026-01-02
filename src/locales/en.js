@@ -77,7 +77,7 @@ export default {
     hired: "Hired",
     rejected: "Rejected",
     mailInterview: "Mail interview",
-    scheduleInterview: "Mail interview",
+    scheduleInterview: "Schedule interview",
 
     // School information
     schoolInfo: {

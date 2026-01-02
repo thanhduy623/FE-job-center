@@ -44,20 +44,25 @@ export async function callSupabaseEdge(urlFunc, data, auth = true) {
             isFormData ? data : JSON.stringify(data),
             { headers }
         );
+        console.log(response);
+
 
         return response.data;
 
     } catch (error) {
         const errorData = error.response?.data;
+
         const errorMessage =
             errorData?.message ||
             error.message ||
             "Lỗi không xác định từ hệ thống.";
 
         console.error("Lỗi gọi Supabase Edge:", errorMessage);
-        EventBus.showNotify("Lỗi khi gọi server!", "error");
-        throw new Error(errorMessage);
 
+        // HIỂN THỊ LỖI THẬT
+        EventBus.showNotify(errorMessage, "warning");
+
+        throw new Error(errorMessage);
     } finally {
         EventBus.hideLoading();
     }

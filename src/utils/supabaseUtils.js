@@ -47,9 +47,23 @@ export async function addData(tableName, newData, useAuth = true) {
         res = { success: true, status: 'success', message: `Thêm dữ liệu vào ${tableName} thành công`, data }
         EventBus.showNotify('Thêm dữ liệu thành công', 'success')
     } catch (error) {
-        res = { success: false, status: 'error', message: `Thêm dữ liệu vào ${tableName} thất bại: ${error.message}`, data: null }
-        EventBus.showNotify('Thêm dữ liệu thất bại', 'error')
-        console.error(res.message)
+        let message = `Thêm dữ liệu vào ${tableName} thất bại`
+
+        if (error.message?.includes('Schedule overlap')) {
+            message = 'Thời gian phỏng vấn bị trùng với lịch đã có tại địa điểm này'
+            EventBus.showNotify(message, 'warning')
+        } else {
+            EventBus.showNotify('Thêm dữ liệu thất bại', 'error')
+        }
+
+        res = {
+            success: false,
+            status: 'error',
+            message,
+            data: null
+        }
+
+        console.error(error)
     } finally {
         EventBus.hideLoading()
     }
@@ -81,9 +95,23 @@ export async function updateData(tableName, newData, keys = [], useAuth = true) 
 
         EventBus.showNotify('Cập nhật dữ liệu thành công', 'success')
     } catch (error) {
-        res = { success: false, status: 'error', message: `Cập nhật dữ liệu ${tableName} thất bại: ${error.message}`, data: null }
-        EventBus.showNotify('Cập nhật dữ liệu thất bại', 'error')
-        console.error(res.message)
+        let message = `Cập nhật dữ liệu ${tableName} thất bại`
+
+        if (error.message?.includes('Schedule overlap')) {
+            message = 'Không thể cập nhật vì lịch phỏng vấn bị trùng thời gian'
+            EventBus.showNotify(message, 'warning')
+        } else {
+            EventBus.showNotify('Cập nhật dữ liệu thất bại', 'error')
+        }
+
+        res = {
+            success: false,
+            status: 'error',
+            message,
+            data: null
+        }
+
+        console.error(error)
     } finally {
         EventBus.hideLoading()
     }

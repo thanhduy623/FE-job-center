@@ -12,6 +12,7 @@ import ResetPassword from '@/views/public/ResetPassword.vue'
 
 import Recruitment from '@/views/public/RecruitmentView.vue'
 import Register from '@/views/public/RecruitmentRegister.vue'
+import MyCV from '@/views/public/MyCV.vue'
 
 import ConfirmInterview from '@/views/auth/application/ConfirmInterview.vue'
 
@@ -83,7 +84,8 @@ const routes = [
         children: [
             { path: 'login', name: 'login', component: Login },
             { path: 'reset-password', name: 'reset-password', component: ResetPassword },
-            { path: 'cofirm-interview/:id', name: 'cofirm-interview', component: ConfirmInterview }
+            { path: 'cofirm-interview/:id', name: 'cofirm-interview', component: ConfirmInterview },
+            { path: 'my-cv/:id', name: 'my-cv', component: MyCV }
         ]
     }
 ]

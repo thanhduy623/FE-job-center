@@ -39,6 +39,18 @@ export async function getApplicationById(id) {
     return { success: false, message: res.message || "Không tìm thấy hồ sơ" }
 }
 
+export async function getMyCV(id) {
+    if (!id) return { success: false, message: "Thiếu ID hồ sơ ứng tuyển" }
+
+    const res = await getData(tableName, { id }, [], false)
+
+    if (res.success && res.data?.length) {
+        return { success: true, data: res.data }
+    }
+
+    return { success: false, message: res.message || "Không tìm thấy hồ sơ" }
+}
+
 /**
  * Cập nhật trạng thái hồ sơ ứng tuyển
  */
@@ -91,4 +103,5 @@ export default {
     confirmMailer,
     uploadCV,
     callChatbot,
+    getMyCV
 }

@@ -14,7 +14,7 @@
                         {{ group.locationName }} - {{ group.departmentName }}
                     </div>
 
-                    <button class="bg-primary" :disabled="!hasChecked(group)" @click="openSchedulePopup(group)">
+                    <button class="bg-gray-400" :disabled="!hasChecked(group)" @click="openSchedulePopup(group)">
                         Xếp lịch phỏng vấn
                     </button>
                 </div>
@@ -248,7 +248,10 @@
         fd.append('scheduleDate', app.scheduleDate)
 
         try {
-            await ApplicationService.sendMailer(fd)
+            console.log(
+                await ApplicationService.sendMailer(fd)
+            );
+
             app.sentMail = true
         } catch (e) {
             app.mailError = 'Gửi thất bại'

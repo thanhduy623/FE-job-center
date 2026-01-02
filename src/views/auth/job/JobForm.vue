@@ -79,7 +79,7 @@
 
         <!-- Submit Buttons -->
         <div class="flex justify-end gap-1">
-            <button v-if="jobId" type="button" class="bg-gray-500 text-white px-4 py-2" @click="goToJobField">
+            <button v-if="jobId" type="button" class="bg-gray-400 text-white px-4 py-2" @click="goToJobField">
                 Trường công việc
             </button>
             <button type="submit" class="bg-primary text-white px-4 py-2">

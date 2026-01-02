@@ -81,6 +81,7 @@
     import { useRoute } from 'vue-router'
     import { useI18n } from 'vue-i18n'
     import { EventBus } from '@/utils/eventBus.js'
+    import { marked } from 'marked'
     import StatusApplicationSelect from '@/components/selects/StatusApplicationSelect.vue'
     import ApplicationService from '@/services/ApplicationService.js'
     import ApplicationCustomFieldValueService from '@/services/ApplicationCustomFieldValueService.js'
@@ -110,9 +111,13 @@
 
     // Xử lý định dạng đánh giá
     const formattedEvaluation = computed(() => {
-        if (!application.value?.evaluation) return 'NULL'
-        return application.value.evaluation.replace(/\\n/g, '<br>')
+        if (!application.value?.evaluation) return ''
+
+        const text = application.value.evaluation.replace(/\\n/g, '\n')
+        return marked.parse(text)
     })
+
+
 
     // Xử lý link xem file online
     function getOnlineFileUrl(url) {

@@ -19,6 +19,12 @@ export async function getByApplicationId(applicationId) {
     return await getData(tableName, { applicationId }, foreignKey, false)
 }
 
+export async function getFieldOfMyCV(applicationId) {
+    if (!applicationId) return { success: false, message: "Thiếu applicationId" }
+
+    return await getData(tableName, { applicationId }, foreignKey, false)
+}
+
 /**
  * Thêm giá trị custom field cho hồ sơ ứng tuyển
  */
@@ -47,5 +53,6 @@ export default {
     getByApplicationId,
     addApplicationCustomFieldValue,
     updateApplicationCustomFieldValue,
-    deleteApplicationCustomFieldValue
+    deleteApplicationCustomFieldValue,
+    getFieldOfMyCV,
 }

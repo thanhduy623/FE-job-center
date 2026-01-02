@@ -54,7 +54,7 @@
     const showReason = ref(false)
     const submitted = ref(false)
     const submitSuccess = ref(false)
-    const textError = ref("Xác nhận lỗi, vui lòng thử lại hoặc liên hệ trung tâm tuyển dụng")
+    const textError = ref("Xác nhận không thành công ...")
 
     // xử lý ẩn/hiện textarea lý do
     function handleSelectChange() {
