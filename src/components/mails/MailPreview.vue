@@ -29,7 +29,7 @@
   .email-preview {
     width: 100%;
     max-width: 600px;
-    margin: 24px auto;
+    margin: 0 auto;
     background: #fff;
     border-radius: 8px;
     font-family: Arial, sans-serif;

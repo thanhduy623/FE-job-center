@@ -1,16 +1,19 @@
 <template>
     <div class="main-container">
-        <div class="flex flex-row gap-1 wrap">
-            <h2 class="text-primary flex-1">Quản lý mẫu email hệ thống</h2>
-            <button @click="loadTemplate('INTERVIEW')">{{ $t('interview') }}</button>
-            <button @click="loadTemplate('REJECTED')">{{ $t('rejected') }}</button>
-            <button @click="loadTemplate('HIRED')">{{ $t('hired') }}</button>
-        </div>
+        <h2 class="text-primary flex-1">Quản lý mẫu email hệ thống</h2>
 
         <div class="flex flex-row wrap gap-2 mt-2">
             <!-- LEFT: Editor -->
             <div class="card flex-1 flex flex-col gap-1">
-                <h3>Chỉnh sửa nội dung</h3>
+                <div class="flex flex-row wrap gap-1">
+                    <h3 class="flex-1">Chỉnh sửa nội dung</h3>
+                    <div class="flex flex-row wrap gap-1 template-buttons">
+                        <button @click="loadTemplate('PENDING')">{{ $t('recruitment') }}</button>
+                        <button @click="loadTemplate('INTERVIEW')">{{ $t('interview') }}</button>
+                        <button @click="loadTemplate('REJECTED')">{{ $t('rejected') }}</button>
+                        <button @click="loadTemplate('HIRED')">{{ $t('hired') }}</button>
+                    </div>
+                </div>
                 <TextEditerSingle ref="emailEditor" v-model="contentHtml" :height="'650px'" />
 
                 <!-- Hiển thị các biến trong template -->
@@ -121,6 +124,14 @@
 </script>
 
 <style scoped>
+    .template-buttons button {
+        padding: 2px 6px;
+        font-size: 0.75rem;
+        background-color: gray;
+        min-width: 60px;
+        height: 24px;
+    }
+
     .variable-info {
         font-family: Arial, sans-serif;
         padding: 0.5rem;
