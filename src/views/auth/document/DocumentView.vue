@@ -1,6 +1,11 @@
 <template>
     <div class="main-container flex flex-col gap-1">
-        <h2 class="text-primary text-title flex-1" v-t="'pageFile.title'"></h2>
+        <div class="flex flex-row items-center gap-1">
+            <h2 class="text-primary text-title flex-1" v-t="'pageFile.title'"></h2>
+            <router-link to="/mail/edit">
+                <button class="bg-gray-400">Email</button>
+            </router-link>
+        </div>
 
         <!-- FORM UPLOAD -->
         <form @submit.prevent="onUploadFile" class="flex gap-1 flex-wrap">

@@ -74,6 +74,8 @@ export default {
     name_en: "Tên tiếng Anh",
     getData: "Lấy dữ liệu",
     interview: "Phỏng vấn",
+    hired: "Đậu",
+    rejected: "Trượt",
     mailInterview: "Thư phỏng vấn",
     scheduleInterview: "Lịch phỏng vấn",
 

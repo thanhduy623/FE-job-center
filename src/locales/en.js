@@ -74,6 +74,8 @@ export default {
     name_en: "English name",
     getData: "getData",
     interview: "Interview",
+    hired: "Hired",
+    rejected: "Rejected",
     mailInterview: "Mail interview",
     scheduleInterview: "Mail interview",
 

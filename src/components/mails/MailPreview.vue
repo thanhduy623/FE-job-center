@@ -9,21 +9,11 @@
 
       <MailFooter />
     </div>
-
-    <!-- Phần mô tả biến -->
-    <div class="variable-info">
-      <h4 class="font-bold">Các biến có thể sử dụng:</h4>
-      <ul>
-        <li v-for="variable in variables" :key="variable.key">
-          <code>{{ variable.key }}</code> - {{ variable.description }}
-        </li>
-      </ul>
-    </div>
   </div>
 </template>
 
 <script setup>
-  import { reactive, computed, defineProps } from 'vue'
+  import { computed, defineProps } from 'vue'
   import MailHeader from './MailHeader.vue'
   import MailFooter from './MailFooter.vue'
 
@@ -31,25 +21,13 @@
     contentHtml: { type: String, required: true }
   })
 
-  // Mock dữ liệu preview
-  const variables = reactive([
-    { key: '{{ fullName }}', text: 'Nguyễn Văn A', description: 'Họ và tên ứng viên' },
-    { key: '{{ jobName }}', text: 'Giáo viên Toán', description: 'Vị trí ứng tuyển' },
-    { key: '{{ locationName }}', text: 'Việt Anh 3', description: 'Cơ sở làm việc' },
-  ])
-
-  // Replace placeholder trong contentHtml
-  const bodyHtml = computed(() => {
-    let html = props.contentHtml
-    variables.forEach(v => {
-      html = html.replaceAll(v.key, v.text)
-    })
-    return html
-  })
+  // Lắng nghe prop từ cha và render HTML
+  const bodyHtml = computed(() => props.contentHtml)
 </script>
 
 <style scoped>
   .email-preview {
+    width: 100%;
     max-width: 600px;
     margin: 24px auto;
     background: #fff;

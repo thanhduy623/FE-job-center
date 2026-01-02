@@ -69,10 +69,17 @@
 <style scoped>
     .editor-container {
         background: #f9f9f9;
-        padding: 6px;
-        height: auto;
+        padding: 12px;
+        min-height: 150px;
+        font-family: Arial, sans-serif;
+        /* font đồng bộ */
+        font-size: 16px;
+        /* font size */
+        line-height: 1.6;
+        /* line-height */
     }
 
+    /* Quill editor */
     .ql-container {
         height: auto !important;
     }
@@ -81,5 +88,42 @@
         min-height: 150px;
         height: auto !important;
         overflow-y: visible;
+        font-family: inherit;
+        font-size: inherit;
+        line-height: inherit;
+    }
+
+    ::v-deep(ol) {
+        padding-left: 0;
+    }
+
+    /* Can thiệp sâu vào các thẻ con trong editor để khoảng cách đều */
+    ::v-deep(.ql-editor *) {
+        font-family: inherit;
+        font-size: inherit;
+        line-height: inherit;
+        margin-top: 0;
+        margin-bottom: 1em;
+        /* khoảng cách giữa các đoạn */
+    }
+
+    /* Các đoạn <p> */
+    ::v-deep(.ql-editor p) {
+        text-indent: 0;
+        /* hoặc 2ch nếu muốn thụt đầu dòng */
+    }
+
+    /* Các danh sách <ul>, <ol> */
+    ::v-deep(.ql-editor ul, ::v-deep .ql-editor ol) {
+        margin-top: 0;
+        margin-bottom: 1em;
+        padding-left: 0rem;
+    }
+
+    /* Link, bold, italic inherit font */
+    ::v-deep(.ql-editor a, ::v-deep .ql-editor strong, ::v-deep .ql-editor em) {
+        font-family: inherit;
+        font-size: inherit;
+        line-height: inherit;
     }
 </style>
