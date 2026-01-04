@@ -131,59 +131,58 @@
         if (!message && !fileRaw.value) return;
 
         try {
-            sendBtn.value.disabled = true
+            sendBtn.value.disabled = true;
 
-            let filePayload = null
+            isLoading.value = true;
 
-            // Hiển thị tạm thời message của người dùng
-            addMessage(true, message, fileRaw.value?.name || null)
-            isLoading.value = true
-            messageText.value = ''
-            clearfileRaw()
-            await scrollToBottom()
+            // Giữ lại file gốc trước khi clear UI
+            const fileToUpload = fileRaw.value;
 
-            if (fileRaw.value) {
-                const promiseFile = uploadFile(fileRaw.value, 'chat-attachments')
-                EventBus.hideLoading()
-                const resFile = await promiseFile
+            // Hiển thị message của người dùng ngay lập tức
+            addMessage(true, message, fileToUpload?.name || null);
+            messageText.value = '';
+            clearfileRaw();
+            await scrollToBottom();
+
+            let filePayload = null;
+
+            // Upload file nếu có
+            if (fileToUpload) {
+                const resFile = await uploadFile(fileToUpload, 'chat-attachments');
 
                 if (resFile.success) {
-
                     filePayload = {
                         fileKey: resFile.path,
                         bucketName: 'chat-attachments'
-                    }
+                    };
                 } else {
-                    addMessage(false, t('pageChatbot.fileError'))
-                    return
+                    addMessage(false, t('pageChatbot.fileError'));
+                    return;
                 }
             }
 
-            // Gọi chatbot kèm message + file nếu có
-            const promiseRes = ApplicationService.callChatbot({
+            // Gọi chatbot kèm message + file (nếu có)
+            const res = await ApplicationService.callChatbot({
                 message,
                 file: filePayload
-            })
+            });
 
-            EventBus.hideLoading()
-            const res = await promiseRes
             if (!res) {
-                addMessage(false, t('pageChatbot.systemBusy'))
+                addMessage(false, t('pageChatbot.systemBusy'));
+                return;
             }
-            console.log(res);
 
-            addMessage(false, res.output)
-            console.log(res);
+            addMessage(false, res.output);
+            await scrollToBottom();
 
-            await scrollToBottom()
         } catch (err) {
-            EventBus.showNotify('Gửi tin nhắn thất bại', 'error')
-            console.error(err)
+            EventBus.showNotify('Gửi tin nhắn thất bại', 'error');
+            console.error(err);
         } finally {
-            isLoading.value = false
-            sendBtn.value.disabled = false
+            isLoading.value = false;
+            sendBtn.value.disabled = false;
         }
-    }
+    };
 
 </script>
 

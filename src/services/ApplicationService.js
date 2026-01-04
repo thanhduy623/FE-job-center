@@ -1,3 +1,4 @@
+import { EventBus } from '@/utils/eventBus';
 import { callSupabaseEdge } from '@/utils/supabaseEdge'
 import { getData, updateData } from "@/utils/supabaseUtils"
 
@@ -74,9 +75,10 @@ export async function uploadCV(data) {
 export async function callChatbot(data) {
     const sessionId = getSessionId()
     const payload = { ...data, sessionId }
-    console.log(payload);
 
-    return await callSupabaseEdge(urlFuncCallChatbot, payload, false)
+    const promise = callSupabaseEdge(urlFuncCallChatbot, payload, false, false)
+    EventBus.hideLoading();
+    return await promise;
 }
 
 

@@ -102,6 +102,7 @@ export async function updateData(tableName, newData, keys = [], useAuth = true) 
             EventBus.showNotify(message, 'warning')
         } else {
             EventBus.showNotify('Cập nhật dữ liệu thất bại', 'error')
+            EventBus.hideLoading()
         }
 
         res = {
