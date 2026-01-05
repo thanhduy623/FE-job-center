@@ -85,7 +85,7 @@
         }
     })
 
-    const isShow = ref(true)
+    const isShow = ref(false)
     const isLoading = ref(false)
     const fileRaw = ref(null)
     const messageText = ref('')
@@ -162,7 +162,7 @@
             }
 
             // Gọi chatbot kèm message + file (nếu có)
-            const res = await ApplicationService.callChatbot({
+            const res = await ApplicationService.callChatbotApplyer({
                 message,
                 file: filePayload
             });

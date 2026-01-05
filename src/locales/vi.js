@@ -78,10 +78,12 @@ export default {
     rejected: "Trượt",
     mailInterview: "Thư phỏng vấn",
     scheduleInterview: "Lịch phỏng vấn",
+    order: "Thứ tự",
+    field: "Trường dữ liệu",
 
     // Thông tin trường
     schoolInfo: {
-        shortname: "Việt Anh 2",
+        shortname: "Việt Anh School",
         fullname: "Trường tiểu học, trung học cơ sở và trung học phổ thông Việt Anh 2",
         introduction: "Trường Việt Anh được xây dựng theo kiến trúc hiện đại, tọa lạc ngay trung tâm thành phố Dĩ An với những trang thiết bị hiện đại nhất",
         address: "Đường số 13, Phường Dĩ An, TP. Hôc Chí Minh",
@@ -93,6 +95,8 @@ export default {
         web: "www.vietanhschool2.edu.vn",
         facebook: "www.facebook.com/truongtrungtieuhocvietanh2",
         feedback: "Chúng tôi trân trọng mọi ý kiến đóng góp của phụ huynh, giáo viên và ứng viên để nâng cao chất lượng tuyển dụng và môi trường làm việc",
+        developedBy: "Xây dựng bởi",
+        contactSuport: "Liên hệ hỗ trợ"
     },
 
     // Nhân sự
@@ -136,6 +140,7 @@ export default {
         title: "Chatbot",
         suggetInput: "Nhập tin nhắn ...",
         introduction: "Xin chào, tôi là chatbot của **Hệ thống Giáo dục Việt Anh**, hỗ trợ công tác tuyển dụng.\n\nTôi có thể giúp bạn:\n- Hỏi đáp thông tin\n- Đánh giá hồ sơ\n- Hỗ trợ nộp hồ sơ\n\nHãy đặt câu hỏi hoặc gửi hồ sơ để tôi hỗ trợ bạn ngay.",
+        introductionStaff: "Xin chào, tôi là chatbot của **Hệ thống Giáo dục Việt Anh** dành cho nhân sự tuyển dụng nhằm hỗ trợ công tác tuyển dụng. Tôi có thể giúp bạn: \n- Phân tích và đánh giá hồ sơ ứng viên \n- Đề xuất mức độ phù hợp với vị trí tuyển dụng \n- So sánh năng lực giữa các ứng viên tiềm năng \n\nChúc quý thầy cô có một buổi làm việc hiệu quả và thuận lợi.",
         fileError: "**Hệ thống hiện không thể xử lý tài liệu đính kèm.**\n\nVui lòng kiểm tra lại file hoặc thử gửi lại sau.",
         systemBusy: "**Hệ thống đang quá tải.**\n\nXin vui lòng thử lại sau."
     }

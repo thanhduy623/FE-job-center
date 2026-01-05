@@ -1,68 +1,43 @@
-const tableName = "JobCustomField";
-const foreignKey = []; // bảng JobCustomField không có foreign key để join
+const tableName = "JobCustomField"
+const primaryKey = ["id"]
 
-import { getData, addData, updateData, deleteData } from "@/utils/supabaseUtils";
-import { EventBus } from "@/utils/eventBus";
+import { EventBus } from "@/utils/eventBus"
+import { getData, addData, updateData, deleteData } from "@/utils/supabaseUtils"
 
 /**
- * Lấy danh sách custom field
- * @param {Object} conditions - Điều kiện lọc
- * @returns {Object} { success, message, data }
+ * Lấy danh sách trường tuỳ biến công việc
  */
-export async function getJobCustomFieldList(conditions = {}) {
-    const res = await getData(tableName, conditions, foreignKey, false);
-    if (!res.success) EventBus.showNotify(res.message, "error");
-    return res;
+export async function getJobCustomField(conditions = {}) {
+    return await getData(tableName, conditions)
 }
 
 /**
- * Lấy thông tin chi tiết của một Custom Field
- * @param {String} id - UUID của custom field
- */
-export async function getJobCustomFieldById(id) {
-    const res = await getData(tableName, { id }, foreignKey, false);
-    if (!res.success) EventBus.showNotify(res.message, "error");
-    return res;
-}
-
-/**
- * Thêm mới custom field
- * @param {Object} data - Dữ liệu custom field
+ * Thêm mới trường tuỳ biến
  */
 export async function addJobCustomField(data) {
-    const res = await addData(tableName, data);
-    if (!res.success) EventBus.showNotify(res.message, "error");
-    return res;
+    return await addData(tableName, data)
 }
 
 /**
- * Cập nhật custom field
- * @param {Object} data - Dữ liệu cập nhật
- * @param {Array} keys - khóa để xác định record (default: id)
+ * Cập nhật trường tuỳ biến
  */
-export async function updateJobCustomField(data, keys = ["id"]) {
-    const res = await updateData(tableName, data, keys);
-    if (!res.success) EventBus.showNotify(res.message, "error");
-    return res;
+export async function updateJobCustomField(data, keys = primaryKey) {
+    return await updateData(tableName, data, keys)
 }
 
 /**
- * Xóa custom field
- * ⚠️ Không nên xóa nếu đang được gán cho Job (vì dùng on delete CASCADE)
+ * Xóa trường tuỳ biến
  */
 export async function deleteJobCustomField(conditions) {
-    const confirmed = await EventBus.confirm("Xác nhận xóa trường tùy chỉnh?");
-    if (!confirmed) return {};
+    const isConfirmed = await EventBus.confirm("Xác nhận xóa trường tuỳ biến công việc?")
+    if (!isConfirmed) return {}
 
-    const res = await deleteData(tableName, conditions);
-    if (!res.success) EventBus.showNotify(res.message, "error");
-    return res;
+    return await deleteData(tableName, conditions)
 }
 
 export default {
-    getJobCustomFieldList,
-    getJobCustomFieldById,
+    getJobCustomField,
     addJobCustomField,
     updateJobCustomField,
     deleteJobCustomField
-};
+}

@@ -80,7 +80,7 @@
         <!-- Submit Buttons -->
         <div class="flex justify-end gap-1">
             <button v-if="jobId" type="button" class="bg-gray-400 text-white px-4 py-2" @click="goToJobField">
-                Trường công việc
+                {{ $t('field')}}
             </button>
             <button type="submit" class="bg-primary text-white px-4 py-2">
                 {{ jobId ? 'Cập nhật' : 'Thêm mới' }}

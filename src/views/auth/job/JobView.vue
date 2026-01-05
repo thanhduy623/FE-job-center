@@ -1,7 +1,12 @@
 <template>
     <div class="main-container">
-        <div class="flex flex-row items-center">
+        <div class="flex flex-row items-center gap-1">
             <h2 v-t="'pageJob.title'" class="text-primary text-title flex-1"></h2>
+
+            <router-link to="/field">
+                <button class="bg-gray-400">{{ $t('field') }}</button>
+            </router-link>
+
             <router-link to="/job/add">
                 <button class="bg-primary">{{ $t('add') }}</button>
             </router-link>

@@ -78,10 +78,12 @@ export default {
     rejected: "Rejected",
     mailInterview: "Mail interview",
     scheduleInterview: "Schedule interview",
+    order: "order",
+    field: "Field custom",
 
     // School information
     schoolInfo: {
-        shortname: "Viet Anh",
+        shortname: "Viet Anh School",
         fullname: "Viet Anh Primary, Secondary and High School 2",
         introduction: "Viet Anh School was built with modern architecture, located in the center of Di An city with the most modern equipment",
         address: "Street 13, Di An Ward, Ho Chi Minh City",
@@ -92,6 +94,8 @@ export default {
         web: "www.vietanhschool2.edu.vn",
         facebook: "www.facebook.com/truongtrungtieuhocvietanh2",
         feedback: "We appreciate all comments from parents, teachers and candidates to improve the quality of recruitment and working environment",
+        developedBy: "Developed by",
+        contactSuport: "Contact suport"
     },
 
     // Staff

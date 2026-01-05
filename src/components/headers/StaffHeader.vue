@@ -43,7 +43,7 @@
         { name: "job", to: "/job" },
         { name: "application", to: "/application" },
         { name: "document", to: "/document" },
-        { name: "chatbot", to: "/chatbot-admin" },
+        // { name: "chatbot", to: "/chatbot-admin" },
         { name: "logout", to: "/login" },
     ];
 

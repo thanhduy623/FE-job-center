@@ -42,6 +42,8 @@ import DocumentView from '@/views/auth/document/DocumentView.vue'
 import ChatbotView from '@/views/auth/chatbot/ChatbotView.vue'
 // Auth/Mail
 import MailEdit from '@/views/auth/mail/MailEdit.vue'
+// Auth/Field
+import FieldView from '@/views/auth/fields/FieldView.vue'
 
 
 
@@ -76,6 +78,7 @@ const routes = [
             { path: 'document', name: 'document', component: DocumentView },
             { path: 'chatbot-admin', name: 'chatbot', component: ChatbotView },
             { path: 'mail/edit', name: 'mailEdit', component: MailEdit },
+            { path: 'field', name: 'field', component: FieldView },
         ]
     },
     {

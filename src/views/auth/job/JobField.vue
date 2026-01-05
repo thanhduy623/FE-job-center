@@ -64,7 +64,7 @@
     async function loadData() {
         loading.value = true;
         try {
-            const fieldRes = await JobCustomFieldService.getJobCustomFieldList();
+            const fieldRes = await JobCustomFieldService.getJobCustomField();
             if (!fieldRes?.success) {
                 EventBus.showNotify("Không thể tải danh sách field", "error");
                 return;

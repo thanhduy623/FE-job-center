@@ -72,7 +72,17 @@ export async function uploadCV(data) {
     return await callSupabaseEdge(urlFuncUploadCV, data, false)
 }
 
-export async function callChatbot(data) {
+export async function callChatbotApplyer(data) {
+    const sessionId = getSessionId()
+    const payload = { ...data, sessionId }
+
+    const promise = callSupabaseEdge(urlFuncCallChatbot, payload, false, false)
+    EventBus.hideLoading();
+    return await promise;
+}
+
+
+export async function callChatbotStaff(data) {
     const sessionId = getSessionId()
     const payload = { ...data, sessionId }
 
@@ -104,6 +114,7 @@ export default {
     sendMailer,
     confirmMailer,
     uploadCV,
-    callChatbot,
+    callChatbotApplyer,
+    callChatbotStaff,
     getMyCV
 }
