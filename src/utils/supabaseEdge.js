@@ -44,8 +44,6 @@ export async function callSupabaseEdge(urlFunc, data, auth = true) {
             isFormData ? data : JSON.stringify(data),
             { headers }
         );
-        console.log(response);
-
 
         return response.data;
 

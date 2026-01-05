@@ -65,8 +65,6 @@
     onMounted(async () => {
         if (id) {
             const res = await getScheduleByToken(id)
-            console.log(res);
-
 
             if (res.success && res.data.length) {
                 applicantName.value = res.data[0]?.Token_applicationId_fkey?.fullName || 'Không rõ tên'

@@ -82,7 +82,7 @@ export async function callChatbotApplyer(data) {
 }
 
 
-export async function callChatbotStaff(data) {
+export async function callChatbotStaffer(data) {
     const sessionId = getSessionId()
     const payload = { ...data, sessionId }
 
@@ -115,6 +115,6 @@ export default {
     confirmMailer,
     uploadCV,
     callChatbotApplyer,
-    callChatbotStaff,
+    callChatbotStaffer,
     getMyCV
 }
