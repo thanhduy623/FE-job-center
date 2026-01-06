@@ -235,6 +235,16 @@
         text-align: start;
     }
 
+    .info-table th,
+    .info-table td {
+        min-width: 50px;
+        max-width: 150px;
+        white-space: normal;
+        word-wrap: break-word;
+        word-break: break-word;
+        text-align: start;
+    }
+
     .evaluation-text {
         white-space: pre-wrap;
     }

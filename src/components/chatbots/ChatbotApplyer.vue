@@ -54,7 +54,7 @@
                     <textarea class="chatbot-textbox text-xs" type="text" v-model="messageText" rows="1"
                         @input="autoResize" required />
 
-                    <input id="file-input" type="file" hidden @change="handleFileRawChange" />
+                    <input id="file-input" type="file" hidden accept="application/pdf" @change="handleFileRawChange" />
 
                     <label for="file-input">
                         <img class="icon" src="@/assets/images/ic-link.png" />
