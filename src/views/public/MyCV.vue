@@ -13,17 +13,17 @@
 
             <!-- Info -->
             <div class="cv-info">
-                <div class="info-item">
+                <div class="info-item" v-if="application.email">
                     <span class="label">Thư điện tử</span>
                     <span class="value">{{ application.email }}</span>
                 </div>
 
-                <div class="info-item">
+                <div class="info-item" v-if="application.phone">
                     <span class="label">Số điện thoại</span>
                     <span class="value">{{ application.phone }}</span>
                 </div>
 
-                <div class="info-item">
+                <div class="info-item" v-if="application.address">
                     <span class="label">Địa chỉ</span>
                     <span class="value">{{ application.address }}</span>
                 </div>
