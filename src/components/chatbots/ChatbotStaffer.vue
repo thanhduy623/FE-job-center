@@ -264,16 +264,17 @@
 
         word-wrap: break-word;
         overflow-wrap: break-word;
-        white-space: normal;
+        white-space: pre-wrap;
     }
 
     .chat-message-text :deep(*) {
         font-size: 12px;
         line-height: 1.4;
+        margin: 0 !important;
 
         word-wrap: break-word;
         overflow-wrap: break-word;
-        white-space: normal;
+        white-space: pre-wrap;
     }
 
     .chatbot-footer {
