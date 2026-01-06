@@ -7,7 +7,7 @@
         <div v-if="isShow" class="wrapper">
             <!-- HEADER -->
             <div class="chatbot-header flex flex-row items-center">
-                <p class="flex flex-1 text-white" style="margin-bottom: 0 !important;">VAS CHATBOT</p>
+                <p class="flex flex-1 text-white" style="margin-bottom: 0 !important;">VAS CHATBOT FOR STAFF</p>
                 <img class="icon" src="@/assets/images/ic-scale.png" @click="isShow = false" />
             </div>
 
@@ -260,7 +260,7 @@
         border-radius: 6px;
         font-size: 12px;
         font-size: 12px;
-        line-height: 1.4;
+        line-height: 1.2;
 
         word-wrap: break-word;
         overflow-wrap: break-word;
@@ -269,7 +269,7 @@
 
     .chat-message-text :deep(*) {
         font-size: 12px;
-        line-height: 1.4;
+        line-height: 1.2;
         margin: 0 !important;
 
         word-wrap: break-word;

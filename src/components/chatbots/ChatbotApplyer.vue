@@ -269,7 +269,7 @@
         border-radius: 6px;
         font-size: 12px;
         font-size: 12px;
-        line-height: 1.4;
+        line-height: 1.2;
 
         word-wrap: break-word;
         overflow-wrap: break-word;
@@ -278,7 +278,7 @@
 
     .chat-message-text :deep(*) {
         font-size: 12px;
-        line-height: 1.4;
+        line-height: 1.2;
         margin: 0 !important;
 
         word-wrap: break-word;
