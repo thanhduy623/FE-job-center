@@ -261,11 +261,19 @@
         font-size: 12px;
         font-size: 12px;
         line-height: 1.4;
+
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        white-space: normal;
     }
 
     .chat-message-text :deep(*) {
         font-size: 12px;
         line-height: 1.4;
+
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        white-space: normal;
     }
 
     .chatbot-footer {

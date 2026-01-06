@@ -51,7 +51,8 @@
                 </div>
 
                 <form class="chat-input flex flex-row">
-                    <input class="chatbot-textbox text-xs" type="text" v-model="messageText" required />
+                    <textarea class="chatbot-textbox text-xs" type="text" v-model="messageText" rows="1"
+                        @input="autoResize" required />
 
                     <input id="file-input" type="file" hidden @change="handleFileRawChange" />
 
@@ -174,7 +175,6 @@
 
             addMessage(false, res.output);
             await scrollToBottom();
-
         } catch (err) {
             EventBus.showNotify('Gửi tin nhắn thất bại', 'error');
             console.error(err);
@@ -183,6 +183,15 @@
             sendBtn.value.disabled = false;
         }
     };
+
+    const autoResize = (event) => {
+        const el = event.target
+        el.style.height = 'auto' // reset trước
+        const lineHeight = parseFloat(getComputedStyle(el).lineHeight)
+        const maxLines = 4
+        const maxHeight = lineHeight * maxLines
+        el.style.height = Math.min(el.scrollHeight, maxHeight) + 'px'
+    }
 
 </script>
 
@@ -261,11 +270,19 @@
         font-size: 12px;
         font-size: 12px;
         line-height: 1.4;
+
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        white-space: normal;
     }
 
     .chat-message-text :deep(*) {
         font-size: 12px;
         line-height: 1.4;
+
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        white-space: normal;
     }
 
     .chatbot-footer {
@@ -309,10 +326,16 @@
     }
 
     .chatbot-textbox {
-        flex: 1;
-        display: flex;
-        min-width: 0;
+        width: 100%;
+        min-height: 2.5em;
+        max-height: 8.5em;
+        line-height: 1.4em;
+        padding: 6px;
+        overflow-y: auto;
+        resize: none;
+        box-sizing: border-box;
     }
+
 
     .send-btn,
     .send-btn .icon,
