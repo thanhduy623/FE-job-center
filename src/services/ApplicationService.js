@@ -8,6 +8,7 @@ const foreignKey = ["Application_jobId_fkey"]
 const urlFuncMailer = process.env.VUE_APP_SUPABASE_FUNC_MAILER;
 const urlFuncUploadCV = process.env.VUE_APP_SUPABASE_FUNC_UPLOADCV;
 const urlFuncCallChatbot = process.env.VUE_APP_SUPABASE_FUNC_CHATBOT;
+const urlFuncCallAdminChatbot = process.env.VUE_APP_SUPABASE_FUNC_ADMIN_CHATBOT;
 const urlFuncConfirmInterview = process.env.VUE_APP_SUPABASE_FUNC_CONFIRMINTERVIEW;
 
 
@@ -86,7 +87,7 @@ export async function callChatbotStaffer(data) {
     const sessionId = getSessionId()
     const payload = { ...data, sessionId }
 
-    const promise = callSupabaseEdge(urlFuncCallChatbot, payload, false, false)
+    const promise = callSupabaseEdge(urlFuncCallAdminChatbot, payload, true, false)
     EventBus.hideLoading();
     return await promise;
 }
