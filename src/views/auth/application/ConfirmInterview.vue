@@ -88,7 +88,7 @@
         try {
             const res = await ApplicationService.confirmMailer(fd)
 
-            if (res.length > 0) {
+            if (res.success) {
                 submitSuccess.value = true
             } else {
                 submitSuccess.value = false
