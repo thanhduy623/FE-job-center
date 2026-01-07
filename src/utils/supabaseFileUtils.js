@@ -36,7 +36,7 @@ export async function uploadFile(file, bucket, fileName) {
             path: safeFileName,
             publicUrl: publicData.publicUrl
         }
-        EventBus.showNotify(res.message, 'success')
+        // EventBus.showNotify(res.message, 'success')
     } catch (error) {
         res = {
             success: false,

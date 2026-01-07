@@ -214,11 +214,26 @@
     }
 
     .chatbot-container.open {
-        width: 400px;
+        width: 750px;
         height: 500px;
         background: white;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         overflow: hidden;
+    }
+
+    .chatbot-container.open {
+        width: 750px;
+        height: 500px;
+        background: white;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+    }
+
+    @media (max-width: 768px) {
+        .chatbot-container.open {
+            width: 90vw;
+            height: 70vh;
+        }
     }
 
     .chatbot-icon {
