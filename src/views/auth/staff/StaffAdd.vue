@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="main-container">
         <h2 class="text-primary text-title" v-t="'pageStaff.title'"></h2>
 
         <form @submit.prevent="formSubmit" @reset="formReset" class="flex flex-col gap-1">
