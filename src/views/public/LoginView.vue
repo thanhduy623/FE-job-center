@@ -38,7 +38,7 @@
 
                 setSession('session', session, session.expires_in)
                 EventBus.hideLoading()
-                router.push('/application')
+                router.push('/profile')
             } else {
                 errorMessage.value = result.message
                 EventBus.hideLoading()
