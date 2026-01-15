@@ -128,6 +128,22 @@
         overflow-y: visible;
     }
 
+    /* Fix gốc font-size của Quill */
+    .editor-container.ql-container {
+        font-size: 1rem !important;
+    }
+
+    /* Đảm bảo toàn bộ nội dung trong editor */
+    .editor-container .ql-editor,
+    .editor-container .ql-editor * {
+        font-size: 1rem !important;
+    }
+
+    /* Fix riêng cho bullet / number */
+    .editor-container .ql-editor li {
+        font-size: 1rem !important;
+    }
+
     .translate-btn {
         background-color: transparent;
         padding: 0;
