@@ -361,7 +361,8 @@
     .chat-message:not(.me) .chat-message-text :deep(p),
     .chat-message:not(.me) .chat-message-text :deep(li),
     .chat-message:not(.me) .chat-message-text :deep(strong),
-    .chat-message:not(.me) .chat-message-text :deep(em) {
+    .chat-message:not(.me) .chat-message-text :deep(em),
+    .chat-message:not(.me) .chat-message-text :deep(a) {
         color: white;
     }
 </style>

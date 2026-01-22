@@ -110,11 +110,17 @@
             idApplication: app.applicationId.id,
             fullName: app.applicationId.fullName,
             jobName: app.jobId.name_vi,
-            startTime: app.scheduleStartTime,
-            endTime: app.scheduleEndTime,
-            scheduleDate: app.scheduleDate,
+
+            // gộp ngày + giờ vào 1 cột
+            interviewTime: `${app.scheduleDate} | ${app.scheduleStartTime} - ${app.scheduleEndTime}`,
+
             status: app.applicationId.status,
             reason: app.reason || "",
+
+            // vẫn giữ dữ liệu gốc để form update dùng
+            scheduleDate: app.scheduleDate,
+            startTime: app.scheduleStartTime,
+            endTime: app.scheduleEndTime,
         }))
     );
 
@@ -137,9 +143,10 @@
     const tableHeaders = [
         { key: "fullName", label: "Họ tên" },
         { key: "jobName", label: "Công việc" },
-        { key: "scheduleDate", label: "Ngày phỏng vấn" },
-        { key: "startTime", label: "Bắt đầu" },
-        { key: "endTime", label: "Kết thúc" },
+
+        // CỘT GỘP
+        { key: "interviewTime", label: "Thời gian phỏng vấn" },
+
         { key: "status", label: "Trạng thái" },
         { key: "reason", label: "Lý do" },
         {

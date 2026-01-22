@@ -187,18 +187,23 @@
 
     .info-item {
         display: flex;
-        justify-content: space-between;
+        align-items: flex-start;
+        gap: 12px;
         padding-bottom: 8px;
         border-bottom: 1px dashed rgba(0, 0, 0, 0.12);
     }
 
     .label {
+        min-width: 110px;
         font-size: 0.9rem;
         color: #555;
+        flex-shrink: 0;
     }
 
     .value {
+        flex: 1;
         font-weight: 500;
+        word-break: break-word;
     }
 
     .cv-link {
